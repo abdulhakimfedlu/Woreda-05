@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+
+  --color-primary: #00B4D8;
+  --color-primary-dark: #0077B6;
+  --color-aqua: #90E0EF;
+  --color-brand: #00B4D8;
+  --color-brand-light: #90E0EF;
+  --color-brand-dark: #0077B6;
+}
+
+@layer base {
+  body {
+    @apply antialiased bg-white text-black selection:bg-brand/20;
+  }
+}
+
+@layer utilities {
+  .stylized-underline {
+    @apply relative inline-block;
+  }
+
+  .stylized-underline::after {
+    content: '';
+    @apply absolute -bottom-1.5 left-0 w-full h-2.5 bg-brand opacity-80 rounded-full transition-all duration-300;
+  }
+
+  .stylized-underline:hover::after {
+    @apply h-3 opacity-100;
+  }
+
+  .glass-card-premium {
+    @apply bg-white/70 backdrop-blur-2xl border border-white shadow-[0_15px_60px_-15px_rgba(0,0,0,0.05)] hover:shadow-brand/20 transition-all duration-500 hover:-translate-y-2;
+  }
+
+  .subtle-glow {
+    @apply shadow-[0_0_20px_rgba(0,180,216,0.15)];
+  }
+
+  .animate-float-calm {
+    animation: float-calm 6s ease-in-out infinite;
+  }
+
+  @keyframes float-calm {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-15px);
+    }
+  }
+}
