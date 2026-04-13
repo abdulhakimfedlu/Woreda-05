@@ -45,8 +45,8 @@ export function Dashboard() {
 
   const stats = [
     { name: 'Total Services', value: data.services.length, icon: Server, color: 'text-brand', gradient: 'from-[#00B4D8] to-[#0077B6]' },
-    { name: 'System Categories', value: data.categories.length, icon: FolderTree, color: 'text-emerald-500', gradient: 'from-emerald-400 to-teal-600' },
-    { name: 'Gallery Assets', value: data.gallery.length, icon: ImageIcon, color: 'text-purple-500', gradient: 'from-purple-500 to-indigo-600' },
+    { name: 'Service Categories', value: data.categories.length, icon: FolderTree, color: 'text-emerald-500', gradient: 'from-emerald-400 to-teal-600' },
+    { name: 'Gallery Images', value: data.gallery.length, icon: ImageIcon, color: 'text-purple-500', gradient: 'from-purple-500 to-indigo-600' },
     { name: 'Announcements', value: data.announcements.length, icon: Megaphone, color: 'text-orange-500', gradient: 'from-orange-400 to-red-500' },
   ];
 
@@ -55,7 +55,7 @@ export function Dashboard() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-brand/20 border-t-brand rounded-full animate-spin"></div>
-          <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Synchronizing Dashboard...</p>
+          <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Loading Dashboard...</p>
         </div>
       </div>
     );
@@ -109,10 +109,10 @@ export function Dashboard() {
             <div className="flex justify-between items-center mb-8">
               <div>
                 <h3 className="text-lg font-black text-slate-800 tracking-tight">Recent Services</h3>
-                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Latest deployments</p>
+                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Latest items</p>
               </div>
               <Link to="/services" className="px-4 py-2 bg-slate-50 text-slate-500 hover:text-brand text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">
-                Registry
+                Service List
               </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -133,8 +133,8 @@ export function Dashboard() {
           <div className="glass-panel rounded-[32px] p-8 border-none shadow-[0_20px_60px_-20px_rgba(0,0,0,0.03)]">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h3 className="text-lg font-black text-slate-800 tracking-tight">Taxonomy Groups</h3>
-                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">System Classification</p>
+                <h3 className="text-lg font-black text-slate-800 tracking-tight">Service Categories</h3>
+                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Organized Groups</p>
               </div>
               <Link to="/services" className="px-4 py-2 bg-slate-50 text-slate-500 hover:text-brand text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">
                 Manage
@@ -149,7 +149,7 @@ export function Dashboard() {
                      </div>
                      <div>
                        <h4 className="text-sm font-black text-slate-800">{cat.name}</h4>
-                       <p className="text-[10px] font-bold text-brand uppercase tracking-widest">{cat.nameAm || 'Classification'}</p>
+                       <p className="text-[10px] font-bold text-brand uppercase tracking-widest">{cat.nameAm || 'Category'}</p>
                      </div>
                    </div>
                    <div className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-lg">

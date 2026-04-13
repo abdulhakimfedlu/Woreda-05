@@ -133,7 +133,7 @@ export function Gallery() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-slate-100 pb-8">
         <div>
           <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Media Gallery</h2>
-          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">Visual Assets & Community Documentation</p>
+          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">Photos & Community Images</p>
         </div>
         <div className="flex items-center gap-4 w-full sm:w-auto">
           <button className="flex-1 sm:flex-none flex items-center justify-center px-6 py-3 bg-white text-slate-500 text-sm font-black uppercase tracking-widest rounded-2xl border border-slate-200 shadow-sm hover:bg-slate-50 hover:text-[#00B4D8] transition-all">
@@ -169,7 +169,7 @@ export function Gallery() {
           <div className="space-y-4">
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Asset Title (English)</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Title (English)</label>
               <input 
                 required
                 type="text"
@@ -180,7 +180,7 @@ export function Gallery() {
               />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Asset Title (Amharic)</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Title (Amharic)</label>
               <input 
                 type="text"
                 value={formData.titleAm}
@@ -248,7 +248,7 @@ export function Gallery() {
               uploading ? 'bg-slate-400 cursor-not-allowed shadow-none' : 'bg-[#00B4D8] shadow-[#00B4D8]/20 hover:bg-[#0077B6] hover:shadow-[#00B4D8]/30'
             }`}
           >
-            {uploading ? 'Synchronizing File...' : (editingItem ? "Update Asset" : "Engage Upload")}
+            {uploading ? 'Uploading File...' : (editingItem ? "Update Image" : "Start Upload")}
           </button>
         </form>
       </Modal>
@@ -266,12 +266,12 @@ export function Gallery() {
            <div className="w-16 h-16 rounded-3xl bg-white shadow-lg border border-slate-100 group-hover:bg-[#00B4D8] group-hover:text-white group-hover:border-[#00B4D8] flex items-center justify-center mb-4 transition-all duration-500">
               <Plus className="w-8 h-8" />
            </div>
-           <span className="font-black text-xs text-slate-600 group-hover:text-[#00B4D8] transition-colors uppercase tracking-widest">Add New Asset</span>
-           <span className="text-[10px] mt-2 text-slate-300 font-black uppercase tracking-[0.2em]">Scale: 5MB Max</span>
+           <span className="font-black text-xs text-slate-600 group-hover:text-[#00B4D8] transition-colors uppercase tracking-widest">Add New Image</span>
+           <span className="text-[10px] mt-2 text-slate-300 font-black uppercase tracking-[0.2em]">Size: 5MB Max</span>
         </div>
 
         {loading ? (
-           <div className="col-span-full py-24 text-center text-slate-300 font-black uppercase tracking-widest animate-pulse">Synchronizing Visual Assets...</div>
+           <div className="col-span-full py-24 text-center text-slate-300 font-black uppercase tracking-widest animate-pulse">Loading Images...</div>
         ) : images.map((image) => (
           <div key={image.id} className="bg-white border border-slate-100 rounded-3xl overflow-hidden group hover:shadow-2xl hover:shadow-[#00B4D8]/20 hover:-translate-y-2 transition-all duration-500 shadow-xl shadow-slate-200/40 relative">
             <div className="aspect-[4/3] relative overflow-hidden bg-slate-900 flex items-center justify-center">

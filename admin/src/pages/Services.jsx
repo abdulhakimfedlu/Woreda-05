@@ -158,8 +158,8 @@ export function Services() {
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-slate-100 pb-8">
         <div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Services Manager</h2>
-          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">Organize and deploy community services</p>
+          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Services</h2>
+          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">Manage community services</p>
         </div>
         <button 
           onClick={() => {
@@ -181,17 +181,17 @@ export function Services() {
       </div>
 
       <div className="flex items-center gap-2 mb-6 bg-slate-100/50 p-1.5 rounded-2xl border border-slate-200/50 overflow-x-auto">
-        <button 
+          <button 
           onClick={() => setActiveTab('list')}
           className={`px-4 sm:px-6 py-2.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap ${activeTab === 'list' ? 'bg-white text-[#0077B6] shadow-md shadow-slate-200' : 'text-slate-400 hover:text-slate-600'}`}
         >
-          Comprehensive List
+          All Services
         </button>
         <button 
           onClick={() => setActiveTab('categories')}
           className={`px-4 sm:px-6 py-2.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap ${activeTab === 'categories' ? 'bg-white text-[#0077B6] shadow-md shadow-slate-200' : 'text-slate-400 hover:text-slate-600'}`}
         >
-          Taxonomy & Groups
+          Service Categories
         </button>
       </div>
 
@@ -269,7 +269,7 @@ export function Services() {
             type="submit"
             className="w-full py-4 mt-4 bg-[#00B4D8] text-white font-black text-xs uppercase tracking-[0.3em] rounded-2xl shadow-xl shadow-[#00B4D8]/20 hover:bg-[#0077B6] hover:shadow-[#00B4D8]/30 transition-all"
           >
-            {editingService ? "Update Service Registry" : "Initialize Service"}
+            {editingService ? "Save Service Changes" : "Create Service"}
           </button>
         </form>
       </Modal>
@@ -341,7 +341,7 @@ export function Services() {
             type="submit"
             className="w-full py-4 mt-4 bg-[#00B4D8] text-white font-black text-xs uppercase tracking-[0.3em] rounded-2xl shadow-xl shadow-[#00B4D8]/20 hover:bg-[#0077B6] hover:shadow-[#00B4D8]/30 transition-all"
           >
-            {editingCategory ? "Update Category" : "Initialize Category"}
+            {editingCategory ? "Save Category Changes" : "Create Category"}
           </button>
         </form>
       </Modal>
@@ -354,7 +354,7 @@ export function Services() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
               <input 
                 type="text" 
-                placeholder="Search services inventory..." 
+                placeholder="Search services..." 
                 className="w-full pl-12 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
               />
             </div>
@@ -364,17 +364,17 @@ export function Services() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-slate-50/50 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                  <th className="px-8 py-5">Service Identification</th>
-                  <th className="px-8 py-5 w-56">Executing Department</th>
-                  <th className="px-8 py-5 w-48">Classification</th>
-                  <th className="px-8 py-5 w-32 text-right">Operation</th>
+                  <th className="px-8 py-5">Service Name</th>
+                  <th className="px-8 py-5 w-56">Department</th>
+                  <th className="px-8 py-5 w-48">Category</th>
+                  <th className="px-8 py-5 w-32 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {loading ? (
-                  <tr><td colSpan="4" className="text-center py-12 text-slate-300 font-black uppercase tracking-widest animate-pulse">Synchronizing Data...</td></tr>
+                  <tr><td colSpan="4" className="text-center py-12 text-slate-300 font-black uppercase tracking-widest animate-pulse">Loading...</td></tr>
                 ) : services.length === 0 ? (
-                   <tr><td colSpan="4" className="text-center py-12 text-slate-300 font-bold">No services indexed in the registry</td></tr>
+                   <tr><td colSpan="4" className="text-center py-12 text-slate-300 font-bold">No services found in the list</td></tr>
                 ) : services.map((service) => (
                   <tr key={service.id} className="hover:bg-slate-50/50 transition-all group">
                     <td className="px-8 py-6">
@@ -419,9 +419,9 @@ export function Services() {
       {activeTab === 'categories' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in slide-in-from-bottom-4 duration-500">
           {loading ? (
-            <div className="col-span-full py-24 text-center text-slate-300 font-black uppercase tracking-widest animate-pulse">Synchronizing Data...</div>
+            <div className="col-span-full py-24 text-center text-slate-300 font-black uppercase tracking-widest animate-pulse">Loading...</div>
           ) : categories.length === 0 ? (
-             <div className="col-span-full py-24 text-center text-slate-300 font-black uppercase tracking-widest">No categories mapped in the system</div>
+             <div className="col-span-full py-24 text-center text-slate-300 font-black uppercase tracking-widest">No categories found in the system</div>
           ) : categories.map((cat) => {
             const serviceCount = services.filter(s => s.category === cat.name).length;
             return (
@@ -435,13 +435,13 @@ export function Services() {
                 </span>
               </div>
               <h3 className="font-extrabold text-slate-800 text-xl tracking-tighter group-hover:text-[#00B4D8] transition-colors">{cat.name}</h3>
-              <p className="text-xs text-slate-400 font-medium mt-1 mb-8">{cat.description || "System categorization for community outreach items."}</p>
+              <p className="text-xs text-slate-400 font-medium mt-1 mb-8">{cat.description || "Categories used for grouping community services."}</p>
               
               <div className="flex border-t border-slate-50 pt-6 gap-2 justify-between">
                 <button 
                   onClick={() => handleEditCategory(cat)}
                   className="text-[10px] font-black text-[#00B4D8] uppercase tracking-widest hover:text-[#0077B6] transition-colors flex items-center p-2 hover:bg-slate-50 rounded-lg">
-                   <Edit2 className="w-3 h-3 mr-1.5" /> Configure Group
+                   <Edit2 className="w-3 h-3 mr-1.5" /> Edit Category
                 </button>
                 <button 
                   onClick={() => deleteCategory(cat.id)}

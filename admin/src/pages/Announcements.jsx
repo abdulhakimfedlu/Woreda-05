@@ -91,7 +91,7 @@ export function Announcements() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-slate-100 pb-8">
         <div>
           <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Announcements</h2>
-          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">Manage Official Woreda News & Updates</p>
+          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">Manage News & Updates</p>
         </div>
         <button 
           onClick={() => {
@@ -199,7 +199,7 @@ export function Announcements() {
             type="submit"
             className="w-full py-4 mt-4 bg-[#00B4D8] text-white font-black text-xs uppercase tracking-[0.3em] rounded-2xl shadow-xl shadow-[#00B4D8]/20 hover:bg-[#0077B6] hover:shadow-[#00B4D8]/30 transition-all"
           >
-            {editingItem ? "Update News Entry" : "Create News Entry"}
+            {editingItem ? "Save Changes" : "Create News Entry"}
           </button>
         </form>
       </Modal>
@@ -223,7 +223,7 @@ export function Announcements() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50/50 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                <th className="px-8 py-4">Article Title</th>
+                <th className="px-8 py-4">Headline</th>
                 <th className="px-8 py-4 w-40">Date</th>
                 <th className="px-8 py-4 w-32">Category</th>
                 <th className="px-8 py-4 w-32">Status</th>
@@ -233,9 +233,9 @@ export function Announcements() {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {loading ? (
-                <tr><td colSpan="6" className="text-center py-12 text-slate-300 font-black uppercase tracking-widest animate-pulse">Synchronizing Data...</td></tr>
+                <tr><td colSpan="6" className="text-center py-12 text-slate-300 font-black uppercase tracking-widest animate-pulse">Loading News...</td></tr>
               ) : announcements.length === 0 ? (
-                <tr><td colSpan="6" className="text-center py-12 text-slate-300 font-bold">No announcements found in registry</td></tr>
+                <tr><td colSpan="6" className="text-center py-12 text-slate-300 font-bold">No announcements found in the list</td></tr>
               ) : announcements.map((announcement) => (
                 <tr key={announcement.id} className="hover:bg-slate-50/50 transition-all group">
                   <td className="px-8 py-5">

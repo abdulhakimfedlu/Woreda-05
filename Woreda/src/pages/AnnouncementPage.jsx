@@ -138,10 +138,10 @@ const AnnouncementPage = () => {
             {t('hero_welcome')}
           </div>
           <h1 className="text-5xl md:text-7xl font-black text-black leading-tight mb-4 tracking-tighter">
-            {t('nav_announcements').split(' ')[0]}
+            {t('ann_header').split(' ')[0]}
             <br />
             <span className="relative inline-block">
-              {t('nav_announcements').split(' ').slice(1).join(' ') || '& Notices'}
+              {t('ann_header').split(' ').slice(1).join(' ')}
               <span
                 className="absolute left-0 -bottom-2 w-full rounded-full"
                 style={{

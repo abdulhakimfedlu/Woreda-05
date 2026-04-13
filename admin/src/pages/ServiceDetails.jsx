@@ -154,19 +154,19 @@ export function ServiceDetails() {
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-slate-100 pb-8">
         <div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Service Content Configurations</h2>
-          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">Manage rich data, requirements, and contact details</p>
+          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Service Details</h2>
+          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">Manage description, requirements, and contact details</p>
         </div>
       </div>
 
       <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/40 border border-slate-100 p-8">
-        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 ml-1">Target Service Pipeline</label>
+        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 ml-1">Select Service</label>
         <select 
           value={selectedServiceId}
           onChange={(e) => setSelectedServiceId(e.target.value)}
           className="w-full lg:w-1/2 px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
         >
-          <option value="">-- Abstract a Service Network --</option>
+          <option value="">-- Choose a Service --</option>
           {services.map(s => (
             <option key={s.id} value={s.id}>{s.title} ({s.department})</option>
           ))}
@@ -175,7 +175,7 @@ export function ServiceDetails() {
 
       {loading && (
         <div className="py-20 text-center animate-pulse">
-           <p className="text-xl font-black text-slate-300 uppercase tracking-widest">Resolving Details...</p>
+           <p className="text-xl font-black text-slate-300 uppercase tracking-widest">Loading Details...</p>
         </div>
       )}
 
@@ -189,7 +189,7 @@ export function ServiceDetails() {
                 <div className="w-10 h-10 bg-[#90E0EF]/20 text-[#00B4D8] rounded-xl flex items-center justify-center">
                   <FileText className="w-5 h-5" />
                 </div>
-                <h3 className="font-extrabold text-slate-800 text-lg">General Profile</h3>
+                <h3 className="font-extrabold text-slate-800 text-lg">General Information</h3>
               </div>
 
               <div className="grid grid-cols-1 gap-6">
@@ -200,7 +200,7 @@ export function ServiceDetails() {
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value})}
                     className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
-                    placeholder="Comprehensive description of the service and its benefits..."
+                    placeholder="Full description of the service and its benefits..."
                   />
                 </div>
                 <div>
@@ -315,7 +315,7 @@ export function ServiceDetails() {
                 <div className="w-10 h-10 bg-[#90E0EF]/20 text-[#00B4D8] rounded-xl flex items-center justify-center">
                   <UserIcon className="w-5 h-5" />
                 </div>
-                <h3 className="font-extrabold text-slate-800 text-lg">Operating Officer</h3>
+                <h3 className="font-extrabold text-slate-800 text-lg">Staff Member</h3>
               </div>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -382,14 +382,14 @@ export function ServiceDetails() {
                   <div className="w-10 h-10 bg-[#90E0EF]/20 text-[#00B4D8] rounded-xl flex items-center justify-center">
                     <Building className="w-5 h-5" />
                   </div>
-                  <h3 className="font-extrabold text-slate-800 text-lg">Prerequisites</h3>
+                  <h3 className="font-extrabold text-slate-800 text-lg">Service Requirements</h3>
                 </div>
                 <button 
                   type="button" 
                   onClick={addRequirement}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-[#00B4D8] text-slate-400 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all"
                 >
-                  <Plus className="w-3 h-3" /> Append
+                  <Plus className="w-3 h-3" /> Add New
                 </button>
               </div>
 
@@ -439,7 +439,7 @@ export function ServiceDetails() {
               className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 sm:px-10 py-4 bg-[#00B4D8] text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-[#00B4D8]/30 hover:bg-[#0077B6] hover:-translate-y-0.5 transition-all disabled:opacity-50"
             >
               <Save className="w-4 h-4" /> 
-              {saving ? 'Synchronizing...' : 'Deploy Content Specifications'}
+              {saving ? 'Saving...' : 'Save Details'}
             </button>
           </div>
         </form>

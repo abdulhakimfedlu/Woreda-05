@@ -77,7 +77,7 @@ const Lightbox = ({ item, onClose }) => {
           <div className="md:w-1/3 p-8 flex flex-col">
             <div className="flex flex-wrap items-center gap-2 mb-4">
               <span className="flex items-center gap-1.5 px-3 py-1 bg-brand/10 rounded-full text-[9px] font-black text-brand uppercase tracking-widest">
-                <Tag className="w-2.5 h-2.5" /> Media
+                <Tag className="w-2.5 h-2.5" /> {language === 'am' ? 'ሚዲያ' : 'Media'}
               </span>
               <span className="flex items-center gap-1.5 px-3 py-1 bg-black/5 rounded-full text-[9px] font-black text-black/40 uppercase tracking-widest">
                 <Calendar className="w-2.5 h-2.5" /> {item.date || (item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'N/A')}
@@ -140,10 +140,10 @@ const GalleryPage = () => {
             {t('hero_welcome')}
           </div>
           <h1 className="text-5xl md:text-7xl font-black text-black leading-tight mb-4 tracking-tighter">
-            {t('nav_gallery').split(' ')[0]}
+            {t('gallery_header').split(' ')[0]}
             <br />
             <span className="relative inline-block">
-              {t('nav_gallery').split(' ').slice(1).join(' ') || 'Media'}
+              {t('gallery_header').split(' ').slice(1).join(' ')}
               <span
                 className="absolute left-0 -bottom-2 w-full rounded-full"
                 style={{

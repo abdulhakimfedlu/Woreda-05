@@ -3,7 +3,7 @@ export const translations = {
     // Navbar
     "nav_home": "Home",
     "nav_services": "Services",
-    "nav_announcements": "Announcement",
+    "nav_announcements": "Announcements",
     "nav_gallery": "Gallery",
     "nav_about": "About",
     "nav_all_services": "All Services",
@@ -22,7 +22,7 @@ export const translations = {
     "btn_read_more": "Read More",
 
     // Services Page
-    "services_header": "Service Directory",
+    "services_header": "Welcome to Woreda 05",
     "services_title": "Where do you want to go?",
     "services_search_placeholder": "Search categories...",
     "services_no_categories": "No categories found in the registry.",
@@ -39,7 +39,7 @@ export const translations = {
     "ann_news": "NEWS",
 
     // Gallery
-    "gallery_header": "Community Gallery",
+    "gallery_header": "Gallery & Media",
     "gallery_sub": "A visual journey through the heart of our community, documenting our events, progress, and shared moments.",
     "gallery_photos": "Photos",
     "gallery_media": "MEDIA",
@@ -99,14 +99,14 @@ export const translations = {
     "btn_read_more": "ተጨማሪ ያንብቡ",
 
     // Services Page
-    "services_header": "የአገልግሎቶች ዝርዝር",
+    "services_header": "እንኳን ወደ ወረዳ 05 በደህና መጡ",
     "services_title": "ወደ የት መሄድ ይፈልጋሉ?",
     "services_search_placeholder": "ምድቦችን ይፈልጉ...",
     "services_no_categories": "በመዝገቡ ውስጥ ምንም ምድቦች አልተገኙም።",
     "services_no_services": "በዚህ ምድብ ውስጥ ምንም አገልግሎቶች አልተገኙም።",
 
     // Announcement Page
-    "ann_header": "ማስታወቂያዎች እና መረጃዎች",
+    "ann_header": "ማስታወቂያዎች እና ማሳሰቢያዎች",
     "ann_search": "ማስታወቂያዎችን ይፈልጉ...",
     "ann_all": "ሁሉም",
     "ann_total": "ጠቅላላ",
@@ -116,7 +116,7 @@ export const translations = {
     "ann_news": "ዜና",
 
     // Gallery
-    "gallery_header": "የማህበረሰብ ጋለሪ",
+    "gallery_header": "ጋለሪ እና ሚዲያ",
     "gallery_sub": "የማህበረሰባችንን ሁነቶች፣ እድገቶች እና የጋራ አፍታዎችን የሚመዘግብ የእይታ ጉዞ።",
     "gallery_photos": "ፎቶዎች",
     "gallery_media": "ሚዲያ",

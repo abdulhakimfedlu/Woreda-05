@@ -81,7 +81,7 @@ const ServicesPage = () => {
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
         {/* Header Section */}
         <div className="text-center mb-16 pt-8">
-          <div className="inline-block px-6 py-2 rounded-full bg-brand/10 text-brand font-black text-[10px] uppercase tracking-[0.4em] mb-6">
+          <div className="inline-block px-6 py-2 rounded-full bg-brand/10 text-brand font-black text-[13px] uppercase tracking-[0.4em] mb-6">
             {t('services_header')}
           </div>
           <h1 className="text-6xl md:text-8xl font-black text-black leading-tight mb-10 tracking-tighter">
