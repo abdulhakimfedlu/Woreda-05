@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 import ServiceCard from './ServiceCard';
 
 const PopularServices = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { language, t } = useLanguage();
 
   useEffect(() => {
     fetch('http://localhost:5000/api/services')
@@ -29,7 +31,7 @@ const PopularServices = () => {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-2xl font-black text-black/20 uppercase tracking-widest animate-pulse">
-            Loading Services...
+            {language === 'am' ? 'በመጫን ላይ...' : 'Loading Services...'}
           </p>
         </div>
       </section>
@@ -45,22 +47,25 @@ const PopularServices = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-20 text-center">
           <h2 className="text-5xl font-black text-black mb-6 tracking-tight">
-            <span className="stylized-underline decoration-brand pb-2">POPULAR</span> SERVICES
+            <span className="stylized-underline decoration-brand pb-2">{t('section_popular').split(' ')[0]}</span> {t('section_popular').split(' ').slice(1).join(' ')}
           </h2>
           <p className="text-xl text-black/50 max-w-2xl mx-auto font-medium">
-            The most utilized sub-city services, now fully accessible through your digital dashboard.
+            {t('footer_mission')}
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {services.map((service) => (
+          {services.map((service) => {
+            const title = language === 'am' && service.titleAm ? service.titleAm : service.title;
+            const dept = language === 'am' && service.departmentAm ? service.departmentAm : service.department;
+            return (
             <Link key={service.id} to={`/services/${service.id}`}>
               <ServiceCard
-                title={service.title}
-                description={service.department ? `Department: ${service.department}` : `Category: ${service.category || 'General'}`}
+                title={title}
+                description={dept ? `${t('nav_services')}: ${dept}` : `${t('ann_header')}: ${service.category || 'General'}`}
               />
             </Link>
-          ))}
+          )})}
         </div>
 
         <div className="mt-20 text-center">
@@ -68,7 +73,7 @@ const PopularServices = () => {
             to="/services"
             className="inline-block px-12 py-5 border-2 border-black text-black rounded-full font-black text-xl hover:bg-brand hover:border-brand hover:text-white hover:shadow-2xl hover:shadow-brand/20 transition-all duration-500 active:scale-95"
           >
-            View All Services
+            {t('btn_view_all')}
           </Link>
         </div>
       </div>

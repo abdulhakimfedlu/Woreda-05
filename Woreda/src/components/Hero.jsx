@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 import abiyImg from '../assets/Abiy ahmed.jpg';
 import adanechImg from '../assets/Adanech-Abiebie.png';
 import liyaImg from '../assets/Dr Liya.jpg';
@@ -8,6 +9,8 @@ import soldierImg from '../assets/Soldier.webp';
 import tayeImg from '../assets/Taye.jpg';
 
 const Hero = () => {
+  const { t } = useLanguage();
+
   return (
     <div className="relative bg-white pt-2 pb-16 lg:pt-4 lg:pb-32 overflow-hidden min-h-[calc(100vh-80px)] flex items-center">
       {/* High-End Background Elements */}
@@ -25,17 +28,17 @@ const Hero = () => {
           {/* Main Statement Content */}
           <div className="lg:col-span-6">
             <div className="inline-block px-6 py-2 rounded-full bg-brand/10 text-brand font-black text-[10px] uppercase tracking-[0.4em] mb-8">
-              Modern Governance Excellence
+              {t('hero_welcome')}
             </div>
 
             <h1 className="text-6xl md:text-8xl font-black text-black leading-[0.9] mb-8 tracking-tighter">
-              Welcome to <br />
-              <span className="stylized-underline pb-4">Woreda 05</span> <br />
-              <span className="text-black/30 block mt-6 leading-none">Yeka Subcity</span>
+              {t('hero_title')} <br />
+              <span className="stylized-underline pb-4">{t('hero_title_2')}</span> <br />
+              <span className="text-black/30 block mt-6 leading-none">{t('hero_location')}</span>
             </h1>
 
             <p className="text-xl md:text-2xl text-black/40 leading-tight max-w-xl mb-10 font-black uppercase tracking-tight">
-              Transforming community service through innovative digital integration and transparent leadership.
+              {t('footer_mission')}
             </p>
 
             <div>
@@ -43,7 +46,7 @@ const Hero = () => {
                 to="/services"
                 className="inline-block px-10 py-5 bg-white border-2 border-black text-black rounded-2xl font-black text-base shadow-xl hover:bg-brand hover:border-brand hover:text-white hover:-translate-y-1 hover:shadow-brand/30 transition-all duration-500 active:scale-95 leading-none"
               >
-                Explore Services
+                {t('btn_view_all')}
               </Link>
             </div>
           </div>

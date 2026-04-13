@@ -20,12 +20,14 @@ router.get('/', async (req, res) => {
 // @desc    Upload/Add a gallery image
 router.post('/', async (req, res) => {
   try {
-    const { title, url, size, description, date } = req.body;
+    const { title, titleAm, url, size, description, descriptionAm, date } = req.body;
     const newImage = await db.insert(gallery).values({
       title,
+      titleAm,
       url,
       size,
       description,
+      descriptionAm,
       date
     }).returning();
     res.json(newImage[0]);
@@ -39,9 +41,9 @@ router.post('/', async (req, res) => {
 // @desc    Update an image metadata
 router.put('/:id', async (req, res) => {
   try {
-    const { title, url, size, description, date } = req.body;
+    const { title, titleAm, url, size, description, descriptionAm, date } = req.body;
     const updated = await db.update(gallery)
-      .set({ title, url, size, description, date })
+      .set({ title, titleAm, url, size, description, descriptionAm, date })
       .where(eq(gallery.id, parseInt(req.params.id)))
       .returning();
     

@@ -31,17 +31,25 @@ export function ServiceDetails() {
         const details = data.details || {};
         setFormData({
           description: details.description || '',
+          descriptionAm: details.descriptionAm || '',
           hours: details.hours || '',
           officeNumber: details.officeNumber || '',
           contactPhone: details.contactPhone || '',
           contactEmail: details.contactEmail || '',
           officerName: details.officerName || '',
+          officerNameAm: details.officerNameAm || '',
           officerRole: details.officerRole || '',
+          officerRoleAm: details.officerRoleAm || '',
           officerPhoto: details.officerPhoto || '',
+          bannerPhoto: details.bannerPhoto || '',
           additionalDetails: details.additionalDetails || '',
+          additionalDetailsAm: details.additionalDetailsAm || '',
           requirements: Array.isArray(details.requirements) 
             ? details.requirements 
-            : (details.requirements ? [details.requirements] : [])
+            : (details.requirements ? [details.requirements] : []),
+          requirementsAm: Array.isArray(details.requirementsAm) 
+            ? details.requirementsAm 
+            : (details.requirementsAm ? [details.requirementsAm] : [])
         });
         setLoading(false);
       })
@@ -89,6 +97,31 @@ export function ServiceDetails() {
     } catch (err) {
       console.error(err);
       alert('Error uploading image.');
+    }
+  };
+
+  const handleBannerUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const data = new FormData();
+    data.append('image', file);
+
+    try {
+      const res = await fetch('http://localhost:5000/api/upload', {
+        method: 'POST',
+        body: data,
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        setFormData({ ...formData, bannerPhoto: result.url });
+      } else {
+        alert('Failed to upload banner image.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error uploading banner image.');
     }
   };
 
@@ -159,15 +192,42 @@ export function ServiceDetails() {
                 <h3 className="font-extrabold text-slate-800 text-lg">General Profile</h3>
               </div>
 
+              <div className="grid grid-cols-1 gap-6">
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Overview Description (English)</label>
+                  <textarea 
+                    rows="4"
+                    value={formData.description}
+                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
+                    placeholder="Comprehensive description of the service and its benefits..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Overview Description (Amharic)</label>
+                  <textarea 
+                    rows="4"
+                    value={formData.descriptionAm}
+                    onChange={(e) => setFormData({...formData, descriptionAm: e.target.value})}
+                    className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
+                    placeholder="ስለ አገልግሎቱ እና ጥቅሞቹ አጠቃላይ መግለጫ..."
+                  />
+                </div>
+              </div>
+
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Overview Description</label>
-                <textarea 
-                  rows="4"
-                  value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
-                  placeholder="Comprehensive description of the service and its benefits..."
-                />
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Banner Graphic Upload</label>
+                <div className="flex items-center gap-4">
+                  {formData.bannerPhoto && (
+                    <img src={formData.bannerPhoto} alt="Banner Preview" className="w-24 h-12 rounded-lg object-cover border-2 border-[#00B4D8]" />
+                  )}
+                  <input 
+                    type="file"
+                    accept="image/*"
+                    onChange={handleBannerUpload}
+                    className="flex-1 px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#90E0EF]/30 file:text-[#0077B6] hover:file:bg-[#00B4D8] hover:file:text-white transition-all cursor-pointer"
+                  />
+                </div>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-6">
@@ -224,15 +284,27 @@ export function ServiceDetails() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Additional Details</label>
-                <textarea 
-                  rows="3"
-                  value={formData.additionalDetails}
-                  onChange={(e) => setFormData({...formData, additionalDetails: e.target.value})}
-                  className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
-                  placeholder="Extra footnotes, disclaimers, or notices..."
-                />
+              <div className="grid grid-cols-1 gap-6">
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Additional Details (English)</label>
+                  <textarea 
+                    rows="3"
+                    value={formData.additionalDetails}
+                    onChange={(e) => setFormData({...formData, additionalDetails: e.target.value})}
+                    className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
+                    placeholder="Extra footnotes, disclaimers, or notices..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Additional Details (Amharic)</label>
+                  <textarea 
+                    rows="3"
+                    value={formData.additionalDetailsAm}
+                    onChange={(e) => setFormData({...formData, additionalDetailsAm: e.target.value})}
+                    className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
+                    placeholder="ተጨማሪ የግርጌ ማስታወሻዎች ወይም መመሪያዎች..."
+                  />
+                </div>
               </div>
 
             </div>
@@ -246,23 +318,45 @@ export function ServiceDetails() {
                 <h3 className="font-extrabold text-slate-800 text-lg">Operating Officer</h3>
               </div>
               <div className="space-y-4">
-                <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Officer Name</label>
-                  <input 
-                    type="text"
-                    value={formData.officerName}
-                    onChange={(e) => setFormData({...formData, officerName: e.target.value})}
-                    className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8]"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Officer Name (English)</label>
+                    <input 
+                      type="text"
+                      value={formData.officerName}
+                      onChange={(e) => setFormData({...formData, officerName: e.target.value})}
+                      className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Officer Name (Amharic)</label>
+                    <input 
+                      type="text"
+                      value={formData.officerNameAm}
+                      onChange={(e) => setFormData({...formData, officerNameAm: e.target.value})}
+                      className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8]"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Officer Role / Title</label>
-                  <input 
-                    type="text"
-                    value={formData.officerRole}
-                    onChange={(e) => setFormData({...formData, officerRole: e.target.value})}
-                    className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8]"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Officer Role (English)</label>
+                    <input 
+                      type="text"
+                      value={formData.officerRole}
+                      onChange={(e) => setFormData({...formData, officerRole: e.target.value})}
+                      className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Officer Role (Amharic)</label>
+                    <input 
+                      type="text"
+                      value={formData.officerRoleAm}
+                      onChange={(e) => setFormData({...formData, officerRoleAm: e.target.value})}
+                      className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8]"
+                    />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Officer Photo upload</label>
@@ -304,22 +398,33 @@ export function ServiceDetails() {
                   <p className="text-sm text-slate-400 font-medium italic text-center py-4 bg-slate-50 rounded-xl">No specific requirements modeled.</p>
                 )}
                 {formData.requirements.map((req, index) => (
-                  <div key={index} className="flex gap-3 items-center group">
-                    <span className="text-[10px] font-black text-slate-300">{(index + 1).toString().padStart(2, '0')}</span>
-                    <input 
-                      type="text"
-                      value={req}
-                      onChange={(e) => handleRequirementChange(index, e.target.value)}
-                      className="flex-1 px-4 py-3 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-[#00B4D8]"
-                      placeholder="Enter requirement rule..."
-                    />
-                    <button 
-                      type="button"
-                      onClick={() => removeRequirement(index)}
-                      className="p-3 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                  <div key={index} className="space-y-2 pb-4 border-b border-slate-50 last:border-0 group">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-[10px] font-black text-slate-300">REQUIREMENT {(index + 1).toString().padStart(2, '0')}</span>
+                      <button 
+                        type="button"
+                        onClick={() => removeRequirement(index)}
+                        className="p-1 text-slate-300 hover:text-red-500 transition-all"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                    <div className="grid gap-2">
+                       <input 
+                        type="text"
+                        value={req}
+                        onChange={(e) => handleRequirementChange(index, e.target.value, false)}
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-[#00B4D8]"
+                        placeholder="English requirement rule..."
+                      />
+                      <input 
+                        type="text"
+                        value={formData.requirementsAm[index] || ''}
+                        onChange={(e) => handleRequirementChange(index, e.target.value, true)}
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-[#0077B6] text-brand"
+                        placeholder="አማርኛ አስፈላጊ ሰነዶች..."
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -327,11 +432,11 @@ export function ServiceDetails() {
 
           </div>
 
-          <div className="flex justify-end pt-4">
+          <div className="flex flex-col sm:flex-row justify-end pt-4 gap-3">
             <button 
               type="submit"
               disabled={saving}
-              className="flex items-center gap-2 px-10 py-4 bg-[#00B4D8] text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-[#00B4D8]/30 hover:bg-[#0077B6] hover:-translate-y-0.5 transition-all disabled:opacity-50"
+              className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 sm:px-10 py-4 bg-[#00B4D8] text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-[#00B4D8]/30 hover:bg-[#0077B6] hover:-translate-y-0.5 transition-all disabled:opacity-50"
             >
               <Save className="w-4 h-4" /> 
               {saving ? 'Synchronizing...' : 'Deploy Content Specifications'}

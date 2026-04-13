@@ -33,10 +33,12 @@ router.get('/:id', async (req, res) => {
 // @desc    Create a service
 router.post('/', async (req, res) => {
   try {
-    const { title, department, category } = req.body;
+    const { title, titleAm, department, departmentAm, category } = req.body;
     const newService = await db.insert(services).values({
       title,
+      titleAm,
       department,
+      departmentAm,
       category
     }).returning();
     res.json(newService[0]);
@@ -50,9 +52,9 @@ router.post('/', async (req, res) => {
 // @desc    Update a service
 router.put('/:id', async (req, res) => {
   try {
-    const { title, department, category } = req.body;
+    const { title, titleAm, department, departmentAm, category } = req.body;
     const updated = await db.update(services)
-      .set({ title, department, category })
+      .set({ title, titleAm, department, departmentAm, category })
       .where(eq(services.id, parseInt(req.params.id)))
       .returning();
     

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { X, ZoomIn, Camera, Calendar, Tag } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const GalleryCard = ({ item, onClick }) => {
+  const { language } = useLanguage();
+  const title = language === 'am' && item.titleAm ? item.titleAm : item.title;
+
   return (
     <div
       onClick={() => onClick(item)}
@@ -10,7 +14,7 @@ const GalleryCard = ({ item, onClick }) => {
       {/* Image */}
       <img 
         src={item.url} 
-        alt={item.title} 
+        alt={title} 
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
 
@@ -24,11 +28,9 @@ const GalleryCard = ({ item, onClick }) => {
       {/* Info Overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
       <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-        <span className="inline-block px-2 py-0.5 bg-brand/80 backdrop-blur-sm rounded-full text-[9px] font-black text-white uppercase tracking-widest mb-2">
-           {item.size || 'Image'}
-        </span>
+
         <h3 className="text-base font-black text-white leading-snug line-clamp-2">
-          {item.title}
+          {title}
         </h3>
         <p className="text-[10px] text-white/60 font-bold mt-1 uppercase tracking-tighter">
           {item.date || (item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'N/A')}
@@ -39,7 +41,12 @@ const GalleryCard = ({ item, onClick }) => {
 };
 
 const Lightbox = ({ item, onClose }) => {
+  const { language, t } = useLanguage();
   if (!item) return null;
+  
+  const title = language === 'am' && item.titleAm ? item.titleAm : item.title;
+  const description = language === 'am' && item.descriptionAm ? item.descriptionAm : (item.description || "This image was captured and uploaded by the Woreda 05 administration to document the progress and spirit of our community projects.");
+
   return (
     <div
       className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-6"
@@ -61,7 +68,7 @@ const Lightbox = ({ item, onClose }) => {
           <div className="md:w-2/3 h-[300px] md:h-[500px] bg-slate-900 border-r border-slate-100">
              <img 
               src={item.url} 
-              alt={item.title} 
+              alt={title} 
               className="w-full h-full object-contain"
             />
           </div>
@@ -76,20 +83,19 @@ const Lightbox = ({ item, onClose }) => {
                 <Calendar className="w-2.5 h-2.5" /> {item.date || (item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'N/A')}
               </span>
             </div>
-            <h2 className="text-2xl font-black text-black mb-3 tracking-tighter leading-snug">{item.title}</h2>
+            <h2 className="text-2xl font-black text-black mb-3 tracking-tighter leading-snug">{title}</h2>
             <p className="text-sm text-black/50 font-medium leading-relaxed flex-1">
-               {item.description || "This image was captured and uploaded by the Woreda 05 administration to document the progress and spirit of our community projects."}
+               {description}
             </p>
             
             <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
-               <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Size: {item.size}</span>
                <a 
                  href={item.url} 
                  target="_blank" 
                  rel="noreferrer"
                  className="text-[10px] font-black text-brand uppercase tracking-widest hover:underline"
                >
-                 View Original
+                 {language === 'am' ? 'ዋናውን ምስል ይመልከቱ' : 'View Original'}
                </a>
             </div>
           </div>
@@ -103,6 +109,7 @@ const GalleryPage = () => {
   const [galleryItems, setGalleryItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
+  const { language, t } = useLanguage();
 
   useEffect(() => {
     fetch('http://localhost:5000/api/gallery')
@@ -123,7 +130,6 @@ const GalleryPage = () => {
       });
   }, []);
 
-
   return (
     <div className="bg-white min-h-screen pt-4 pb-40 lg:pt-8">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
@@ -131,13 +137,13 @@ const GalleryPage = () => {
         {/* Header */}
         <div className="text-center mb-14 pt-4">
           <div className="inline-block px-6 py-2 rounded-full bg-brand/10 text-brand font-black text-[10px] uppercase tracking-[0.4em] mb-6">
-            Woreda 05 Media
+            {t('hero_welcome')}
           </div>
           <h1 className="text-5xl md:text-7xl font-black text-black leading-tight mb-4 tracking-tighter">
-            Community
+            {t('nav_gallery').split(' ')[0]}
             <br />
             <span className="relative inline-block">
-              Gallery
+              {t('nav_gallery').split(' ').slice(1).join(' ') || 'Media'}
               <span
                 className="absolute left-0 -bottom-2 w-full rounded-full"
                 style={{
@@ -151,7 +157,7 @@ const GalleryPage = () => {
             </span>
           </h1>
           <p className="text-base text-black/40 font-bold max-w-xl mx-auto mt-6">
-            A visual journey through the events, initiatives, and milestones shaping Woreda 05.
+            {language === 'am' ? 'ወረዳ 05ን የሚቀርጹ ዝግጅቶች፣ ተግባራት እና ትልልቅ ስኬቶች የእይታ ጉዞ።' : 'A visual journey through the events, initiatives, and milestones shaping Woreda 05.'}
           </p>
         </div>
 
@@ -160,7 +166,7 @@ const GalleryPage = () => {
           <div className="flex items-center gap-2">
             <Camera className="w-4 h-4 text-brand" />
             <span className="text-sm font-black text-black/40 uppercase tracking-widest">
-              {galleryItems.length} {galleryItems.length === 1 ? 'Photo' : 'Photos'}
+              {galleryItems.length} {language === 'am' ? 'ፎቶዎች' : (galleryItems.length === 1 ? 'Photo' : 'Photos')}
             </span>
           </div>
         </div>
@@ -168,7 +174,9 @@ const GalleryPage = () => {
         {/* Grid */}
         {loading ? (
            <div className="py-24 text-center">
-            <p className="text-xl font-black text-black/20 uppercase tracking-widest animate-pulse">Loading gallery images...</p>
+            <p className="text-xl font-black text-black/20 uppercase tracking-widest animate-pulse">
+               {language === 'am' ? 'ፎቶዎችን በመጫን ላይ...' : 'Loading gallery images...'}
+            </p>
           </div>
         ) : galleryItems.length > 0 ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -179,7 +187,9 @@ const GalleryPage = () => {
         ) : (
           <div className="py-24 text-center">
             <Camera className="w-12 h-12 text-black/10 mx-auto mb-4" />
-            <p className="text-xl font-black text-black/20 uppercase tracking-widest">No photos found in the gallery</p>
+            <p className="text-xl font-black text-black/20 uppercase tracking-widest">
+               {language === 'am' ? 'በጋለሪ ውስጥ ምንም ፎቶ አልተገኘም' : 'No photos found in the gallery'}
+            </p>
           </div>
         )}
 

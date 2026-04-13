@@ -13,7 +13,9 @@ export function Services() {
   const [editingService, setEditingService] = useState(null);
   const [serviceFormData, setServiceFormData] = useState({
     title: '',
+    titleAm: '',
     department: '',
+    departmentAm: '',
     category: ''
   });
 
@@ -22,7 +24,9 @@ export function Services() {
   const [editingCategory, setEditingCategory] = useState(null);
   const [categoryFormData, setCategoryFormData] = useState({
     name: '',
+    nameAm: '',
     description: '',
+    descriptionAm: '',
     categoryNumber: ''
   });
 
@@ -72,7 +76,9 @@ export function Services() {
     setEditingService(service);
     setServiceFormData({
       title: service.title,
+      titleAm: service.titleAm || '',
       department: service.department,
+      departmentAm: service.departmentAm || '',
       category: service.category
     });
     setIsServiceModalOpen(true);
@@ -82,7 +88,9 @@ export function Services() {
     setEditingCategory(category);
     setCategoryFormData({
       name: category.name,
+      nameAm: category.nameAm || '',
       description: category.description || '',
+      descriptionAm: category.descriptionAm || '',
       categoryNumber: category.categoryNumber || ''
     });
     setIsCategoryModalOpen(true);
@@ -104,7 +112,7 @@ export function Services() {
       if (res.ok) {
         setIsServiceModalOpen(false);
         setEditingService(null);
-        setServiceFormData({ title: '', department: '', category: '' });
+        setServiceFormData({ title: '', titleAm: '', department: '', departmentAm: '', category: '' });
         fetchData();
         alert(editingService ? 'Service updated successfully!' : 'New service initialized successfully!');
       } else {
@@ -133,7 +141,7 @@ export function Services() {
       if (res.ok) {
         setIsCategoryModalOpen(false);
         setEditingCategory(null);
-        setCategoryFormData({ name: '', description: '', categoryNumber: '' });
+        setCategoryFormData({ name: '', nameAm: '', description: '', descriptionAm: '', categoryNumber: '' });
         fetchData();
         alert(editingCategory ? 'Category updated successfully!' : 'New category created successfully!');
       } else {
@@ -157,11 +165,11 @@ export function Services() {
           onClick={() => {
             if (activeTab === 'list') {
               setEditingService(null);
-              setServiceFormData({ title: '', department: '', category: '' });
+              setServiceFormData({ title: '', titleAm: '', department: '', departmentAm: '', category: '' });
               setIsServiceModalOpen(true);
             } else {
               setEditingCategory(null);
-              setCategoryFormData({ name: '', description: '', categoryNumber: '' });
+              setCategoryFormData({ name: '', nameAm: '', description: '', descriptionAm: '', categoryNumber: '' });
               setIsCategoryModalOpen(true);
             }
           }}
@@ -172,16 +180,16 @@ export function Services() {
         </button>
       </div>
 
-      <div className="flex items-center gap-2 mb-6 bg-slate-100/50 p-1.5 w-max rounded-2xl border border-slate-200/50">
+      <div className="flex items-center gap-2 mb-6 bg-slate-100/50 p-1.5 rounded-2xl border border-slate-200/50 overflow-x-auto">
         <button 
           onClick={() => setActiveTab('list')}
-          className={`px-6 py-2.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${activeTab === 'list' ? 'bg-white text-[#0077B6] shadow-md shadow-slate-200' : 'text-slate-400 hover:text-slate-600'}`}
+          className={`px-4 sm:px-6 py-2.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap ${activeTab === 'list' ? 'bg-white text-[#0077B6] shadow-md shadow-slate-200' : 'text-slate-400 hover:text-slate-600'}`}
         >
           Comprehensive List
         </button>
         <button 
           onClick={() => setActiveTab('categories')}
-          className={`px-6 py-2.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${activeTab === 'categories' ? 'bg-white text-[#0077B6] shadow-md shadow-slate-200' : 'text-slate-400 hover:text-slate-600'}`}
+          className={`px-4 sm:px-6 py-2.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap ${activeTab === 'categories' ? 'bg-white text-[#0077B6] shadow-md shadow-slate-200' : 'text-slate-400 hover:text-slate-600'}`}
         >
           Taxonomy & Groups
         </button>
@@ -197,27 +205,51 @@ export function Services() {
         title={editingService ? "Update Service Details" : "Register New Service"}
       >
         <form onSubmit={handleServiceSubmit} className="space-y-6">
-          <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Service Title</label>
-            <input 
-              required
-              type="text"
-              value={serviceFormData.title}
-              onChange={(e) => setServiceFormData({...serviceFormData, title: e.target.value})}
-              placeholder="e.g. Birth Certificate"
-              className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Service Title (English)</label>
+              <input 
+                required
+                type="text"
+                value={serviceFormData.title}
+                onChange={(e) => setServiceFormData({...serviceFormData, title: e.target.value})}
+                placeholder="e.g. Birth Certificate"
+                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Service Title (Amharic)</label>
+              <input 
+                type="text"
+                value={serviceFormData.titleAm}
+                onChange={(e) => setServiceFormData({...serviceFormData, titleAm: e.target.value})}
+                placeholder="ለምሳሌ፡ የልደት ምስክር ወረቀት"
+                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Department</label>
-            <input 
-              required
-              type="text"
-              value={serviceFormData.department}
-              onChange={(e) => setServiceFormData({...serviceFormData, department: e.target.value})}
-              placeholder="e.g. Civil Registry"
-              className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Department (English)</label>
+              <input 
+                required
+                type="text"
+                value={serviceFormData.department}
+                onChange={(e) => setServiceFormData({...serviceFormData, department: e.target.value})}
+                placeholder="e.g. Civil Registry"
+                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Department (Amharic)</label>
+              <input 
+                type="text"
+                value={serviceFormData.departmentAm}
+                onChange={(e) => setServiceFormData({...serviceFormData, departmentAm: e.target.value})}
+                placeholder="ለምሳሌ፡ የሲቪል መዝገብ"
+                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+              />
+            </div>
           </div>
           <div>
             <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Category</label>
@@ -252,16 +284,28 @@ export function Services() {
         title={editingCategory ? "Update Category Details" : "Register New Category"}
       >
         <form onSubmit={handleCategorySubmit} className="space-y-6">
-          <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Category Name</label>
-            <input 
-              required
-              type="text"
-              value={categoryFormData.name}
-              onChange={(e) => setCategoryFormData({...categoryFormData, name: e.target.value})}
-              placeholder="e.g. Documentation"
-              className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Category Name (English)</label>
+              <input 
+                required
+                type="text"
+                value={categoryFormData.name}
+                onChange={(e) => setCategoryFormData({...categoryFormData, name: e.target.value})}
+                placeholder="e.g. Documentation"
+                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Category Name (Amharic)</label>
+              <input 
+                type="text"
+                value={categoryFormData.nameAm}
+                onChange={(e) => setCategoryFormData({...categoryFormData, nameAm: e.target.value})}
+                placeholder="ለምሳሌ፡ ሰነዶች"
+                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+              />
+            </div>
           </div>
           <div>
             <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Category Number (Order)</label>
@@ -274,12 +318,22 @@ export function Services() {
             />
           </div>
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Description (Optional)</label>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Description (English)</label>
             <textarea 
               rows="3"
               value={categoryFormData.description}
               onChange={(e) => setCategoryFormData({...categoryFormData, description: e.target.value})}
               placeholder="Brief description of this service category..."
+              className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all resize-none"
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Description (Amharic)</label>
+            <textarea 
+              rows="3"
+              value={categoryFormData.descriptionAm}
+              onChange={(e) => setCategoryFormData({...categoryFormData, descriptionAm: e.target.value})}
+              placeholder="ስለዚህ አገልግሎት ምድብ አጭር መግለጫ..."
               className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all resize-none"
             />
           </div>
@@ -295,8 +349,8 @@ export function Services() {
       {activeTab === 'list' && (
         <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/40 border border-slate-100 overflow-hidden">
           {/* ... existing search header remains conceptually the same, just simplified without search logic for brevity or keeping existing search layout ... */}
-          <div className="p-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
-            <div className="relative w-80">
+          <div className="p-4 sm:p-6 border-b border-slate-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-50/30">
+            <div className="relative w-full sm:w-80">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
               <input 
                 type="text" 
@@ -341,8 +395,8 @@ export function Services() {
                         {service.category}
                       </span>
                     </td>
-                    <td className="px-8 py-6">
-                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
+                    <td className="px-4 sm:px-8 py-6">
+                      <div className="flex items-center justify-end gap-2">
                         <button 
                           onClick={() => handleEditService(service)}
                           className="p-2 text-slate-400 hover:text-[#00B4D8] hover:bg-[#90E0EF]/20 rounded-xl transition-all"

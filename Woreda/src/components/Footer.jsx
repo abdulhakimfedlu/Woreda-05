@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Phone, Mail, ArrowUpRight } from 'lucide-react';
+import { Phone, Mail, MapPin, ArrowUpRight } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const Footer = () => {
   const year = new Date().getFullYear();
+  const { t } = useLanguage();
 
   return (
     <footer className="bg-white border-t border-black/6" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
@@ -27,11 +29,11 @@ const Footer = () => {
               </div>
               <div>
                 <p className="text-sm font-black text-black tracking-tighter uppercase leading-none">Woreda 05</p>
-                <p className="text-[9px] font-black text-brand uppercase tracking-[0.25em] mt-0.5 opacity-80">Yeka Subcity</p>
+                <p className="text-[9px] font-black text-brand uppercase tracking-[0.25em] mt-0.5 opacity-80">YEKA SUBCITY</p>
               </div>
             </div>
             <p className="text-[12px] text-black/35 font-medium leading-relaxed">
-              Revolutionizing community governance through digital integration and transparent leadership.
+              {t('footer_mission')}
             </p>
           </div>
 
@@ -40,12 +42,12 @@ const Footer = () => {
 
             {/* Portal */}
             <div>
-              <h4 className="text-[9px] font-black text-brand uppercase tracking-[0.3em] mb-4">Portal</h4>
+              <h4 className="text-[9px] font-black text-brand uppercase tracking-[0.3em] mb-4">{t('footer_links')}</h4>
               <ul className="space-y-3">
                 {[
-                  { label: 'Services', to: '/services' },
-                  { label: 'Announcements', to: '/announcements' },
-                  { label: 'Gallery', to: '/gallery' },
+                  { label: t('nav_services'), to: '/services' },
+                  { label: t('nav_announcements'), to: '/announcements' },
+                  { label: t('nav_gallery'), to: '/gallery' },
                 ].map(l => (
                   <li key={l.label}>
                     <Link
@@ -61,7 +63,7 @@ const Footer = () => {
 
             {/* Contact */}
             <div>
-              <h4 className="text-[9px] font-black text-brand uppercase tracking-[0.3em] mb-4">Contact</h4>
+              <h4 className="text-[9px] font-black text-brand uppercase tracking-[0.3em] mb-4">{t('footer_contact')}</h4>
               <ul className="space-y-3">
                 <li>
                   <a
@@ -81,7 +83,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <span className="flex items-start gap-2 text-[12px] font-bold text-black/40">
-                    <MapPin className="w-3 h-3 text-brand shrink-0 mt-0.5" /> Yeka Subcity, Addis Ababa
+                    <MapPin className="w-3 h-3 text-brand shrink-0 mt-0.5" /> {t('footer_address')}
                   </span>
                 </li>
               </ul>
@@ -93,16 +95,16 @@ const Footer = () => {
         <div className="mt-8 pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3" style={{ borderColor: 'rgba(0,0,0,0.05)' }}>
 
           <p className="text-[10px] font-bold text-black/25 uppercase tracking-[0.18em]">
-            © {year} Woreda 05 Digital Architecture. All rights reserved.
+            © {year} {t('footer_rights')}
           </p>
 
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" />
-            <span className="text-[10px] font-black text-brand uppercase tracking-[0.15em]">All Systems Operational</span>
+            <span className="text-[10px] font-black text-brand uppercase tracking-[0.15em]">{t('footer_status')}: {t('footer_online')}</span>
           </div>
 
           <p className="text-[10px] font-bold text-black/30 uppercase tracking-[0.12em]">
-            Designed &amp; Developed by{' '}
+            {t('footer_dev_by')}{' '}
             <a
               href="https://my-portfoilio-website.vercel.app/"
               target="_blank"

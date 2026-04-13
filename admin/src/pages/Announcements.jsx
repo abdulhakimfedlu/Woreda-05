@@ -9,8 +9,11 @@ export function Announcements() {
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
+    titleAm: '',
     content: '',
+    contentAm: '',
     status: 'Published',
+    category: 'Urgent',
     author: 'Admin'
   });
 
@@ -44,8 +47,11 @@ export function Announcements() {
     setEditingItem(announcement);
     setFormData({
       title: announcement.title,
+      titleAm: announcement.titleAm || '',
       content: announcement.content,
+      contentAm: announcement.contentAm || '',
       status: announcement.status,
+      category: announcement.category || 'Urgent',
       author: announcement.author
     });
     setIsModalOpen(true);
@@ -67,7 +73,7 @@ export function Announcements() {
       if (res.ok) {
         setIsModalOpen(false);
         setEditingItem(null);
-        setFormData({ title: '', status: 'Published', author: '', content: '' });
+        setFormData({ title: '', titleAm: '', status: 'Published', category: 'Urgent', author: 'Admin', content: '', contentAm: '' });
         fetchAnnouncements();
         alert(editingItem ? 'Announcement updated!' : 'Announcement created successfully!');
       } else {
@@ -90,7 +96,7 @@ export function Announcements() {
         <button 
           onClick={() => {
             setEditingItem(null);
-            setFormData({ title: '', content: '', status: 'Published', author: 'Admin' });
+            setFormData({ title: '', titleAm: '', content: '', contentAm: '', status: 'Published', category: 'Urgent', author: 'Admin' });
             setIsModalOpen(true);
           }}
           className="flex items-center px-6 py-3 bg-[#00B4D8] text-white text-sm font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-[#00B4D8]/30 hover:bg-[#0077B6] hover:-translate-y-0.5 transition-all"
@@ -110,38 +116,51 @@ export function Announcements() {
         title={editingItem ? "Update Announcement" : "Create New Announcement"}
       >
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Title</label>
-            <input 
-              required
-              type="text"
-              value={formData.title}
-              onChange={(e) => setFormData({...formData, title: e.target.value})}
-              placeholder="e.g. Office Closure Notice"
-              className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Title (English)</label>
+              <input 
+                required
+                type="text"
+                value={formData.title}
+                onChange={(e) => setFormData({...formData, title: e.target.value})}
+                placeholder="e.g. Office Closure Notice"
+                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Title (Amharic / አማርኛ)</label>
+              <input 
+                type="text"
+                value={formData.titleAm}
+                onChange={(e) => setFormData({...formData, titleAm: e.target.value})}
+                placeholder="ለምሳሌ፡ የቢሮ መዘጊያ ማስታወቂያ"
+                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+              />
+            </div>
           </div>
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Content</label>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Content (English)</label>
             <textarea 
               required
-              rows="5"
+              rows="4"
               value={formData.content}
               onChange={(e) => setFormData({...formData, content: e.target.value})}
               placeholder="Provide detailed announcement details..."
               className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all resize-none"
             />
           </div>
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Author</label>
-              <input 
-                type="text"
-                value={formData.author}
-                onChange={(e) => setFormData({...formData, author: e.target.value})}
-                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
-              />
-            </div>
+          <div>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Content (Amharic / አማርኛ)</label>
+            <textarea 
+              rows="4"
+              value={formData.contentAm}
+              onChange={(e) => setFormData({...formData, contentAm: e.target.value})}
+              placeholder="ዝርዝር ማስታወቂያ እዚህ ጋር ይጥቀሱ..."
+              className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all resize-none"
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Status</label>
               <select 
@@ -154,6 +173,27 @@ export function Announcements() {
                 <option value="Urgent">Urgent</option>
               </select>
             </div>
+            <div>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Category</label>
+              <select 
+                value={formData.category}
+                onChange={(e) => setFormData({...formData, category: e.target.value})}
+                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+              >
+                <option value="Urgent">Urgent</option>
+                <option value="Team">Team (Employee News)</option>
+                <option value="Work">Work (Job Opps)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Author</label>
+            <input 
+              type="text"
+              value={formData.author}
+              onChange={(e) => setFormData({...formData, author: e.target.value})}
+              className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+            />
           </div>
           <button 
             type="submit"
@@ -165,8 +205,8 @@ export function Announcements() {
       </Modal>
 
       <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/40 border border-slate-100 overflow-hidden">
-        <div className="p-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
-          <div className="relative w-72">
+        <div className="p-4 sm:p-6 border-b border-slate-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-50/30">
+          <div className="relative w-full sm:w-72">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
             <input 
               type="text" 
@@ -185,6 +225,7 @@ export function Announcements() {
               <tr className="bg-slate-50/50 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
                 <th className="px-8 py-4">Article Title</th>
                 <th className="px-8 py-4 w-40">Date</th>
+                <th className="px-8 py-4 w-32">Category</th>
                 <th className="px-8 py-4 w-32">Status</th>
                 <th className="px-8 py-4 w-32">Author</th>
                 <th className="px-8 py-4 w-32 text-right">Actions</th>
@@ -192,9 +233,9 @@ export function Announcements() {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {loading ? (
-                <tr><td colSpan="5" className="text-center py-12 text-slate-300 font-black uppercase tracking-widest animate-pulse">Synchronizing Data...</td></tr>
+                <tr><td colSpan="6" className="text-center py-12 text-slate-300 font-black uppercase tracking-widest animate-pulse">Synchronizing Data...</td></tr>
               ) : announcements.length === 0 ? (
-                <tr><td colSpan="5" className="text-center py-12 text-slate-300 font-bold">No announcements found in registry</td></tr>
+                <tr><td colSpan="6" className="text-center py-12 text-slate-300 font-bold">No announcements found in registry</td></tr>
               ) : announcements.map((announcement) => (
                 <tr key={announcement.id} className="hover:bg-slate-50/50 transition-all group">
                   <td className="px-8 py-5">
@@ -206,6 +247,17 @@ export function Announcements() {
                       <Calendar className="w-3.5 h-3.5 mr-2 text-[#00B4D8]" />
                       {announcement.createdAt ? new Date(announcement.createdAt).toLocaleDateString() : 'N/A'}
                     </div>
+                  </td>
+                  <td className="px-8 py-5">
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${
+                      announcement.category === 'Urgent' 
+                        ? 'bg-red-50 text-red-600 border border-red-100'
+                        : announcement.category === 'Team'
+                        ? 'bg-blue-50 text-blue-600 border border-blue-100'
+                        : 'bg-indigo-50 text-indigo-600 border border-indigo-100'
+                    }`}>
+                      {announcement.category || 'Urgent'}
+                    </span>
                   </td>
                   <td className="px-8 py-5">
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${
@@ -221,8 +273,8 @@ export function Announcements() {
                   <td className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-tight">
                     {announcement.author}
                   </td>
-                  <td className="px-8 py-5">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
+                  <td className="px-4 sm:px-8 py-5">
+                    <div className="flex items-center justify-end gap-2">
                       <button 
                         onClick={() => handleEdit(announcement)}
                         className="p-2 text-slate-400 hover:text-[#00B4D8] hover:bg-[#90E0EF]/20 rounded-xl transition-all"

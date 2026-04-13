@@ -20,10 +20,12 @@ router.get('/', async (req, res) => {
 // @desc    Create a category
 router.post('/', async (req, res) => {
   try {
-    const { name, description, categoryNumber } = req.body;
+    const { name, nameAm, description, descriptionAm, categoryNumber } = req.body;
     const newCategory = await db.insert(categories).values({
       name,
+      nameAm,
       description,
+      descriptionAm,
       categoryNumber: categoryNumber ? parseInt(categoryNumber) : 0
     }).returning();
     res.json(newCategory[0]);
@@ -37,11 +39,13 @@ router.post('/', async (req, res) => {
 // @desc    Update a category
 router.put('/:id', async (req, res) => {
   try {
-    const { name, description, categoryNumber } = req.body;
+    const { name, nameAm, description, descriptionAm, categoryNumber } = req.body;
     const updated = await db.update(categories)
       .set({ 
         name, 
+        nameAm,
         description,
+        descriptionAm,
         categoryNumber: categoryNumber ? parseInt(categoryNumber) : 0
       })
       .where(eq(categories.id, parseInt(req.params.id)))

@@ -32,9 +32,9 @@ router.put('/:serviceId', async (req, res) => {
   try {
     const serviceId = parseInt(req.params.serviceId);
     const { 
-      description, requirements, officerName, officerRole, 
+      description, descriptionAm, requirements, requirementsAm, officerName, officerNameAm, officerRole, officerRoleAm, 
       officerPhoto, contactPhone, contactEmail, officeNumber, 
-      hours, additionalDetails 
+      hours, additionalDetails, additionalDetailsAm, bannerPhoto
     } = req.body;
 
     // Check if it already exists
@@ -44,9 +44,9 @@ router.put('/:serviceId', async (req, res) => {
       // Update
       const updated = await db.update(serviceDetails)
         .set({
-          description, requirements, officerName, officerRole, 
+          description, descriptionAm, requirements, requirementsAm, officerName, officerNameAm, officerRole, officerRoleAm, 
           officerPhoto, contactPhone, contactEmail, officeNumber, 
-          hours, additionalDetails
+          hours, additionalDetails, additionalDetailsAm, bannerPhoto
         })
         .where(eq(serviceDetails.serviceId, serviceId))
         .returning();
@@ -55,9 +55,9 @@ router.put('/:serviceId', async (req, res) => {
       // Insert
       const inserted = await db.insert(serviceDetails)
         .values({
-          serviceId, description, requirements, officerName, officerRole, 
+          serviceId, description, descriptionAm, requirements, requirementsAm, officerName, officerNameAm, officerRole, officerRoleAm, 
           officerPhoto, contactPhone, contactEmail, officeNumber, 
-          hours, additionalDetails
+          hours, additionalDetails, additionalDetailsAm, bannerPhoto
         })
         .returning();
       res.json(inserted[0]);

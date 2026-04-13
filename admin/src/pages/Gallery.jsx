@@ -12,8 +12,10 @@ export function Gallery() {
   
   const [formData, setFormData] = useState({
     title: '',
+    titleAm: '',
     url: '',
     description: '',
+    descriptionAm: '',
     date: new Date().toISOString().split('T')[0],
     size: '0 MB'
   });
@@ -48,8 +50,10 @@ export function Gallery() {
     setEditingItem(image);
     setFormData({
       title: image.title,
+      titleAm: image.titleAm || '',
       url: image.url,
       description: image.description || '',
+      descriptionAm: image.descriptionAm || '',
       date: image.date || new Date().toISOString().split('T')[0],
       size: image.size || '0 MB'
     });
@@ -113,7 +117,7 @@ export function Gallery() {
         setIsModalOpen(false);
         setEditingItem(null);
         setSelectedFile(null);
-        setFormData({ title: '', url: '', description: '', date: new Date().toISOString().split('T')[0], size: '0 MB' });
+        setFormData({ title: '', titleAm: '', url: '', description: '', descriptionAm: '', date: new Date().toISOString().split('T')[0], size: '0 MB' });
         fetchGallery();
       }
     } catch (error) {
@@ -139,7 +143,7 @@ export function Gallery() {
           <button 
             onClick={() => {
               setEditingItem(null);
-              setFormData({ title: '', url: '', description: '', date: new Date().toISOString().split('T')[0], size: '0 MB' });
+              setFormData({ title: '', titleAm: '', url: '', description: '', descriptionAm: '', date: new Date().toISOString().split('T')[0], size: '0 MB' });
               setSelectedFile(null);
               setIsModalOpen(true);
             }}
@@ -163,8 +167,9 @@ export function Gallery() {
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-6">
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Asset Title</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Asset Title (English)</label>
               <input 
                 required
                 type="text"
@@ -174,6 +179,17 @@ export function Gallery() {
                 className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
               />
             </div>
+            <div>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Asset Title (Amharic)</label>
+              <input 
+                type="text"
+                value={formData.titleAm}
+                onChange={(e) => setFormData({...formData, titleAm: e.target.value})}
+                placeholder="ለምሳሌ፡ የማህበረሰብ ጽዳት ቀን"
+                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+              />
+            </div>
+          </div>
             
             <div className="grid grid-cols-2 gap-6">
                <div>
@@ -204,12 +220,22 @@ export function Gallery() {
             </div>
 
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Description</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Description (English)</label>
               <textarea 
                 rows="3"
                 value={formData.description}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
                 placeholder="Briefly describe this media asset..."
+                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all resize-none"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Description (Amharic)</label>
+              <textarea 
+                rows="3"
+                value={formData.descriptionAm}
+                onChange={(e) => setFormData({...formData, descriptionAm: e.target.value})}
+                placeholder="ስለዚህ ምስል አጭር መግለጫ..."
                 className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all resize-none"
               />
             </div>

@@ -20,11 +20,14 @@ router.get('/', async (req, res) => {
 // @desc    Create an announcement
 router.post('/', async (req, res) => {
   try {
-    const { title, content, status, author } = req.body;
+    const { title, titleAm, content, contentAm, status, category, author } = req.body;
     const newAnnouncement = await db.insert(announcements).values({
       title,
+      titleAm,
       content,
+      contentAm,
       status,
+      category,
       author
     }).returning();
     res.json(newAnnouncement[0]);
@@ -38,9 +41,9 @@ router.post('/', async (req, res) => {
 // @desc    Update an announcement
 router.put('/:id', async (req, res) => {
   try {
-    const { title, content, status, author } = req.body;
+    const { title, titleAm, content, contentAm, status, category, author } = req.body;
     const updated = await db.update(announcements)
-      .set({ title, content, status, author })
+      .set({ title, titleAm, content, contentAm, status, category, author })
       .where(eq(announcements.id, parseInt(req.params.id)))
       .returning();
     

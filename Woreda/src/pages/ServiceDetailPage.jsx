@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import {
-  ArrowLeft,
-  MapPin,
-  Clock,
-  PhoneCall,
-  Mail,
-  CheckCircle2,
-  ChevronRight,
-  Shield,
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { 
+  ArrowLeft, 
+  Shield, 
+  MapPin, 
+  Clock, 
+  PhoneCall, 
+  Mail, 
+  CheckCircle2, 
+  ChevronRight 
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const OFFICE_BANNER = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1400&auto=format&fit=crop';
 
@@ -18,6 +19,7 @@ const ServiceDetailPage = () => {
   const navigate = useNavigate();
   const [serviceData, setServiceData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { language, t } = useLanguage();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -36,15 +38,23 @@ const ServiceDetailPage = () => {
   }, [id]);
 
   if (loading) {
-     return <div className="pt-40 pb-20 text-center"><p className="text-xl font-bold text-slate-400 uppercase tracking-widest animate-pulse">Loading Details...</p></div>;
+    return (
+      <div className="pt-40 pb-20 text-center">
+        <p className="text-xl font-bold text-slate-400 uppercase tracking-widest animate-pulse">
+          {language === 'am' ? 'በመጫን ላይ...' : 'Loading Details...'}
+        </p>
+      </div>
+    );
   }
 
   if (!serviceData) {
     return (
       <div className="pt-40 pb-20 text-center">
-        <h2 className="text-4xl font-black mb-8 text-slate-800">Service Not Found</h2>
+        <h2 className="text-4xl font-black mb-8 text-slate-800">
+          {language === 'am' ? 'አገልግሎቱ አልተገኘም' : 'Service Not Found'}
+        </h2>
         <Link to="/services" className="text-brand font-black hover:underline uppercase tracking-widest">
-          Back to Services
+          {t('sd_back')}
         </Link>
       </div>
     );
@@ -53,12 +63,20 @@ const ServiceDetailPage = () => {
   const service = serviceData;
   const details = service.details || {};
   
-  const description = details.description;
-  const requirements = Array.isArray(details.requirements) && details.requirements.length > 0 ? details.requirements : null;
-  const additionalDetails = details.additionalDetails;
-
-  const hasOfficerInfo = details.officerName || details.officerRole || details.officerPhoto;
+  const title = language === 'am' && service.titleAm ? service.titleAm : (service.title || service.name);
+  const department = language === 'am' && service.departmentAm ? service.departmentAm : service.department;
+  const description = language === 'am' && details.descriptionAm ? details.descriptionAm : details.description;
+  const officerName = language === 'am' && details.officerNameAm ? details.officerNameAm : details.officerName;
+  const officerRole = language === 'am' && details.officerRoleAm ? details.officerRoleAm : details.officerRole;
+  const additionalDetails = language === 'am' && details.additionalDetailsAm ? details.additionalDetailsAm : details.additionalDetails;
   
+  const rawRequirements = language === 'am' && Array.isArray(details.requirementsAm) && details.requirementsAm.length > 0 
+    ? details.requirementsAm 
+    : (Array.isArray(details.requirements) && details.requirements.length > 0 ? details.requirements : null);
+    
+  const requirements = rawRequirements;
+
+  const hasOfficerInfo = officerName || officerRole || details.officerPhoto;
   const hasContactInfo = details.contactPhone || details.contactEmail;
   const hasLocationHoursInfo = details.officeNumber || details.hours;
 
@@ -68,8 +86,8 @@ const ServiceDetailPage = () => {
       {/* ── OFFICE BANNER ──────────────────────────────────────────── */}
       <div className="relative w-full h-[360px] md:h-[460px] overflow-hidden">
         <img
-          src={OFFICE_BANNER}
-          alt="Woreda 05 Office Building"
+          src={details.bannerPhoto || OFFICE_BANNER}
+          alt="Office Banner"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
         {/* Overlay */}
@@ -90,7 +108,7 @@ const ServiceDetailPage = () => {
             <div className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:bg-brand/40 transition-colors">
               <ArrowLeft className="w-4 h-4" />
             </div>
-            <span className="text-[11px] font-black uppercase tracking-[0.2em]">All Services</span>
+            <span className="text-[11px] font-black uppercase tracking-[0.2em]">{t('nav_all_services')}</span>
           </button>
         </div>
 
@@ -99,11 +117,11 @@ const ServiceDetailPage = () => {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand/25 border border-brand/40 backdrop-blur-sm mb-4">
             <Shield className="w-3 h-3 text-brand" />
             <span className="text-brand font-black text-[9px] uppercase tracking-[0.3em]">
-              {service.category} {details.officeNumber && `· ${details.officeNumber}`}
+              {department || service.category} {details.officeNumber && `· ${details.officeNumber}`}
             </span>
           </div>
           <h1 className="text-4xl md:text-6xl font-black text-white leading-tight tracking-tighter max-w-3xl">
-            {service.title || service.name}
+            {title}
           </h1>
         </div>
       </div>
@@ -118,7 +136,7 @@ const ServiceDetailPage = () => {
                 <div className="w-36 h-36 md:w-44 md:h-44 rounded-3xl overflow-hidden border-4 border-white shadow-2xl shadow-black/15 shrink-0">
                     <img
                       src={details.officerPhoto}
-                      alt={details.officerName || "Officer"}
+                      alt={officerName || "Officer"}
                       className="w-full h-full object-cover"
                     />
                 </div>
@@ -127,16 +145,16 @@ const ServiceDetailPage = () => {
               {/* Officer info */}
               <div className="flex-1 text-center sm:text-left pt-2">
                 <p className="text-[10px] font-black text-brand uppercase tracking-[0.35em] mb-2">
-                  Officer Responsible
+                  {t('sd_officer')}
                 </p>
-                {details.officerName && (
+                {officerName && (
                   <h2 className="text-3xl md:text-4xl font-black text-black tracking-tighter leading-none mb-2">
-                    {details.officerName}
+                    {officerName}
                   </h2>
                 )}
-                {details.officerRole && (
+                {officerRole && (
                   <p className="text-base font-bold text-black/40 uppercase tracking-widest mb-4">
-                    {details.officerRole}
+                    {officerRole}
                   </p>
                 )}
 
@@ -179,7 +197,7 @@ const ServiceDetailPage = () => {
               <section>
                 <div className="flex items-center gap-3 mb-5">
                   <span className="w-8 h-[3px] bg-brand rounded-full" />
-                  <h2 className="text-[10px] font-black text-black/35 uppercase tracking-[0.3em]">Overview</h2>
+                  <h2 className="text-[10px] font-black text-black/35 uppercase tracking-[0.3em]">{t('sd_overview')}</h2>
                 </div>
                 <p className="text-xl md:text-2xl text-black/55 font-semibold leading-relaxed">
                   {description}
@@ -192,7 +210,7 @@ const ServiceDetailPage = () => {
               <section>
                 <div className="flex items-center gap-3 mb-7">
                   <span className="w-8 h-[3px] bg-brand rounded-full" />
-                  <h2 className="text-[10px] font-black text-black/35 uppercase tracking-[0.3em]">Required Documents</h2>
+                  <h2 className="text-[10px] font-black text-black/35 uppercase tracking-[0.3em]">{t('sd_requirements')}</h2>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-3">
                   {requirements.map((req, i) => (
@@ -205,7 +223,7 @@ const ServiceDetailPage = () => {
                       </div>
                       <div>
                         <span className="text-[9px] font-black text-brand/50 uppercase tracking-widest block mb-0.5">
-                          Doc {String(i + 1).padStart(2, '0')}
+                          {language === 'am' ? 'ሰነድ' : 'Doc'} {String(i + 1).padStart(2, '0')}
                         </span>
                         <span className="text-sm font-bold text-black/65 group-hover:text-black transition-colors leading-snug">
                           {req}
@@ -222,7 +240,7 @@ const ServiceDetailPage = () => {
               <section>
                 <div className="flex items-center gap-3 mb-5 mt-10">
                   <span className="w-8 h-[3px] bg-brand rounded-full" />
-                  <h2 className="text-[10px] font-black text-black/35 uppercase tracking-[0.3em]">Additional Guidelines</h2>
+                  <h2 className="text-[10px] font-black text-black/35 uppercase tracking-[0.3em]">{t('sd_guidelines')}</h2>
                 </div>
                 <div className="p-6 rounded-3xl bg-black/[0.02] border border-black/5 text-sm font-bold text-black/60 leading-relaxed whitespace-pre-line">
                   {additionalDetails}
@@ -233,8 +251,12 @@ const ServiceDetailPage = () => {
             {Object.keys(details).length === 0 && (
               <div className="py-24 text-center border-2 border-dashed border-slate-100 rounded-3xl">
                 <Shield className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                <h3 className="text-xl font-black text-slate-400 tracking-tight">Configuration Pending</h3>
-                <p className="text-slate-400 mt-2 font-medium">Service details have not yet been published by the administration.</p>
+                <h3 className="text-xl font-black text-slate-400 tracking-tight">
+                  {language === 'am' ? 'ውቅረት በመጠባበቅ ላይ' : 'Configuration Pending'}
+                </h3>
+                <p className="text-slate-400 mt-2 font-medium">
+                  {language === 'am' ? 'የአገልግሎት ዝርዝሮች ገና በአስተዳደሩ አልታተሙም' : 'Service details have not yet been published by the administration.'}
+                </p>
               </div>
             )}
           </div>
@@ -248,7 +270,7 @@ const ServiceDetailPage = () => {
                 <div className="rounded-3xl border border-black/5 bg-white shadow-lg shadow-black/5 overflow-hidden">
                   <div className="px-7 py-4 border-b border-black/5 flex items-center gap-2">
                     <MapPin className="w-3.5 h-3.5 text-brand" />
-                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-black/35">Location & Hours</span>
+                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-black/35">{t('sd_location')}</span>
                   </div>
                   <div className="p-7 space-y-6">
                     {details.officeNumber && (
@@ -257,9 +279,11 @@ const ServiceDetailPage = () => {
                           <MapPin className="w-4 h-4 text-brand" />
                         </div>
                         <div>
-                          <p className="text-[9px] font-black text-black/25 uppercase tracking-[0.2em] mb-1">Office</p>
+                          <p className="text-[9px] font-black text-black/25 uppercase tracking-[0.2em] mb-1">
+                            {language === 'am' ? 'ቢሮ' : 'Office'}
+                          </p>
                           <p className="text-base font-black text-black leading-snug">{details.officeNumber}</p>
-                          <p className="text-[11px] text-black/30 font-semibold mt-0.5">Woreda 05, Yeka Subcity</p>
+                          <p className="text-[11px] text-black/30 font-semibold mt-0.5">{t('footer_address')}</p>
                         </div>
                       </div>
                     )}
@@ -269,7 +293,9 @@ const ServiceDetailPage = () => {
                           <Clock className="w-4 h-4 text-brand" />
                         </div>
                         <div>
-                          <p className="text-[9px] font-black text-black/25 uppercase tracking-[0.2em] mb-1">Hours</p>
+                          <p className="text-[9px] font-black text-black/25 uppercase tracking-[0.2em] mb-1">
+                            {language === 'am' ? 'ሰዓት' : 'Hours'}
+                          </p>
                           <p className="text-base font-black text-black leading-snug">{details.hours}</p>
                         </div>
                       </div>
@@ -278,12 +304,12 @@ const ServiceDetailPage = () => {
                 </div>
               )}
 
-              {/* Contact (if officer box is hidden, show it here as well as a fallback, or just rely on officer box. Actually, we render it again here if desired, or if no officer profile exists.) */}
+              {/* Contact fallback */}
               {!hasOfficerInfo && hasContactInfo && (
                 <div className="rounded-3xl border border-black/5 bg-white shadow-lg shadow-black/5 overflow-hidden">
                   <div className="px-7 py-4 border-b border-black/5 flex items-center gap-2">
                     <PhoneCall className="w-3.5 h-3.5 text-brand" />
-                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-black/35">Contact</span>
+                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-black/35">{t('sd_contact')}</span>
                   </div>
                   <div className="p-7 space-y-3">
                     {details.contactPhone && (
@@ -324,7 +350,7 @@ const ServiceDetailPage = () => {
                 className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl border-2 border-black/8 text-black/40 hover:border-brand hover:text-brand font-black text-sm uppercase tracking-widest transition-all duration-300"
                 style={{ borderColor: 'rgba(0,0,0,0.08)' }}
               >
-                <ArrowLeft className="w-4 h-4" /> Back to All Services
+                <ArrowLeft className="w-4 h-4" /> {t('sd_back')}
               </Link>
             </div>
           )}

@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
 import PopularServices from './components/PopularServices';
+import { LanguageProvider } from './context/LanguageContext';
 
 import ServicesPage from './pages/ServicesPage';
 import CategoryServicesPage from './pages/CategoryServicesPage';
@@ -22,21 +23,23 @@ const Home = () => (
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col font-sans selection:bg-brand/20">
-      <Navbar />
-      <main className="flex-grow">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/categories/:categoryName" element={<CategoryServicesPage />} />
-          <Route path="/services/:id" element={<ServiceDetailPage />} />
-          <Route path="/announcements" element={<AnnouncementPage />} />
-          <Route path="/gallery" element={<GalleryPage />} />
-          <Route path="/about" element={<AboutPage />} />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
+    <LanguageProvider>
+      <div className="min-h-screen flex flex-col font-sans selection:bg-brand/20">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/services" element={<ServicesPage />} />
+            <Route path="/categories/:categoryName" element={<CategoryServicesPage />} />
+            <Route path="/services/:id" element={<ServiceDetailPage />} />
+            <Route path="/announcements" element={<AnnouncementPage />} />
+            <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/about" element={<AboutPage />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </LanguageProvider>
   );
 }
 

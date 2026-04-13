@@ -1,9 +1,13 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
+import { Globe, ChevronDown } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isLangOpen, setIsLangOpen] = React.useState(false);
   const location = useLocation();
+  const { language, setLang, t } = useLanguage();
 
   const isActive = (path) => {
     if (path === '/') return location.pathname === '/';
@@ -11,11 +15,11 @@ const Navbar = () => {
   };
 
   const links = [
-    { name: 'Home', path: '/' },
-    { name: 'Services', path: '/services' },
-    { name: 'Announcement', path: '/announcements' },
-    { name: 'Gallery', path: '/gallery' },
-    { name: 'About', path: '/about' },
+    { name: t('nav_home'), path: '/' },
+    { name: t('nav_services'), path: '/services' },
+    { name: t('nav_announcements'), path: '/announcements' },
+    { name: t('nav_gallery'), path: '/gallery' },
+    { name: t('nav_about'), path: '/about' },
   ];
 
   return (
@@ -51,8 +55,40 @@ const Navbar = () => {
             )})}
           </div>
 
-          {/* Minimalist Portal Access Indicator */}
-          <div className="hidden md:block">
+          {/* Minimalist Portal Access Indicator & Language Switcher */}
+          <div className="hidden md:flex items-center gap-8">
+            <div className="relative">
+              <button 
+                onClick={() => setIsLangOpen(!isLangOpen)}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-50 border border-slate-100 hover:border-brand/40 transition-all group"
+              >
+                <Globe className="w-4 h-4 text-slate-400 group-hover:text-brand transition-colors" />
+                <span className="text-[11px] font-black uppercase tracking-widest text-slate-600">
+                  {language === 'en' ? 'English' : 'አማርኛ'}
+                </span>
+                <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-300 ${isLangOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {isLangOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setIsLangOpen(false)}></div>
+                  <div className="absolute right-0 mt-3 w-40 bg-white rounded-2xl shadow-2xl shadow-black/5 border border-slate-100 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200">
+                    <button 
+                      onClick={() => { setLang('en'); setIsLangOpen(false); }}
+                      className={`w-full px-6 py-4 text-left text-[11px] font-black uppercase tracking-widest transition-colors ${language === 'en' ? 'bg-brand/5 text-brand' : 'text-slate-500 hover:bg-slate-50'}`}
+                    >
+                      English
+                    </button>
+                    <button 
+                      onClick={() => { setLang('am'); setIsLangOpen(false); }}
+                      className={`w-full px-6 py-4 text-left text-[11px] font-black uppercase tracking-widest transition-colors ${language === 'am' ? 'bg-brand/5 text-brand' : 'text-slate-500 hover:bg-slate-50'}`}
+                    >
+                      አማርኛ
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
             <div className="w-2 h-2 bg-brand rounded-full animate-pulse subtle-glow"></div>
           </div>
 
@@ -70,8 +106,8 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu Overlay */}
-      <div className={`md:hidden overflow-hidden transition-all duration-500 bg-white ${isOpen ? 'max-h-96 border-b border-slate-100' : 'max-h-0'}`}>
-        <div className="px-10 py-12 flex flex-col gap-8 items-center">
+      <div className={`md:hidden overflow-hidden transition-all duration-500 bg-white ${isOpen ? 'max-h-screen border-b border-slate-100 pb-12' : 'max-h-0'}`}>
+        <div className="px-10 pt-12 flex flex-col gap-8 items-center">
           {links.map((link) => {
             const active = isActive(link.path);
             return (
@@ -79,6 +115,26 @@ const Navbar = () => {
               {link.name}
             </Link>
           )})}
+          
+          <div className="w-full h-px bg-slate-100 my-4" />
+          
+          <div className="flex flex-col gap-4 w-full">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] text-center mb-2">Select Language</p>
+            <div className="flex gap-2">
+              <button 
+                onClick={() => { setLang('en'); setIsOpen(false); }}
+                className={`flex-1 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest border transition-all ${language === 'en' ? 'bg-brand text-white border-brand' : 'bg-slate-50 text-slate-400 border-slate-100'}`}
+              >
+                English
+              </button>
+              <button 
+                onClick={() => { setLang('am'); setIsOpen(false); }}
+                className={`flex-1 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest border transition-all ${language === 'am' ? 'bg-brand text-white border-brand' : 'bg-slate-50 text-slate-400 border-slate-100'}`}
+              >
+                አማርኛ
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
