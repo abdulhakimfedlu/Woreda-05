@@ -1,4 +1,4 @@
-const { pgTable, serial, varchar, text, timestamp, integer, json } = require('drizzle-orm/pg-core');
+const { pgTable, serial, varchar, text, timestamp, integer, json, boolean } = require('drizzle-orm/pg-core');
 
 const announcements = pgTable('announcements', {
   id: serial('id').primaryKey(),
@@ -65,10 +65,21 @@ const gallery = pgTable('gallery', {
   createdAt: timestamp('created_at').defaultNow(),
 });
 
+const messages = pgTable('messages', {
+  id: serial('id').primaryKey(),
+  topic: varchar('topic', { length: 255 }).notNull(),
+  description: text('description').notNull(),
+  contactInfo: varchar('contact_info', { length: 20 }),
+  isAnonymous: boolean('is_anonymous').default(false),
+  isRead: boolean('is_read').default(false),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
 module.exports = {
   announcements,
   categories,
   services,
   serviceDetails,
   gallery,
+  messages,
 };

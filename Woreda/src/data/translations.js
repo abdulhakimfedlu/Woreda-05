@@ -6,6 +6,7 @@ export const translations = {
     "nav_announcements": "Announcements",
     "nav_gallery": "Gallery",
     "nav_about": "About",
+    "nav_contact": "Contact",
     "nav_all_services": "All Services",
 
     // Hero
@@ -75,6 +76,31 @@ export const translations = {
     "footer_status": "System Status",
     "footer_online": "Online",
     "footer_dev_by": "Designed & Developed by",
+
+    // Contact Page
+    "contact_title": "Get in Touch",
+    "contact_subtitle": "Have a question or feedback? We'd love to hear from you. Send us a message and our team will get back to you.",
+    "contact_topic": "Topic",
+    "contact_topic_placeholder": "Select or enter a topic",
+    "contact_description": "Description",
+    "contact_description_placeholder": "How can we help you?",
+    "contact_phone": "Phone Number",
+    "contact_phone_placeholder": "09...",
+    "contact_anonymous": "Send as Anonymous",
+    "contact_anonymous_hint": "No contact information will be collected if selected.",
+    "contact_btn_send": "Send Message",
+    "contact_success": "Message sent successfully! Our team will review it shortly.",
+    "contact_error": "Failed to send message. Please try again later.",
+    "contact_val_phone": "Phone number must be between 10 and 12 digits.",
+    "contact_val_required": "This field is required.",
+    "contact_info_title": "Contact Info",
+    "contact_call": "Call Us",
+    "contact_office": "Main Office",
+    "contact_office_addr": "Woreda 05, Yeka Subcity",
+    "contact_privacy_title": "Privacy Guaranteed",
+    "contact_privacy_desc": "Your communications are handled with strict confidentiality. Choosing anonymous submission hides your contact data completely.",
+    "contact_btn_another": "Send Another Message",
+    "contact_sending": "Sending...",
   },
   am: {
     // Navbar
@@ -83,6 +109,7 @@ export const translations = {
     "nav_announcements": "ማስታወቂያዎች",
     "nav_gallery": "ጋለሪ",
     "nav_about": "ስለ እኛ",
+    "nav_contact": "ያግኙን",
     "nav_all_services": "ሁሉንም አገልግሎቶች",
 
     // Hero
@@ -152,5 +179,30 @@ export const translations = {
     "footer_status": "የሲስተም ሁኔታ",
     "footer_online": "በስራ ላይ",
     "footer_dev_by": "የተሰራው በ",
+
+    // Contact Page
+    "contact_title": "ያግኙን",
+    "contact_subtitle": "ጥያቄ ወይም አስተያየት ካለዎት? ከእርስዎ መስማት እንፈልጋለን። መልእክት ይላኩልን እና ቡድናችን መልስ ይሰጥዎታል።",
+    "contact_topic": "ርዕሰ ጉዳይ",
+    "contact_topic_placeholder": "ርዕሰ ጉዳይ ይምረጡ ወይም ያስገቡ",
+    "contact_description": "መግለጫ",
+    "contact_description_placeholder": "እንዴት ልንረዳዎ እንችላለን?",
+    "contact_phone": "የስልክ ቁጥር",
+    "contact_phone_placeholder": "09...",
+    "contact_anonymous": "ስም ሳይጠቅሱ ይላኩ",
+    "contact_anonymous_hint": "ይህ ከተመረጠ ምንም የእውቂያ መረጃ አይሰበሰብም::",
+    "contact_btn_send": "መልእክት ይላኩ",
+    "contact_success": "መልዕክቱ በተሳካ ሁኔታ ተልኳል! ቡድናችን በቅርቡ ይገመግመዋል።",
+    "contact_error": "መልእክት መላክ አልተቻለም። እባክዎ ቆይተው እንደገና ይሞክሩ።",
+    "contact_val_phone": "የስልክ ቁጥር ከ10 እስከ 12 አሃዞች መሆን አለበት።",
+    "contact_val_required": "ይህ መስክ ያስፈልጋል።",
+    "contact_info_title": "የእውቂያ መረጃ",
+    "contact_call": "ይደውሉልን",
+    "contact_office": "ዋና ቢሮ",
+    "contact_office_addr": "ወረዳ 05፣ የካ ክፍለ ከተማ",
+    "contact_privacy_title": "ግላዊነት የተጠበቀ ነው",
+    "contact_privacy_desc": "የእርስዎ ግንኙነቶች በጥብቅ ሚስጥራዊነት ይያዛሉ። ስም ሳይጠቅሱ መላክን መምረጥ የእርስዎን የእውቂያ መረጃ ሙሉ በሙሉ ይደብቃል።",
+    "contact_btn_another": "ሌላ መልእክት ይላኩ",
+    "contact_sending": "በመላክ ላይ...",
   }
 };

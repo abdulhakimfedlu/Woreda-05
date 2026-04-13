@@ -12,6 +12,7 @@ import ServiceDetailPage from './pages/ServiceDetailPage';
 import AnnouncementPage from './pages/AnnouncementPage';
 import GalleryPage from './pages/GalleryPage';
 import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
 
 // Home Component
 const Home = () => (
@@ -35,6 +36,7 @@ function App() {
             <Route path="/announcements" element={<AnnouncementPage />} />
             <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
           </Routes>
         </main>
         <Footer />

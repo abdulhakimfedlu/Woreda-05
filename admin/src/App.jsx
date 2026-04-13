@@ -5,6 +5,7 @@ import { Announcements } from './pages/Announcements';
 import { Services } from './pages/Services';
 import { ServiceDetails } from './pages/ServiceDetails';
 import { Gallery } from './pages/Gallery';
+import { Messages } from './pages/Messages';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="services" element={<Services />} />
           <Route path="service-details" element={<ServiceDetails />} />
           <Route path="gallery" element={<Gallery />} />
+          <Route path="messages" element={<Messages />} />
         </Route>
       </Routes>
     </BrowserRouter>

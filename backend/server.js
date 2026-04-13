@@ -55,12 +55,14 @@ const servicesRoutes = require('./routes/servicesRoutes');
 const galleryRoutes = require('./routes/galleryRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const serviceDetailsRoutes = require('./routes/serviceDetailsRoutes');
+const messageRoutes = require('./routes/messageRoutes');
 
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/services', servicesRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/service-details', serviceDetailsRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 5000;
