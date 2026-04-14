@@ -84,47 +84,80 @@ const ServiceDetailPage = () => {
     <div className="bg-white min-h-screen pb-40">
 
       {/* ── OFFICE BANNER ──────────────────────────────────────────── */}
-      <div className="relative w-full h-[360px] md:h-[460px] overflow-hidden">
-        <img
-          src={details.bannerPhoto || OFFICE_BANNER}
-          alt="Office Banner"
-          className="absolute inset-0 w-full h-full object-cover object-center"
-        />
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/20" />
+      {details.bannerPhoto && (
+        <div className="relative w-full h-[360px] md:h-[460px] overflow-hidden">
+          <img
+            src={details.bannerPhoto}
+            alt="Office Banner"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+          />
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/20" />
 
-        {/* Aqua top stripe */}
-        <div
-          className="absolute top-0 left-0 w-full h-[3px]"
-          style={{ background: 'linear-gradient(90deg, #00B4D8 0%, #90E0EF 60%, transparent 100%)' }}
-        />
+          {/* Aqua top stripe */}
+          <div
+            className="absolute top-0 left-0 w-full h-[3px]"
+            style={{ background: 'linear-gradient(90deg, #00B4D8 0%, #90E0EF 60%, transparent 100%)' }}
+          />
 
-        {/* Back button */}
-        <div className="absolute top-8 left-0 right-0 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-          <button
-            onClick={() => navigate('/services')}
-            className="inline-flex items-center gap-3 text-white/70 hover:text-white transition-colors group"
-          >
-            <div className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:bg-brand/40 transition-colors">
-              <ArrowLeft className="w-4 h-4" />
-            </div>
-            <span className="text-[11px] font-black uppercase tracking-[0.2em]">{t('nav_all_services')}</span>
-          </button>
-        </div>
-
-        {/* Title */}
-        <div className="absolute bottom-0 left-0 right-0 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand/25 border border-brand/40 backdrop-blur-sm mb-4">
-            <Shield className="w-3 h-3 text-brand" />
-            <span className="text-brand font-black text-[9px] uppercase tracking-[0.3em]">
-              {department || service.category} {details.officeNumber && `· ${details.officeNumber}`}
-            </span>
+          {/* Back button */}
+          <div className="absolute top-8 left-0 right-0 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+            <button
+              onClick={() => navigate('/services')}
+              className="inline-flex items-center gap-3 text-white/70 hover:text-white transition-colors group"
+            >
+              <div className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:bg-brand/40 transition-colors">
+                <ArrowLeft className="w-4 h-4" />
+              </div>
+              <span className="text-[11px] font-black uppercase tracking-[0.2em]">{t('nav_all_services')}</span>
+            </button>
           </div>
-          <h1 className="text-4xl md:text-6xl font-black text-white leading-tight tracking-tighter max-w-3xl">
-            {title}
-          </h1>
+
+          {/* Title */}
+          <div className="absolute bottom-0 left-0 right-0 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand/25 border border-brand/40 backdrop-blur-sm mb-4">
+              <Shield className="w-3 h-3 text-brand" />
+              <span className="text-brand font-black text-[9px] uppercase tracking-[0.3em]">
+                {department || service.category} {details.officeNumber && `· ${details.officeNumber}`}
+              </span>
+            </div>
+            <h1 className="text-4xl md:text-6xl font-black text-white leading-tight tracking-tighter max-w-3xl">
+              {title}
+            </h1>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* ── ALTERNATIVE HEADER (when no banner) ──────────────────── */}
+      {!details.bannerPhoto && (
+        <div className="pt-32 pb-16 bg-gradient-to-br from-slate-50 to-white">
+          <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+            {/* Back button */}
+            <div className="mb-8">
+              <button
+                onClick={() => navigate('/services')}
+                className="inline-flex items-center gap-3 text-slate-400 hover:text-brand transition-colors group"
+              >
+                <div className="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center group-hover:bg-brand/10 group-hover:border-brand/20 transition-colors">
+                  <ArrowLeft className="w-4 h-4" />
+                </div>
+                <span className="text-[11px] font-black uppercase tracking-[0.2em]">{t('nav_all_services')}</span>
+              </button>
+            </div>
+
+            {/* Title */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand/10 border border-brand/20 mb-6">
+              <Shield className="w-3 h-3 text-brand" />
+              <span className="text-brand font-black text-[9px] uppercase tracking-[0.3em]">
+                {department || service.category} {details.officeNumber && `· ${details.officeNumber}`}
+              </span>
+            </div>
+            <h1 className="text-4xl md:text-6xl font-black text-slate-800 leading-tight tracking-tighter max-w-3xl">
+              {title}
+            </h1>
+          </div>
+        </div>
+      )}
 
       {/* ── OFFICER PROFILE — full width strip below banner ────────── */}
       {hasOfficerInfo && (

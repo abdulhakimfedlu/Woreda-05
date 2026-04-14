@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Plus, Trash2, FileText, User as UserIcon, Clock, MapPin, Building, PhoneCall, Mail } from 'lucide-react';
+import { Save, Plus, Trash2, FileText, User as UserIcon, Clock, MapPin, Building, PhoneCall, Mail, Search } from 'lucide-react';
 
 export function ServiceDetails() {
   const [services, setServices] = useState([]);
   const [selectedServiceId, setSelectedServiceId] = useState('');
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Form State
   const [formData, setFormData] = useState(null);
@@ -59,20 +60,61 @@ export function ServiceDetails() {
       });
   }, [selectedServiceId]);
 
-  const handleRequirementChange = (index, value) => {
-    const updated = [...formData.requirements];
-    updated[index] = value;
-    setFormData({ ...formData, requirements: updated });
+  const handleRequirementChange = (index, value, isAmharic = false) => {
+    if (isAmharic) {
+      const updated = [...(formData.requirementsAm || [])];
+      updated[index] = value;
+      setFormData({ ...formData, requirementsAm: updated });
+    } else {
+      const updated = [...formData.requirements];
+      updated[index] = value;
+      setFormData({ ...formData, requirements: updated });
+    }
   };
 
   const addRequirement = () => {
-    setFormData({ ...formData, requirements: [...formData.requirements, ''] });
+    setFormData({ 
+      ...formData, 
+      requirements: [...formData.requirements, ''],
+      requirementsAm: [...(formData.requirementsAm || []), '']
+    });
   };
 
   const removeRequirement = (index) => {
-    const updated = [...formData.requirements];
-    updated.splice(index, 1);
-    setFormData({ ...formData, requirements: updated });
+    const updatedReq = [...formData.requirements];
+    const updatedReqAm = [...(formData.requirementsAm || [])];
+    updatedReq.splice(index, 1);
+    updatedReqAm.splice(index, 1);
+    setFormData({ 
+      ...formData, 
+      requirements: updatedReq,
+      requirementsAm: updatedReqAm
+    });
+  };
+
+  const deleteServiceDetails = async () => {
+    if (!selectedServiceId) return;
+    if (!confirm('Are you sure you want to delete all details for this service? This action cannot be undone.')) return;
+    
+    try {
+      const res = await fetch(`http://localhost:5000/api/service-details/${selectedServiceId}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        alert('Service details deleted successfully!');
+        setFormData(null);
+        setSelectedServiceId('');
+      } else {
+        alert('Failed to delete service details.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error deleting service details.');
+    }
+  };
+
+  const clearOfficerPhoto = () => {
+    setFormData({ ...formData, officerPhoto: '' });
   };
 
   const handleImageUpload = async (e) => {
@@ -161,13 +203,31 @@ export function ServiceDetails() {
 
       <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/40 border border-slate-100 p-8">
         <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 ml-1">Select Service</label>
+        
+        {/* Search Bar */}
+        <div className="relative w-full lg:w-1/2 mb-4">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
+          <input 
+            type="text" 
+            placeholder="Search services..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
+          />
+        </div>
+
         <select 
           value={selectedServiceId}
           onChange={(e) => setSelectedServiceId(e.target.value)}
           className="w-full lg:w-1/2 px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
         >
           <option value="">-- Choose a Service --</option>
-          {services.map(s => (
+          {services.filter(s => 
+            s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            s.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (s.titleAm && s.titleAm.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (s.departmentAm && s.departmentAm.toLowerCase().includes(searchTerm.toLowerCase()))
+          ).map(s => (
             <option key={s.id} value={s.id}>{s.title} ({s.department})</option>
           ))}
         </select>
@@ -216,10 +276,19 @@ export function ServiceDetails() {
               </div>
 
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Banner Graphic Upload</label>
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Banner Graphic Upload (Optional)</label>
                 <div className="flex items-center gap-4">
                   {formData.bannerPhoto && (
-                    <img src={formData.bannerPhoto} alt="Banner Preview" className="w-24 h-12 rounded-lg object-cover border-2 border-[#00B4D8]" />
+                    <div className="relative">
+                      <img src={formData.bannerPhoto} alt="Banner Preview" className="w-24 h-12 rounded-lg object-cover border-2 border-[#00B4D8]" />
+                      <button
+                        type="button"
+                        onClick={() => setFormData({...formData, bannerPhoto: ''})}
+                        className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-all"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
                   )}
                   <input 
                     type="file"
@@ -228,6 +297,9 @@ export function ServiceDetails() {
                     className="flex-1 px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#90E0EF]/30 file:text-[#0077B6] hover:file:bg-[#00B4D8] hover:file:text-white transition-all cursor-pointer"
                   />
                 </div>
+                {!formData.bannerPhoto && (
+                  <p className="text-[9px] text-slate-400 mt-2 ml-1">No banner image uploaded. This field is optional.</p>
+                )}
               </div>
 
               <div className="grid sm:grid-cols-2 gap-6">
@@ -362,7 +434,16 @@ export function ServiceDetails() {
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Officer Photo upload</label>
                   <div className="flex items-center gap-4">
                     {formData.officerPhoto && (
-                      <img src={formData.officerPhoto} alt="Preview" className="w-12 h-12 rounded-lg object-cover border-2 border-[#00B4D8]" />
+                      <div className="relative">
+                        <img src={formData.officerPhoto} alt="Preview" className="w-12 h-12 rounded-lg object-cover border-2 border-[#00B4D8]" />
+                        <button
+                          type="button"
+                          onClick={clearOfficerPhoto}
+                          className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-all"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
                     )}
                     <input 
                       type="file"
@@ -432,7 +513,15 @@ export function ServiceDetails() {
 
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-end pt-4 gap-3">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end pt-4 gap-3">
+            <button 
+              type="button"
+              onClick={deleteServiceDetails}
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-red-500 text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-red-500/30 hover:bg-red-600 hover:-translate-y-0.5 transition-all"
+            >
+              <Trash2 className="w-4 h-4" /> 
+              Delete All Details
+            </button>
             <button 
               type="submit"
               disabled={saving}

@@ -7,6 +7,8 @@ export function Services() {
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categorySearchTerm, setCategorySearchTerm] = useState('');
   
   // Service Modal State
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
@@ -347,111 +349,139 @@ export function Services() {
       </Modal>
 
       {activeTab === 'list' && (
-        <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/40 border border-slate-100 overflow-hidden">
-          {/* ... existing search header remains conceptually the same, just simplified without search logic for brevity or keeping existing search layout ... */}
-          <div className="p-4 sm:p-6 border-b border-slate-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-50/30">
+        <div className="space-y-4">
+          {/* Search Bar */}
+          <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/40 border border-slate-100 p-4">
             <div className="relative w-full sm:w-80">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
               <input 
                 type="text" 
                 placeholder="Search services..." 
-                className="w-full pl-12 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
               />
             </div>
           </div>
-          
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-slate-50/50 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                  <th className="px-8 py-5">Service Name</th>
-                  <th className="px-8 py-5 w-56">Department</th>
-                  <th className="px-8 py-5 w-48">Category</th>
-                  <th className="px-8 py-5 w-32 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50">
-                {loading ? (
-                  <tr><td colSpan="4" className="text-center py-12 text-slate-300 font-black uppercase tracking-widest animate-pulse">Loading...</td></tr>
-                ) : services.length === 0 ? (
-                   <tr><td colSpan="4" className="text-center py-12 text-slate-300 font-bold">No services found in the list</td></tr>
-                ) : services.map((service) => (
-                  <tr key={service.id} className="hover:bg-slate-50/50 transition-all group">
-                    <td className="px-8 py-6">
-                      <div className="flex items-center">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center mr-4 bg-[#90E0EF]/20 text-[#0077B6] border border-[#90E0EF]/30`}>
-                          <FileText className="w-5 h-5" />
-                        </div>
-                        <p className="font-black text-slate-800 text-sm tracking-tight">{service.title}</p>
-                      </div>
-                    </td>
-                    <td className="px-8 py-6">
-                      <span className="text-[10px] font-black text-slate-500 bg-slate-100/80 border border-slate-200 px-3 py-1 rounded-full uppercase tracking-tighter">
-                        {service.department}
-                      </span>
-                    </td>
-                    <td className="px-8 py-6">
-                      <span className="text-[10px] font-black text-[#0077B6] bg-[#90E0EF]/30 px-3 py-1 rounded-full uppercase tracking-widest border border-[#90E0EF]/50">
-                        {service.category}
-                      </span>
-                    </td>
-                    <td className="px-4 sm:px-8 py-6">
-                      <div className="flex items-center justify-end gap-2">
-                        <button 
-                          onClick={() => handleEditService(service)}
-                          className="p-2 text-slate-400 hover:text-[#00B4D8] hover:bg-[#90E0EF]/20 rounded-xl transition-all"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                        <button onClick={() => deleteService(service.id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+          {/* Services Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 animate-in slide-in-from-bottom-4 duration-500">
+            {loading ? (
+              <div className="col-span-full py-16 text-center text-slate-300 font-black uppercase tracking-widest animate-pulse">Loading...</div>
+            ) : services.filter(service => 
+                service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                service.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                service.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (service.titleAm && service.titleAm.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                (service.departmentAm && service.departmentAm.toLowerCase().includes(searchTerm.toLowerCase()))
+              ).length === 0 ? (
+               <div className="col-span-full py-16 text-center text-slate-300 font-black uppercase tracking-widest">
+                 {searchTerm ? 'No services found matching your search' : 'No services found in the list'}
+               </div>
+            ) : services.filter(service => 
+                service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                service.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                service.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (service.titleAm && service.titleAm.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                (service.departmentAm && service.departmentAm.toLowerCase().includes(searchTerm.toLowerCase()))
+              ).map((service) => (
+              <div key={service.id} className="bg-white border border-slate-100 rounded-2xl p-4 hover:shadow-lg hover:shadow-[#00B4D8]/10 hover:border-[#00B4D8]/40 transition-all group relative overflow-hidden">
+                <div className="flex justify-between items-start mb-3">
+                  <div className="w-8 h-8 rounded-xl bg-[#90E0EF]/20 text-[#00B4D8] flex items-center justify-center border border-[#90E0EF]/30 group-hover:bg-[#00B4D8] group-hover:text-white transition-all duration-300">
+                    <FileText className="w-4 h-4" />
+                  </div>
+                  <span className="text-[9px] font-black px-2 py-1 rounded-full bg-slate-50 text-slate-400 border border-slate-100 group-hover:bg-[#0077B6] group-hover:text-white group-hover:border-[#0077B6] transition-all">
+                    {service.category}
+                  </span>
+                </div>
+                <h3 className="font-extrabold text-slate-800 text-sm tracking-tighter group-hover:text-[#00B4D8] transition-colors mb-1">{service.title}</h3>
+                <p className="text-[10px] text-slate-400 font-medium mb-4 line-clamp-2">{service.department}</p>
+                
+                <div className="flex border-t border-slate-50 pt-3 gap-1 justify-between">
+                  <button 
+                    onClick={() => handleEditService(service)}
+                    className="text-[9px] font-black text-[#00B4D8] uppercase tracking-widest hover:text-[#0077B6] transition-colors flex items-center p-1 hover:bg-slate-50 rounded-md">
+                     <Edit2 className="w-3 h-3 mr-1" /> Edit
+                  </button>
+                  <button 
+                    onClick={() => deleteService(service.id)}
+                    className="text-[9px] font-black text-red-400 uppercase tracking-widest hover:text-red-600 transition-colors flex items-center p-1 hover:bg-red-50 rounded-md">
+                     <Trash2 className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
 
       {activeTab === 'categories' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in slide-in-from-bottom-4 duration-500">
-          {loading ? (
-            <div className="col-span-full py-24 text-center text-slate-300 font-black uppercase tracking-widest animate-pulse">Loading...</div>
-          ) : categories.length === 0 ? (
-             <div className="col-span-full py-24 text-center text-slate-300 font-black uppercase tracking-widest">No categories found in the system</div>
-          ) : categories.map((cat) => {
-            const serviceCount = services.filter(s => s.category === cat.name).length;
-            return (
-            <div key={cat.id} className="bg-white border border-slate-100 rounded-3xl p-8 hover:shadow-2xl hover:shadow-[#00B4D8]/10 hover:border-[#00B4D8]/40 transition-all group relative overflow-hidden">
-              <div className="flex justify-between items-start mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-[#90E0EF]/20 text-[#00B4D8] flex items-center justify-center border border-[#90E0EF]/30 group-hover:bg-[#00B4D8] group-hover:text-white transition-all duration-300">
-                  <span className="font-black text-lg">{cat.categoryNumber || 0}</span>
-                </div>
-                <span className="text-[10px] font-black px-3 py-1 rounded-full bg-slate-50 text-slate-400 border border-slate-100 group-hover:bg-[#0077B6] group-hover:text-white group-hover:border-[#0077B6] transition-all">
-                  {serviceCount} Services
-                </span>
-              </div>
-              <h3 className="font-extrabold text-slate-800 text-xl tracking-tighter group-hover:text-[#00B4D8] transition-colors">{cat.name}</h3>
-              <p className="text-xs text-slate-400 font-medium mt-1 mb-8">{cat.description || "Categories used for grouping community services."}</p>
-              
-              <div className="flex border-t border-slate-50 pt-6 gap-2 justify-between">
-                <button 
-                  onClick={() => handleEditCategory(cat)}
-                  className="text-[10px] font-black text-[#00B4D8] uppercase tracking-widest hover:text-[#0077B6] transition-colors flex items-center p-2 hover:bg-slate-50 rounded-lg">
-                   <Edit2 className="w-3 h-3 mr-1.5" /> Edit Category
-                </button>
-                <button 
-                  onClick={() => deleteCategory(cat.id)}
-                  className="text-[10px] font-black text-red-400 uppercase tracking-widest hover:text-red-600 transition-colors flex items-center p-2 hover:bg-red-50 rounded-lg">
-                   <Trash2 className="w-3 h-3" />
-                </button>
-              </div>
+        <div className="space-y-4">
+          {/* Search Bar for Categories */}
+          <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/40 border border-slate-100 p-4">
+            <div className="relative w-full sm:w-80">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
+              <input 
+                type="text" 
+                placeholder="Search categories..." 
+                value={categorySearchTerm}
+                onChange={(e) => setCategorySearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
+              />
             </div>
-            );
-          })}
+          </div>
+
+          {/* Categories Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 animate-in slide-in-from-bottom-4 duration-500">
+            {loading ? (
+              <div className="col-span-full py-16 text-center text-slate-300 font-black uppercase tracking-widest animate-pulse">Loading...</div>
+            ) : categories.filter(cat => 
+                cat.name.toLowerCase().includes(categorySearchTerm.toLowerCase()) ||
+                (cat.nameAm && cat.nameAm.toLowerCase().includes(categorySearchTerm.toLowerCase())) ||
+                (cat.description && cat.description.toLowerCase().includes(categorySearchTerm.toLowerCase())) ||
+                (cat.descriptionAm && cat.descriptionAm.toLowerCase().includes(categorySearchTerm.toLowerCase())) ||
+                (cat.categoryNumber && cat.categoryNumber.toString().includes(categorySearchTerm))
+              ).length === 0 ? (
+               <div className="col-span-full py-16 text-center text-slate-300 font-black uppercase tracking-widest">
+                 {categorySearchTerm ? 'No categories found matching your search' : 'No categories found in the system'}
+               </div>
+            ) : categories.filter(cat => 
+                cat.name.toLowerCase().includes(categorySearchTerm.toLowerCase()) ||
+                (cat.nameAm && cat.nameAm.toLowerCase().includes(categorySearchTerm.toLowerCase())) ||
+                (cat.description && cat.description.toLowerCase().includes(categorySearchTerm.toLowerCase())) ||
+                (cat.descriptionAm && cat.descriptionAm.toLowerCase().includes(categorySearchTerm.toLowerCase())) ||
+                (cat.categoryNumber && cat.categoryNumber.toString().includes(categorySearchTerm))
+              ).map((cat) => {
+              const serviceCount = services.filter(s => s.category === cat.name).length;
+              return (
+              <div key={cat.id} className="bg-white border border-slate-100 rounded-2xl p-4 hover:shadow-lg hover:shadow-[#00B4D8]/10 hover:border-[#00B4D8]/40 transition-all group relative overflow-hidden">
+                <div className="flex justify-between items-start mb-3">
+                  <div className="w-8 h-8 rounded-xl bg-[#90E0EF]/20 text-[#00B4D8] flex items-center justify-center border border-[#90E0EF]/30 group-hover:bg-[#00B4D8] group-hover:text-white transition-all duration-300">
+                    <span className="font-black text-sm">{cat.categoryNumber || 0}</span>
+                  </div>
+                  <span className="text-[9px] font-black px-2 py-1 rounded-full bg-slate-50 text-slate-400 border border-slate-100 group-hover:bg-[#0077B6] group-hover:text-white group-hover:border-[#0077B6] transition-all">
+                    {serviceCount}
+                  </span>
+                </div>
+                <h3 className="font-extrabold text-slate-800 text-sm tracking-tighter group-hover:text-[#00B4D8] transition-colors mb-1">{cat.name}</h3>
+                <p className="text-[10px] text-slate-400 font-medium mb-4 line-clamp-2">{cat.description || "Categories used for grouping community services."}</p>
+                
+                <div className="flex border-t border-slate-50 pt-3 gap-1 justify-between">
+                  <button 
+                    onClick={() => handleEditCategory(cat)}
+                    className="text-[9px] font-black text-[#00B4D8] uppercase tracking-widest hover:text-[#0077B6] transition-colors flex items-center p-1 hover:bg-slate-50 rounded-md">
+                     <Edit2 className="w-3 h-3 mr-1" /> Edit
+                  </button>
+                  <button 
+                    onClick={() => deleteCategory(cat.id)}
+                    className="text-[9px] font-black text-red-400 uppercase tracking-widest hover:text-red-600 transition-colors flex items-center p-1 hover:bg-red-50 rounded-md">
+                     <Trash2 className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
