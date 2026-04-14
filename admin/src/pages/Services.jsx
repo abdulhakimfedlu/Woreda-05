@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Search, Settings, FileText } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, Settings, FileText, Star } from 'lucide-react';
 import { Modal } from '../components/Modal';
 
 export function Services() {
@@ -18,7 +18,8 @@ export function Services() {
     titleAm: '',
     department: '',
     departmentAm: '',
-    category: ''
+    category: '',
+    isPopular: false
   });
 
   // Category Modal State
@@ -54,6 +55,25 @@ export function Services() {
     }
   };
 
+  const togglePopular = async (serviceId, currentStatus) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/services/${serviceId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isPopular: !currentStatus })
+      });
+      if (res.ok) {
+        fetchData();
+        alert(`Service ${!currentStatus ? 'added to' : 'removed from'} popular section!`);
+      } else {
+        alert('Failed to update service popularity status.');
+      }
+    } catch (error) {
+      console.error('Error updating service popularity:', error);
+      alert('Error updating service popularity.');
+    }
+  };
+
   const deleteService = async (id) => {
     if(!confirm('Are you sure you want to delete this service?')) return;
     try {
@@ -81,7 +101,8 @@ export function Services() {
       titleAm: service.titleAm || '',
       department: service.department,
       departmentAm: service.departmentAm || '',
-      category: service.category
+      category: service.category,
+      isPopular: service.isPopular || false
     });
     setIsServiceModalOpen(true);
   };
@@ -114,7 +135,7 @@ export function Services() {
       if (res.ok) {
         setIsServiceModalOpen(false);
         setEditingService(null);
-        setServiceFormData({ title: '', titleAm: '', department: '', departmentAm: '', category: '' });
+        setServiceFormData({ title: '', titleAm: '', department: '', departmentAm: '', category: '', isPopular: false });
         fetchData();
         alert(editingService ? 'Service updated successfully!' : 'New service initialized successfully!');
       } else {
@@ -167,7 +188,7 @@ export function Services() {
           onClick={() => {
             if (activeTab === 'list') {
               setEditingService(null);
-              setServiceFormData({ title: '', titleAm: '', department: '', departmentAm: '', category: '' });
+              setServiceFormData({ title: '', titleAm: '', department: '', departmentAm: '', category: '', isPopular: false });
               setIsServiceModalOpen(true);
             } else {
               setEditingCategory(null);
@@ -266,6 +287,24 @@ export function Services() {
                 <option key={cat.id} value={cat.name}>{cat.name}</option>
               ))}
             </select>
+          </div>
+          <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+            <div className="flex items-center gap-3">
+              <Star className="w-5 h-5 text-amber-500" />
+              <div>
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Popular Service</label>
+                <p className="text-xs text-slate-500 mt-1">Display this service in the Popular section</p>
+              </div>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer ml-auto">
+              <input 
+                type="checkbox" 
+                checked={serviceFormData.isPopular}
+                onChange={(e) => setServiceFormData({...serviceFormData, isPopular: e.target.checked})}
+                className="sr-only peer" 
+              />
+              <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#00B4D8]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00B4D8]"></div>
+            </label>
           </div>
           <button 
             type="submit"
@@ -386,6 +425,11 @@ export function Services() {
                 (service.departmentAm && service.departmentAm.toLowerCase().includes(searchTerm.toLowerCase()))
               ).map((service) => (
               <div key={service.id} className="bg-white border border-slate-100 rounded-2xl p-4 hover:shadow-lg hover:shadow-[#00B4D8]/10 hover:border-[#00B4D8]/40 transition-all group relative overflow-hidden">
+                {service.isPopular && (
+                  <div className="absolute top-2 right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center">
+                    <Star className="w-3 h-3 text-white fill-white" />
+                  </div>
+                )}
                 <div className="flex justify-between items-start mb-3">
                   <div className="w-8 h-8 rounded-xl bg-[#90E0EF]/20 text-[#00B4D8] flex items-center justify-center border border-[#90E0EF]/30 group-hover:bg-[#00B4D8] group-hover:text-white transition-all duration-300">
                     <FileText className="w-4 h-4" />
@@ -397,16 +441,25 @@ export function Services() {
                 <h3 className="font-extrabold text-slate-800 text-sm tracking-tighter group-hover:text-[#00B4D8] transition-colors mb-1">{service.title}</h3>
                 <p className="text-[10px] text-slate-400 font-medium mb-4 line-clamp-2">{service.department}</p>
                 
-                <div className="flex border-t border-slate-50 pt-3 gap-1 justify-between">
+                <div className="flex border-t border-slate-50 pt-3 gap-1 justify-between items-center">
+                  <div className="flex gap-1">
+                    <button 
+                      onClick={() => handleEditService(service)}
+                      className="text-[9px] font-black text-[#00B4D8] uppercase tracking-widest hover:text-[#0077B6] transition-colors flex items-center p-1 hover:bg-slate-50 rounded-md">
+                       <Edit2 className="w-3 h-3 mr-1" /> Edit
+                    </button>
+                    <button 
+                      onClick={() => deleteService(service.id)}
+                      className="text-[9px] font-black text-red-400 uppercase tracking-widest hover:text-red-600 transition-colors flex items-center p-1 hover:bg-red-50 rounded-md">
+                       <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
                   <button 
-                    onClick={() => handleEditService(service)}
-                    className="text-[9px] font-black text-[#00B4D8] uppercase tracking-widest hover:text-[#0077B6] transition-colors flex items-center p-1 hover:bg-slate-50 rounded-md">
-                     <Edit2 className="w-3 h-3 mr-1" /> Edit
-                  </button>
-                  <button 
-                    onClick={() => deleteService(service.id)}
-                    className="text-[9px] font-black text-red-400 uppercase tracking-widest hover:text-red-600 transition-colors flex items-center p-1 hover:bg-red-50 rounded-md">
-                     <Trash2 className="w-3 h-3" />
+                    onClick={() => togglePopular(service.id, service.isPopular)}
+                    className={`p-1.5 rounded-lg transition-all ${service.isPopular ? 'bg-amber-100 text-amber-600 hover:bg-amber-200' : 'bg-slate-100 text-slate-400 hover:bg-amber-100 hover:text-amber-600'}`}
+                    title={service.isPopular ? 'Remove from Popular' : 'Add to Popular'}
+                  >
+                    <Star className={`w-3 h-3 ${service.isPopular ? 'fill-current' : ''}`} />
                   </button>
                 </div>
               </div>

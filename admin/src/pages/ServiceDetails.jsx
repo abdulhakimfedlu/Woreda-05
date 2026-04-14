@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Plus, Trash2, FileText, User as UserIcon, Clock, MapPin, Building, PhoneCall, Mail, Search } from 'lucide-react';
+import { Save, Plus, Trash2, FileText, User as UserIcon, Clock, MapPin, Building, PhoneCall, Mail, Search, Star } from 'lucide-react';
 
 export function ServiceDetails() {
   const [services, setServices] = useState([]);
-  const [selectedServiceId, setSelectedServiceId] = useState('');
+  const [selectedService, setSelectedService] = useState(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showForm, setShowForm] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState(null);
@@ -20,13 +21,14 @@ export function ServiceDetails() {
   }, []);
 
   useEffect(() => {
-    if (!selectedServiceId) {
+    if (!selectedService) {
       setFormData(null);
+      setShowForm(false);
       return;
     }
 
     setLoading(true);
-    fetch(`http://localhost:5000/api/service-details/${selectedServiceId}`)
+    fetch(`http://localhost:5000/api/service-details/${selectedService.id}`)
       .then(res => res.json())
       .then(data => {
         const details = data.details || {};
@@ -52,13 +54,14 @@ export function ServiceDetails() {
             ? details.requirementsAm 
             : (details.requirementsAm ? [details.requirementsAm] : [])
         });
+        setShowForm(true);
         setLoading(false);
       })
       .catch(err => {
         console.error(err);
         setLoading(false);
       });
-  }, [selectedServiceId]);
+  }, [selectedService]);
 
   const handleRequirementChange = (index, value, isAmharic = false) => {
     if (isAmharic) {
@@ -93,23 +96,26 @@ export function ServiceDetails() {
   };
 
   const deleteServiceDetails = async () => {
-    if (!selectedServiceId) return;
+    if (!selectedService) return;
     if (!confirm('Are you sure you want to delete all details for this service? This action cannot be undone.')) return;
     
     try {
-      const res = await fetch(`http://localhost:5000/api/service-details/${selectedServiceId}`, {
+      const res = await fetch(`http://localhost:5000/api/service-details/${selectedService.id}`, {
         method: 'DELETE'
       });
+      
       if (res.ok) {
         alert('Service details deleted successfully!');
         setFormData(null);
-        setSelectedServiceId('');
+        setSelectedService(null);
+        setShowForm(false);
       } else {
-        alert('Failed to delete service details.');
+        const errorData = await res.json();
+        alert(`Failed to delete service details: ${errorData.msg || 'Unknown error'}`);
       }
     } catch (err) {
-      console.error(err);
-      alert('Error deleting service details.');
+      console.error('Delete error:', err);
+      alert('Network error. Could not delete service details. Please check if the backend is running.');
     }
   };
 
@@ -169,11 +175,11 @@ export function ServiceDetails() {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    if (!selectedServiceId || !formData) return;
+    if (!selectedService || !formData) return;
 
     setSaving(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/service-details/${selectedServiceId}`, {
+      const res = await fetch(`http://localhost:5000/api/service-details/${selectedService.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -199,39 +205,100 @@ export function ServiceDetails() {
           <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Service Details</h2>
           <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">Manage description, requirements, and contact details</p>
         </div>
+        {selectedService && (
+          <button 
+            onClick={() => {
+              setSelectedService(null);
+              setShowForm(false);
+              setFormData(null);
+            }}
+            className="flex items-center px-6 py-3 bg-slate-500 text-white text-sm font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-slate-500/30 hover:bg-slate-600 hover:-translate-y-0.5 transition-all"
+          >
+            ← Back to Services
+          </button>
+        )}
       </div>
 
-      <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/40 border border-slate-100 p-8">
-        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 ml-1">Select Service</label>
-        
-        {/* Search Bar */}
-        <div className="relative w-full lg:w-1/2 mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-          <input 
-            type="text" 
-            placeholder="Search services..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
-          />
+      {!selectedService && (
+        <div className="space-y-4">
+          {/* Search Bar */}
+          <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/40 border border-slate-100 p-4">
+            <div className="relative w-full sm:w-80">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
+              <input 
+                type="text" 
+                placeholder="Search services..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Services Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 animate-in slide-in-from-bottom-4 duration-500">
+            {services.filter(service => 
+                service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                service.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                service.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (service.titleAm && service.titleAm.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                (service.departmentAm && service.departmentAm.toLowerCase().includes(searchTerm.toLowerCase()))
+              ).length === 0 ? (
+               <div className="col-span-full py-16 text-center text-slate-300 font-black uppercase tracking-widest">
+                 {searchTerm ? 'No services found matching your search' : 'No services available'}
+               </div>
+            ) : services.filter(service => 
+                service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                service.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                service.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (service.titleAm && service.titleAm.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                (service.departmentAm && service.departmentAm.toLowerCase().includes(searchTerm.toLowerCase()))
+              ).map((service) => (
+              <div 
+                key={service.id} 
+                onClick={() => setSelectedService(service)}
+                className="bg-white border border-slate-100 rounded-2xl p-4 hover:shadow-lg hover:shadow-[#00B4D8]/10 hover:border-[#00B4D8]/40 transition-all group relative overflow-hidden cursor-pointer"
+              >
+                {service.isPopular && (
+                  <div className="absolute top-2 right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center">
+                    <Star className="w-3 h-3 text-white fill-white" />
+                  </div>
+                )}
+                <div className="flex justify-between items-start mb-3">
+                  <div className="w-8 h-8 rounded-xl bg-[#90E0EF]/20 text-[#00B4D8] flex items-center justify-center border border-[#90E0EF]/30 group-hover:bg-[#00B4D8] group-hover:text-white transition-all duration-300">
+                    <FileText className="w-4 h-4" />
+                  </div>
+                  <span className="text-[9px] font-black px-2 py-1 rounded-full bg-slate-50 text-slate-400 border border-slate-100 group-hover:bg-[#0077B6] group-hover:text-white group-hover:border-[#0077B6] transition-all">
+                    {service.category}
+                  </span>
+                </div>
+                <h3 className="font-extrabold text-slate-800 text-sm tracking-tighter group-hover:text-[#00B4D8] transition-colors mb-1">{service.title}</h3>
+                <p className="text-[10px] text-slate-400 font-medium mb-4 line-clamp-2">{service.department}</p>
+                
+                <div className="flex border-t border-slate-50 pt-3 justify-center">
+                  <span className="text-[9px] font-black text-[#00B4D8] uppercase tracking-widest group-hover:text-[#0077B6] transition-colors">
+                    Click to manage details →
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+      )}
 
-        <select 
-          value={selectedServiceId}
-          onChange={(e) => setSelectedServiceId(e.target.value)}
-          className="w-full lg:w-1/2 px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
-        >
-          <option value="">-- Choose a Service --</option>
-          {services.filter(s => 
-            s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            s.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (s.titleAm && s.titleAm.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (s.departmentAm && s.departmentAm.toLowerCase().includes(searchTerm.toLowerCase()))
-          ).map(s => (
-            <option key={s.id} value={s.id}>{s.title} ({s.department})</option>
-          ))}
-        </select>
-      </div>
+      {selectedService && (
+        <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/40 border border-slate-100 p-6 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#90E0EF]/20 text-[#00B4D8] flex items-center justify-center border border-[#90E0EF]/30">
+              <FileText className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-extrabold text-slate-800 text-lg">{selectedService.title}</h3>
+              <p className="text-sm text-slate-500">{selectedService.department} • {selectedService.category}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {loading && (
         <div className="py-20 text-center animate-pulse">
@@ -239,7 +306,7 @@ export function ServiceDetails() {
         </div>
       )}
 
-      {!loading && formData && (
+      {!loading && showForm && formData && (
         <form onSubmit={handleSave} className="space-y-8">
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

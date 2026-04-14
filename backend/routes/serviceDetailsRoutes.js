@@ -68,4 +68,27 @@ router.put('/:serviceId', async (req, res) => {
   }
 });
 
+// @route   DELETE /api/service-details/:serviceId
+// @desc    Delete service details by service ID
+router.delete('/:serviceId', async (req, res) => {
+  try {
+    const serviceId = parseInt(req.params.serviceId);
+    
+    // Check if service details exist
+    const existing = await db.select().from(serviceDetails).where(eq(serviceDetails.serviceId, serviceId));
+    
+    if (existing.length === 0) {
+      return res.status(404).json({ msg: 'Service details not found' });
+    }
+
+    // Delete the service details
+    await db.delete(serviceDetails).where(eq(serviceDetails.serviceId, serviceId));
+    
+    res.json({ msg: 'Service details deleted successfully' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
