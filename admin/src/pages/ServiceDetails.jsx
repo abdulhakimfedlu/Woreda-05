@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Plus, Trash2, FileText, User as UserIcon, Clock, MapPin, Building, PhoneCall, Mail, Search, Star } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export function ServiceDetails() {
+  const { language, t } = useLanguage();
   const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -202,8 +204,8 @@ export function ServiceDetails() {
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-slate-100 pb-8">
         <div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Service Details</h2>
-          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">Manage description, requirements, and contact details</p>
+          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">{t('sd_title')}</h2>
+          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">{t('sd_subtitle')}</p>
         </div>
         {selectedService && (
           <button 
@@ -214,7 +216,7 @@ export function ServiceDetails() {
             }}
             className="flex items-center px-6 py-3 bg-slate-500 text-white text-sm font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-slate-500/30 hover:bg-slate-600 hover:-translate-y-0.5 transition-all"
           >
-            ← Back to Services
+            {t('sd_back_to_services')}
           </button>
         )}
       </div>
@@ -227,7 +229,7 @@ export function ServiceDetails() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
               <input 
                 type="text" 
-                placeholder="Search services..." 
+                placeholder={t('services_search_placeholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
@@ -245,7 +247,7 @@ export function ServiceDetails() {
                 (service.departmentAm && service.departmentAm.toLowerCase().includes(searchTerm.toLowerCase()))
               ).length === 0 ? (
                <div className="col-span-full py-16 text-center text-slate-300 font-black uppercase tracking-widest">
-                 {searchTerm ? 'No services found matching your search' : 'No services available'}
+                 {searchTerm ? t('services_no_search_results') : 'No services available'}
                </div>
             ) : services.filter(service => 
                 service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -272,12 +274,16 @@ export function ServiceDetails() {
                     {service.category}
                   </span>
                 </div>
-                <h3 className="font-extrabold text-slate-800 text-sm tracking-tighter group-hover:text-[#00B4D8] transition-colors mb-1">{service.title}</h3>
-                <p className="text-[10px] text-slate-400 font-medium mb-4 line-clamp-2">{service.department}</p>
+                <h3 className="font-extrabold text-slate-800 text-sm tracking-tighter group-hover:text-[#00B4D8] transition-colors mb-1">
+                  {language === 'am' && service.titleAm ? service.titleAm : service.title}
+                </h3>
+                <p className="text-[10px] text-slate-400 font-medium mb-4 line-clamp-2">
+                  {language === 'am' && service.departmentAm ? service.departmentAm : service.department}
+                </p>
                 
                 <div className="flex border-t border-slate-50 pt-3 justify-center">
                   <span className="text-[9px] font-black text-[#00B4D8] uppercase tracking-widest group-hover:text-[#0077B6] transition-colors">
-                    Click to manage details →
+                    {t('services_click_to_manage')}
                   </span>
                 </div>
               </div>
@@ -293,8 +299,12 @@ export function ServiceDetails() {
               <FileText className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-slate-800 text-lg">{selectedService.title}</h3>
-              <p className="text-sm text-slate-500">{selectedService.department} • {selectedService.category}</p>
+              <h3 className="font-extrabold text-slate-800 text-lg">
+                {language === 'am' && selectedService.titleAm ? selectedService.titleAm : selectedService.title}
+              </h3>
+              <p className="text-sm text-slate-500">
+                {language === 'am' && selectedService.departmentAm ? selectedService.departmentAm : selectedService.department} • {selectedService.category}
+              </p>
             </div>
           </div>
         </div>
@@ -302,7 +312,7 @@ export function ServiceDetails() {
 
       {loading && (
         <div className="py-20 text-center animate-pulse">
-           <p className="text-xl font-black text-slate-300 uppercase tracking-widest">Loading Details...</p>
+           <p className="text-xl font-black text-slate-300 uppercase tracking-widest">{t('status_loading')}</p>
         </div>
       )}
 

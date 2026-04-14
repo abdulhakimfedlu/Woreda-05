@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Search, Settings, FileText, Star } from 'lucide-react';
 import { Modal } from '../components/Modal';
+import { useLanguage } from '../context/LanguageContext';
 
 export function Services() {
+  const { language, t } = useLanguage();
   const [activeTab, setActiveTab] = useState('list');
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -181,8 +183,8 @@ export function Services() {
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-slate-100 pb-8">
         <div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Services</h2>
-          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">Manage community services</p>
+          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">{t('services_title')}</h2>
+          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">{t('services_subtitle')}</p>
         </div>
         <button 
           onClick={() => {
@@ -199,7 +201,7 @@ export function Services() {
           className="flex items-center px-6 py-3 bg-[#00B4D8] text-white text-sm font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-[#00B4D8]/30 hover:bg-[#0077B6] hover:-translate-y-0.5 transition-all"
         >
           <Plus className="w-5 h-5 mr-2" /> 
-          {activeTab === 'list' ? 'Add Service' : 'Add Category'}
+          {activeTab === 'list' ? t('services_add_service') : t('services_add_category')}
         </button>
       </div>
 
@@ -208,13 +210,13 @@ export function Services() {
           onClick={() => setActiveTab('list')}
           className={`px-4 sm:px-6 py-2.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap ${activeTab === 'list' ? 'bg-white text-[#0077B6] shadow-md shadow-slate-200' : 'text-slate-400 hover:text-slate-600'}`}
         >
-          All Services
+          {t('services_all_services')}
         </button>
         <button 
           onClick={() => setActiveTab('categories')}
           className={`px-4 sm:px-6 py-2.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap ${activeTab === 'categories' ? 'bg-white text-[#0077B6] shadow-md shadow-slate-200' : 'text-slate-400 hover:text-slate-600'}`}
         >
-          Service Categories
+          {t('services_service_categories')}
         </button>
       </div>
 
@@ -284,7 +286,9 @@ export function Services() {
             >
               <option value="" disabled>Select a Category...</option>
               {categories.map((cat) => (
-                <option key={cat.id} value={cat.name}>{cat.name}</option>
+                <option key={cat.id} value={cat.name}>
+                  {language === 'am' && cat.nameAm ? cat.nameAm : cat.name}
+                </option>
               ))}
             </select>
           </div>
@@ -395,7 +399,7 @@ export function Services() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
               <input 
                 type="text" 
-                placeholder="Search services..." 
+                placeholder={t('services_search_placeholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
@@ -415,7 +419,7 @@ export function Services() {
                 (service.departmentAm && service.departmentAm.toLowerCase().includes(searchTerm.toLowerCase()))
               ).length === 0 ? (
                <div className="col-span-full py-16 text-center text-slate-300 font-black uppercase tracking-widest">
-                 {searchTerm ? 'No services found matching your search' : 'No services found in the list'}
+                 {searchTerm ? t('services_no_search_results') : t('services_no_services')}
                </div>
             ) : services.filter(service => 
                 service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -438,8 +442,12 @@ export function Services() {
                     {service.category}
                   </span>
                 </div>
-                <h3 className="font-extrabold text-slate-800 text-sm tracking-tighter group-hover:text-[#00B4D8] transition-colors mb-1">{service.title}</h3>
-                <p className="text-[10px] text-slate-400 font-medium mb-4 line-clamp-2">{service.department}</p>
+                <h3 className="font-extrabold text-slate-800 text-sm tracking-tighter group-hover:text-[#00B4D8] transition-colors mb-1">
+                  {language === 'am' && service.titleAm ? service.titleAm : service.title}
+                </h3>
+                <p className="text-[10px] text-slate-400 font-medium mb-4 line-clamp-2">
+                  {language === 'am' && service.departmentAm ? service.departmentAm : service.department}
+                </p>
                 
                 <div className="flex border-t border-slate-50 pt-3 gap-1 justify-between items-center">
                   <div className="flex gap-1">
@@ -476,7 +484,7 @@ export function Services() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
               <input 
                 type="text" 
-                placeholder="Search categories..." 
+                placeholder={t('services_search_categories')}
                 value={categorySearchTerm}
                 onChange={(e) => setCategorySearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
@@ -496,7 +504,7 @@ export function Services() {
                 (cat.categoryNumber && cat.categoryNumber.toString().includes(categorySearchTerm))
               ).length === 0 ? (
                <div className="col-span-full py-16 text-center text-slate-300 font-black uppercase tracking-widest">
-                 {categorySearchTerm ? 'No categories found matching your search' : 'No categories found in the system'}
+                 {categorySearchTerm ? t('services_no_category_results') : t('services_no_categories')}
                </div>
             ) : categories.filter(cat => 
                 cat.name.toLowerCase().includes(categorySearchTerm.toLowerCase()) ||
@@ -516,8 +524,12 @@ export function Services() {
                     {serviceCount}
                   </span>
                 </div>
-                <h3 className="font-extrabold text-slate-800 text-sm tracking-tighter group-hover:text-[#00B4D8] transition-colors mb-1">{cat.name}</h3>
-                <p className="text-[10px] text-slate-400 font-medium mb-4 line-clamp-2">{cat.description || "Categories used for grouping community services."}</p>
+                <h3 className="font-extrabold text-slate-800 text-sm tracking-tighter group-hover:text-[#00B4D8] transition-colors mb-1">
+                  {language === 'am' && cat.nameAm ? cat.nameAm : cat.name}
+                </h3>
+                <p className="text-[10px] text-slate-400 font-medium mb-4 line-clamp-2">
+                  {language === 'am' && cat.descriptionAm ? cat.descriptionAm : (cat.description || (language === 'am' ? "ለማህበረሰብ አገልግሎቶች ለመመደብ የሚያገለግሉ ምድቦች።" : "Categories used for grouping community services."))}
+                </p>
                 
                 <div className="flex border-t border-slate-50 pt-3 gap-1 justify-between">
                   <button 

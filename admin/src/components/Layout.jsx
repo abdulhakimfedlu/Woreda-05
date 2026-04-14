@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Megaphone, Server, Image as ImageIcon, LogOut, Bell, Search, Settings, FileText, Menu, X, Mail } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 // Shared hook for unread message count
 function useUnreadCount() {
@@ -28,13 +30,15 @@ function useUnreadCount() {
 
 function SidebarContent({ onNavClick, unreadCount }) {
   const location = useLocation();
+  const { t } = useLanguage();
+  
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-    { name: 'Announcements', path: '/announcements', icon: Megaphone },
-    { name: 'Services', path: '/services', icon: Server },
-    { name: 'Service Content', path: '/service-details', icon: FileText },
-    { name: 'Gallery', path: '/gallery', icon: ImageIcon },
-    { name: 'Messages', path: '/messages', icon: Mail },
+    { name: t('nav_dashboard'), path: '/', icon: LayoutDashboard },
+    { name: t('nav_announcements'), path: '/announcements', icon: Megaphone },
+    { name: t('nav_services'), path: '/services', icon: Server },
+    { name: t('nav_service_content'), path: '/service-details', icon: FileText },
+    { name: t('nav_gallery'), path: '/gallery', icon: ImageIcon },
+    { name: t('nav_messages'), path: '/messages', icon: Mail },
   ];
 
   return (
@@ -46,14 +50,14 @@ function SidebarContent({ onNavClick, unreadCount }) {
           </div>
           <div>
             <h1 className="text-xl font-black text-slate-800 tracking-tighter">Woreda <span className="text-[#00B4D8]">05</span></h1>
-            <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">Management</p>
+            <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">{t('nav_management')}</p>
           </div>
         </div>
       </div>
 
       <div className="px-4 pb-4 mt-4 space-y-6 flex-1 overflow-y-auto">
         <div>
-          <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4 ml-4">Main Menu</p>
+          <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4 ml-4">{t('nav_main_menu')}</p>
           <nav className="space-y-1.5 font-bold">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
@@ -72,12 +76,12 @@ function SidebarContent({ onNavClick, unreadCount }) {
                     <item.icon className="w-4 h-4" />
                   </div>
                   <span className="tracking-tight">{item.name}</span>
-                  {item.name === 'Messages' && unreadCount > 0 && (
+                  {item.name === t('nav_messages') && unreadCount > 0 && (
                     <div className="ml-auto bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-red-500/30">
                       {unreadCount}
                     </div>
                   )}
-                  {isActive && !(item.name === 'Messages' && unreadCount > 0) && (
+                  {isActive && !(item.name === t('nav_messages') && unreadCount > 0) && (
                     <div className="absolute right-3 w-1.5 h-1.5 rounded-full bg-[#00B4D8] shadow-[0_0_8px_#00B4D8]" />
                   )}
                 </NavLink>
@@ -92,7 +96,7 @@ function SidebarContent({ onNavClick, unreadCount }) {
           <div className="p-2 rounded-xl mr-3 text-slate-300 group-hover:text-red-500 group-hover:bg-red-100 transition-colors">
             <LogOut className="w-4 h-4" />
           </div>
-          Log Out
+          {t('nav_logout')}
         </button>
       </div>
     </div>
@@ -108,6 +112,8 @@ export function Sidebar({ unreadCount }) {
 }
 
 export function TopBar({ onMenuClick, unreadCount }) {
+  const { t } = useLanguage();
+  
   return (
     <header className="h-16 lg:h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-10 flex items-center justify-between px-4 lg:px-10">
       {/* Mobile Menu Button */}
@@ -123,7 +129,7 @@ export function TopBar({ onMenuClick, unreadCount }) {
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
         <input
           type="text"
-          placeholder="Quick search everything..."
+          placeholder={t('search_quick_placeholder') || "Quick search everything..."}
           className="w-full pl-12 pr-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-2xl text-sm font-medium text-slate-700 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
         />
       </div>
@@ -134,6 +140,7 @@ export function TopBar({ onMenuClick, unreadCount }) {
       </div>
 
       <div className="flex items-center gap-2 lg:gap-4">
+        <LanguageSwitcher />
         <a
           href="/messages"
           className="relative p-2.5 rounded-xl text-slate-400 hover:text-[#00B4D8] hover:bg-[#90E0EF]/10 transition-all"
@@ -151,8 +158,8 @@ export function TopBar({ onMenuClick, unreadCount }) {
         <div className="hidden sm:block h-8 w-[1px] bg-slate-100 mx-1"></div>
         <div className="flex items-center gap-3 cursor-pointer group rounded-2xl hover:bg-slate-50 p-1.5 transition-all">
           <div className="text-right hidden sm:block">
-            <p className="text-sm font-black text-slate-800 tracking-tight">Admin User</p>
-            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Super Admin</p>
+            <p className="text-sm font-black text-slate-800 tracking-tight">{t('nav_admin_user')}</p>
+            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{t('nav_super_admin')}</p>
           </div>
           <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-2xl border-2 border-white overflow-hidden shadow-lg shadow-slate-200 group-hover:shadow-[#00B4D8]/20 transition-all">
             <img src="https://ui-avatars.com/api/?name=Admin+User&background=00B4D8&color=fff&size=64&bold=true" alt="Admin" className="w-full h-full object-cover" />
