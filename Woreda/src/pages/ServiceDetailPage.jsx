@@ -81,7 +81,7 @@ const ServiceDetailPage = () => {
   const hasLocationHoursInfo = details.officeNumber || details.hours;
 
   return (
-    <div className="bg-white min-h-screen pb-40">
+    <div className="bg-white dark:bg-[#080d14] min-h-screen pb-40 transition-colors duration-300">
 
       {/* ── OFFICE BANNER ──────────────────────────────────────────── */}
       {details.bannerPhoto && (
@@ -130,15 +130,15 @@ const ServiceDetailPage = () => {
 
       {/* ── ALTERNATIVE HEADER (when no banner) ──────────────────── */}
       {!details.bannerPhoto && (
-        <div className="pt-32 pb-16 bg-gradient-to-br from-slate-50 to-white">
+        <div className="pt-32 pb-16 bg-gradient-to-br from-black/3 dark:from-[#0d1420] to-white dark:to-[#080d14]">
           <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
             {/* Back button */}
             <div className="mb-8">
               <button
                 onClick={() => navigate('/services')}
-                className="inline-flex items-center gap-3 text-slate-400 hover:text-brand transition-colors group"
+                className="inline-flex items-center gap-3 text-black/30 dark:text-white/30 hover:text-brand transition-colors group"
               >
-                <div className="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center group-hover:bg-brand/10 group-hover:border-brand/20 transition-colors">
+                <div className="w-9 h-9 rounded-full bg-black/5 dark:bg-white/8 border border-black/8 dark:border-white/10 flex items-center justify-center group-hover:bg-brand/10 group-hover:border-brand/20 transition-colors">
                   <ArrowLeft className="w-4 h-4" />
                 </div>
                 <span className="text-[11px] font-black uppercase tracking-[0.2em]">{t('nav_all_services')}</span>
@@ -152,7 +152,7 @@ const ServiceDetailPage = () => {
                 {department || service.category} {details.officeNumber && `· ${details.officeNumber}`}
               </span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-black text-slate-800 leading-tight tracking-tighter max-w-3xl">
+            <h1 className="text-4xl md:text-6xl font-black text-black dark:text-white leading-tight tracking-tighter max-w-3xl">
               {title}
             </h1>
           </div>
@@ -161,7 +161,7 @@ const ServiceDetailPage = () => {
 
       {/* ── OFFICER PROFILE — full width strip below banner ────────── */}
       {hasOfficerInfo && (
-        <div className="bg-gradient-to-r from-slate-50 to-white border-b border-black/5">
+        <div className="bg-black/3 dark:bg-[#0d1420] border-b border-black/5 dark:border-white/8">
           <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-10">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8">
               {/* Large officer photo */}
@@ -181,7 +181,7 @@ const ServiceDetailPage = () => {
                   {t('sd_officer')}
                 </p>
                 {officerName && (
-                  <h2 className="text-3xl md:text-4xl font-black text-black tracking-tighter leading-none mb-2">
+                  <h2 className="text-3xl md:text-4xl font-black text-black dark:text-white tracking-tighter leading-none mb-2">
                     {officerName}
                   </h2>
                 )}
@@ -230,9 +230,9 @@ const ServiceDetailPage = () => {
               <section>
                 <div className="flex items-center gap-3 mb-5">
                   <span className="w-8 h-[3px] bg-brand rounded-full" />
-                  <h2 className="text-[10px] font-black text-black/35 uppercase tracking-[0.3em]">{t('sd_overview')}</h2>
+                  <h2 className="text-[10px] font-black text-black/35 dark:text-white/30 uppercase tracking-[0.3em]">{t('sd_overview')}</h2>
                 </div>
-                <p className="text-xl md:text-2xl text-black/55 font-semibold leading-relaxed">
+                <p className="text-xl md:text-2xl text-black/55 dark:text-white/45 font-semibold leading-relaxed">
                   {description}
                 </p>
               </section>
@@ -249,7 +249,7 @@ const ServiceDetailPage = () => {
                   {requirements.map((req, i) => (
                     <div
                       key={i}
-                      className="group flex items-start gap-4 p-5 rounded-2xl bg-black/[0.03] border border-transparent hover:border-brand/20 hover:bg-brand/5 transition-all duration-300"
+                      className="group flex items-start gap-4 p-5 rounded-2xl bg-black/[0.03] dark:bg-white/3 border border-transparent hover:border-brand/20 hover:bg-brand/5 dark:hover:bg-brand/10 transition-all duration-300"
                     >
                       <div className="w-7 h-7 rounded-xl bg-brand/10 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-brand/20 transition-colors">
                         <CheckCircle2 className="w-3.5 h-3.5 text-brand" />
@@ -258,7 +258,7 @@ const ServiceDetailPage = () => {
                         <span className="text-[9px] font-black text-brand/50 uppercase tracking-widest block mb-0.5">
                           {language === 'am' ? 'ሰነድ' : 'Doc'} {String(i + 1).padStart(2, '0')}
                         </span>
-                        <span className="text-sm font-bold text-black/65 group-hover:text-black transition-colors leading-snug">
+                        <span className="text-sm font-bold text-black/65 dark:text-white/55 group-hover:text-black dark:group-hover:text-white transition-colors leading-snug">
                           {req}
                         </span>
                       </div>
@@ -273,9 +273,9 @@ const ServiceDetailPage = () => {
               <section>
                 <div className="flex items-center gap-3 mb-5 mt-10">
                   <span className="w-8 h-[3px] bg-brand rounded-full" />
-                  <h2 className="text-[10px] font-black text-black/35 uppercase tracking-[0.3em]">{t('sd_guidelines')}</h2>
+                  <h2 className="text-[10px] font-black text-black/35 dark:text-white/30 uppercase tracking-[0.3em]">{t('sd_guidelines')}</h2>
                 </div>
-                <div className="p-6 rounded-3xl bg-black/[0.02] border border-black/5 text-sm font-bold text-black/60 leading-relaxed whitespace-pre-line">
+                <div className="p-6 rounded-3xl bg-black/[0.02] dark:bg-white/3 border border-black/5 dark:border-white/8 text-sm font-bold text-black/60 dark:text-white/40 leading-relaxed whitespace-pre-line">
                   {additionalDetails}
                 </div>
               </section>
@@ -300,10 +300,10 @@ const ServiceDetailPage = () => {
 
               {/* Location & Hours */}
               {hasLocationHoursInfo && (
-                <div className="rounded-3xl border border-black/5 bg-white shadow-lg shadow-black/5 overflow-hidden">
-                  <div className="px-7 py-4 border-b border-black/5 flex items-center gap-2">
+                <div className="rounded-3xl border border-black/5 dark:border-white/8 bg-white dark:bg-[#0d1420] shadow-lg shadow-black/5 dark:shadow-brand/5 overflow-hidden">
+                  <div className="px-7 py-4 border-b border-black/5 dark:border-white/8 flex items-center gap-2">
                     <MapPin className="w-3.5 h-3.5 text-brand" />
-                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-black/35">{t('sd_location')}</span>
+                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-black/35 dark:text-white/30">{t('sd_location')}</span>
                   </div>
                   <div className="p-7 space-y-6">
                     {details.officeNumber && (
@@ -315,8 +315,8 @@ const ServiceDetailPage = () => {
                           <p className="text-[9px] font-black text-black/25 uppercase tracking-[0.2em] mb-1">
                             {language === 'am' ? 'ቢሮ' : 'Office'}
                           </p>
-                          <p className="text-base font-black text-black leading-snug">{details.officeNumber}</p>
-                          <p className="text-[11px] text-black/30 font-semibold mt-0.5">{t('footer_address')}</p>
+                          <p className="text-base font-black text-black dark:text-white leading-snug">{details.officeNumber}</p>
+                          <p className="text-[11px] text-black/30 dark:text-white/30 font-semibold mt-0.5">{t('footer_address')}</p>
                         </div>
                       </div>
                     )}
@@ -380,7 +380,7 @@ const ServiceDetailPage = () => {
               {/* Back button */}
               <Link
                 to="/services"
-                className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl border-2 border-black/8 text-black/40 hover:border-brand hover:text-brand font-black text-sm uppercase tracking-widest transition-all duration-300"
+                className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl border-2 border-black/8 dark:border-white/10 text-black/40 dark:text-white/40 hover:border-brand hover:text-brand font-black text-sm uppercase tracking-widest transition-all duration-300"
                 style={{ borderColor: 'rgba(0,0,0,0.08)' }}
               >
                 <ArrowLeft className="w-4 h-4" /> {t('sd_back')}

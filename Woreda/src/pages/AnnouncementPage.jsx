@@ -92,12 +92,12 @@ const AnnouncementModal = ({ announcement, onClose, language }) => {
       onClick={(e) => { if (e.target === backdropRef.current) onClose(); }}
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm px-0 sm:px-4"
     >
-      <div className="bg-white w-full sm:max-w-2xl rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[85vh] overflow-hidden animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-300">
+      <div className="bg-white dark:bg-[#111827] w-full sm:max-w-2xl rounded-t-3xl sm:rounded-3xl shadow-2xl dark:shadow-brand/10 flex flex-col max-h-[92vh] sm:max-h-[85vh] overflow-hidden animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-300">
         {/* Aqua top bar */}
         <div className={`h-1.5 w-full ${cat.accent} shrink-0`} />
 
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 px-7 pt-6 pb-5 border-b border-slate-100 shrink-0">
+        <div className="flex items-start justify-between gap-4 px-7 pt-6 pb-5 border-b border-black/8 dark:border-white/8 shrink-0">
           <div className="flex items-center gap-3">
             <div className={`w-11 h-11 rounded-2xl ${cat.bg} flex items-center justify-center shrink-0`}>
               <Icon className={`w-5 h-5 ${cat.color}`} />
@@ -127,16 +127,16 @@ const AnnouncementModal = ({ announcement, onClose, language }) => {
 
         {/* Body */}
         <div className="flex-1 overflow-y-auto px-7 py-6 space-y-5">
-          <h2 className="text-2xl sm:text-3xl font-black text-black tracking-tighter leading-snug">{title}</h2>
+          <h2 className="text-2xl sm:text-3xl font-black text-black dark:text-white tracking-tighter leading-snug">{title}</h2>
           <div className={`h-0.5 w-16 ${cat.accent} rounded-full`} />
-          <p className="text-base text-black/60 font-medium leading-relaxed whitespace-pre-wrap">{content}</p>
+          <p className="text-base text-black/60 dark:text-white/50 font-medium leading-relaxed whitespace-pre-wrap">{content}</p>
         </div>
 
         {/* Footer */}
-        <div className="shrink-0 px-7 py-5 border-t border-slate-100 flex justify-end">
+        <div className="shrink-0 px-7 py-5 border-t border-black/8 dark:border-white/8 flex justify-end">
           <button
             onClick={onClose}
-            className="px-7 py-3 rounded-2xl bg-black text-white text-[11px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all"
+            className="px-7 py-3 rounded-2xl bg-black dark:bg-white/10 dark:hover:bg-white/20 text-white text-[11px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all"
           >
             {language === 'am' ? 'ዝጋ' : 'Close'}
           </button>
@@ -159,7 +159,7 @@ const AnnouncementCard = ({ announcement, index, onViewMore, language, t }) => {
 
   return (
     <article
-      className={`group relative bg-white rounded-3xl border ${cat.border} overflow-hidden hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/8 transition-all duration-500`}
+      className={`group relative bg-white dark:bg-[#0d1420] rounded-3xl border ${cat.border} dark:border-opacity-40 overflow-hidden hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand/10 transition-all duration-500`}
       style={{ animationDelay: `${index * 60}ms` }}
     >
       {/* Left accent bar */}
@@ -187,12 +187,12 @@ const AnnouncementCard = ({ announcement, index, onViewMore, language, t }) => {
         </div>
 
         {/* Title */}
-        <h3 className="text-xl font-black text-black leading-snug mb-3 tracking-tight group-hover:text-[#0077B6] transition-colors">
+        <h3 className="text-xl font-black text-black dark:text-white leading-snug mb-3 tracking-tight group-hover:text-[#00B4D8] transition-colors">
           {title}
         </h3>
 
         {/* Preview */}
-        <p className="text-sm text-black/50 font-medium leading-relaxed mb-6">{preview}</p>
+        <p className="text-sm text-black/50 dark:text-white/40 font-medium leading-relaxed mb-6">{preview}</p>
 
         {/* Footer */}
         <div className="flex items-center justify-between">
@@ -224,8 +224,8 @@ const CategoryBanner = ({ categoryKey, language }) => {
   if (!cat) return null;
   const Icon = cat.icon;
   return (
-    <div className={`flex items-start gap-4 px-6 py-5 rounded-2xl ${cat.bg} border ${cat.border} mb-8 transition-all duration-300`}>
-      <div className={`w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm shrink-0 mt-0.5`}>
+    <div className={`flex items-start gap-4 px-6 py-5 rounded-2xl ${cat.bg} dark:bg-[#0d1420] border ${cat.border} dark:border-white/8 mb-8 transition-all duration-300`}>
+      <div className={`w-10 h-10 rounded-xl bg-white dark:bg-[#111827] flex items-center justify-center shadow-sm shrink-0 mt-0.5`}>
         <Icon className={`w-5 h-5 ${cat.color}`} />
       </div>
       <div>
@@ -233,7 +233,7 @@ const CategoryBanner = ({ categoryKey, language }) => {
           {cat.label[language] || cat.label.en}
         </p>
         <div className={`w-10 h-0.5 ${cat.accent} rounded-full mb-2`} />
-        <p className="text-sm font-medium text-black/60 leading-relaxed">
+        <p className="text-sm font-medium text-black/60 dark:text-white/40 leading-relaxed">
           {cat.desc[language] || cat.desc.en}
         </p>
       </div>
@@ -278,7 +278,7 @@ const AnnouncementPage = () => {
   });
 
   return (
-    <div className="bg-white min-h-screen pt-4 pb-40 lg:pt-8">
+    <div className="bg-white dark:bg-[#080d14] min-h-screen pt-4 pb-40 lg:pt-8 transition-colors duration-300">
       <div className="max-w-5xl mx-auto px-6 sm:px-8 lg:px-12">
 
         {/* ── Hero Header ── */}
@@ -287,7 +287,7 @@ const AnnouncementPage = () => {
             <Megaphone className="w-3.5 h-3.5" />
             {language === 'am' ? 'ወረዳ 05' : 'Woreda 05'}
           </div>
-          <h1 className="text-5xl md:text-7xl font-black text-black leading-tight mb-4 tracking-tighter">
+          <h1 className="text-5xl md:text-7xl font-black text-black dark:text-white leading-tight mb-4 tracking-tighter">
             {language === 'am' ? 'ማስታወቂያዎች' : 'Announce'}
             <br />
             <span className="relative inline-block">
@@ -298,7 +298,7 @@ const AnnouncementPage = () => {
               />
             </span>
           </h1>
-          <p className="text-base text-black/40 font-bold max-w-xl mx-auto mt-6">
+          <p className="text-base text-black/40 dark:text-white/40 font-bold max-w-xl mx-auto mt-6">
             {language === 'am'
               ? 'ከወረዳ 05 የሚወጡ የቅርብ ጊዜ መረጃዎችን፣ ዝግጅቶችን እና ይፋዊ ማስታወቂያዎችን ይከታተሉ።'
               : 'Stay informed with the latest updates, events, and official communications from Woreda 05.'}
@@ -316,7 +316,7 @@ const AnnouncementPage = () => {
               placeholder={language === 'am' ? 'ማስታወቂያ ፈልግ...' : 'Search announcements...'}
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full bg-black/5 border-2 border-transparent py-4 pl-14 pr-6 rounded-2xl text-sm font-bold text-black placeholder:text-black/25 focus:bg-white focus:border-[#00B4D8] focus:shadow-[0_0_30px_rgba(0,180,216,0.12)] transition-all outline-none"
+              className="w-full bg-black/5 dark:bg-white/5 border-2 border-transparent py-4 pl-14 pr-6 rounded-2xl text-sm font-bold text-black dark:text-white placeholder:text-black/25 dark:placeholder:text-white/20 focus:bg-white dark:focus:bg-[#0d1420] focus:border-[#00B4D8] focus:shadow-[0_0_30px_rgba(0,180,216,0.12)] transition-all outline-none"
             />
           </div>
           <div className="flex gap-2 flex-wrap">
@@ -327,7 +327,7 @@ const AnnouncementPage = () => {
                 className={`px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${
                   activeFilter === f.id
                     ? 'bg-[#00B4D8] text-white shadow-lg shadow-[#00B4D8]/25'
-                    : 'bg-black/5 text-black/40 hover:bg-[#00B4D8]/10 hover:text-[#0077B6]'
+                    : 'bg-black/5 dark:bg-white/5 text-black/40 dark:text-white/40 hover:bg-[#00B4D8]/10 hover:text-[#0077B6] dark:hover:bg-brand/20 dark:hover:text-brand'
                 }`}
               >
                 {f.label}
@@ -341,7 +341,7 @@ const AnnouncementPage = () => {
 
         {/* ── Results count ── */}
         {!loading && (
-          <p className="text-[10px] font-black uppercase tracking-widest text-black/25 mb-6">
+          <p className="text-[10px] font-black uppercase tracking-widest text-black/25 dark:text-white/20 mb-6">
             {filtered.length} {language === 'am' ? 'ውጤቶች' : 'results'}
           </p>
         )}
@@ -350,7 +350,7 @@ const AnnouncementPage = () => {
         {loading ? (
           <div className="py-24 text-center">
             <div className="w-10 h-10 border-4 border-[#00B4D8]/20 border-t-[#00B4D8] rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-sm font-black text-black/20 uppercase tracking-widest">
+            <p className="text-sm font-black text-black/20 dark:text-white/20 uppercase tracking-widest">
               {language === 'am' ? 'ማስታወቂያዎችን በመጫን ላይ...' : 'Loading announcements...'}
             </p>
           </div>
@@ -369,10 +369,10 @@ const AnnouncementPage = () => {
           </div>
         ) : (
           <div className="py-24 text-center">
-            <div className="w-16 h-16 rounded-3xl bg-black/5 flex items-center justify-center mx-auto mb-4">
-              <Bell className="w-8 h-8 text-black/15" />
+            <div className="w-16 h-16 rounded-3xl bg-black/5 dark:bg-white/5 flex items-center justify-center mx-auto mb-4">
+              <Bell className="w-8 h-8 text-black/15 dark:text-white/10" />
             </div>
-            <p className="text-xl font-black text-black/20 uppercase tracking-widest">
+            <p className="text-xl font-black text-black/20 dark:text-white/20 uppercase tracking-widest">
               {language === 'am' ? 'ምንም ማስታወቂያ አልተገኘም' : 'No announcements found'}
             </p>
           </div>

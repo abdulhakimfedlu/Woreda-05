@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+/* Enable class-based dark mode for Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
 
@@ -15,6 +18,27 @@
 @layer base {
   body {
     @apply antialiased bg-white text-black selection:bg-brand/20;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Dark mode body */
+  html.dark body {
+    @apply bg-[#080d14] text-white;
+  }
+
+  /* Smooth transitions on all elements */
+  * {
+    transition-property: background-color, border-color, color;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+  }
+
+  /* Override transition for transforms & opacity so animations still work */
+  [class*="translate-"],
+  [class*="rotate-"],
+  [class*="scale-"],
+  [class*="opacity-"] {
+    transition-property: transform, opacity;
   }
 }
 
@@ -32,8 +56,17 @@
     @apply h-3 opacity-100;
   }
 
+  /* Dark mode card utility */
+  .dark-card {
+    @apply dark:bg-[#111827] dark:border-white/8 dark:shadow-black/40;
+  }
+
   .glass-card-premium {
     @apply bg-white/70 backdrop-blur-2xl border border-white shadow-[0_15px_60px_-15px_rgba(0,0,0,0.05)] hover:shadow-brand/20 transition-all duration-500 hover:-translate-y-2;
+  }
+
+  html.dark .glass-card-premium {
+    @apply bg-white/5 border-white/10 shadow-[0_15px_60px_-15px_rgba(0,0,0,0.5)];
   }
 
   .subtle-glow {
@@ -45,14 +78,7 @@
   }
 
   @keyframes float-calm {
-
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-
-    50% {
-      transform: translateY(-15px);
-    }
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-15px); }
   }
 }

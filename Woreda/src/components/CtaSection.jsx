@@ -7,14 +7,13 @@ const CtaSection = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="py-24 bg-black relative overflow-hidden mx-6 sm:mx-12 mb-24 rounded-[4rem]">
-      {/* Decorative Background Elements */}
+    <section className="py-24 bg-black dark:bg-[#0a0f1a] relative overflow-hidden mx-6 sm:mx-12 mb-24 rounded-[4rem] border dark:border-white/5">
       <div className="absolute top-0 right-0 w-full h-full opacity-20">
-        <motion.div 
+        <motion.div
           animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.3, 0.1] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand rounded-full blur-[160px]"
-        ></motion.div>
+        />
       </div>
 
       <div className="max-w-5xl mx-auto px-8 relative z-10 text-center">
@@ -24,7 +23,6 @@ const CtaSection = () => {
         <p className="text-xl md:text-2xl text-white/40 font-black uppercase tracking-tight mb-12 max-w-3xl mx-auto">
           {t('home_cta_desc')}
         </p>
-        
         <div className="flex flex-wrap justify-center gap-6">
           <Link
             to="/gallery"

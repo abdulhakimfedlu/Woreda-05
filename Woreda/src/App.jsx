@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import Hero from './components/Hero';
 import PopularServices from './components/PopularServices';
 import { LanguageProvider } from './context/LanguageContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 import ServicesPage from './pages/ServicesPage';
 import CategoryServicesPage from './pages/CategoryServicesPage';
@@ -14,12 +15,10 @@ import GalleryPage from './pages/GalleryPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 
-// New Components
 import AboutSection from './components/AboutSection';
 import FeaturesSection from './components/FeaturesSection';
 import CtaSection from './components/CtaSection';
 
-// Home Component
 const Home = () => (
   <>
     <Hero />
@@ -32,26 +31,27 @@ const Home = () => (
 
 function App() {
   return (
-    <LanguageProvider>
-      <div className="min-h-screen flex flex-col font-sans selection:bg-brand/20">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/categories/:categoryName" element={<CategoryServicesPage />} />
-            <Route path="/services/:id" element={<ServiceDetailPage />} />
-            <Route path="/announcements" element={<AnnouncementPage />} />
-            <Route path="/gallery" element={<GalleryPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <div className="min-h-screen flex flex-col font-sans selection:bg-brand/20 bg-white dark:bg-[#080d14] transition-colors duration-300">
+          <Navbar />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/services" element={<ServicesPage />} />
+              <Route path="/categories/:categoryName" element={<CategoryServicesPage />} />
+              <Route path="/services/:id" element={<ServiceDetailPage />} />
+              <Route path="/announcements" element={<AnnouncementPage />} />
+              <Route path="/gallery" element={<GalleryPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 
 export default App;
-
