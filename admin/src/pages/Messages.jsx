@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Trash2, CheckCircle, User, Phone, Calendar, Inbox, Clock, X, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
+import { confirmToast } from '../utils/toast-utils';
+import toast from 'react-hot-toast';
 
 const SideSheet = ({ m, onClose, onDelete, onMarkRead, t }) => {
   if (!m) return null;
@@ -48,6 +51,23 @@ const SideSheet = ({ m, onClose, onDelete, onMarkRead, t }) => {
             </div>
           </div>
 
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+               <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{t('msg_table_type') || 'Type'}</p>
+               <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                  {m.messageType === 'General' ? (t('msg_type_general_label') || 'General') : (t('msg_type_service_label') || 'Service-Related')}
+               </div>
+            </div>
+            {m.serviceCategory && (
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{t('msg_category_label') || 'Category'}</p>
+                 <div className="flex items-center gap-2 text-xs font-bold text-slate-700 truncate">
+                    {m.serviceCategory}
+                 </div>
+              </div>
+            )}
+          </div>
+
           <div className="space-y-4">
             <div className="flex items-center gap-2">
                <div className="w-1 h-4 bg-brand rounded-full" />
@@ -82,13 +102,18 @@ const SideSheet = ({ m, onClose, onDelete, onMarkRead, t }) => {
 
 export function Messages() {
   const { t } = useLanguage();
+  const { token } = useAuth();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
+  const [typeFilter, setTypeFilter] = useState('All');
+  const [categoryFilter, setCategoryFilter] = useState('All');
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/messages');
+      const res = await fetch('http://localhost:5000/api/messages', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       const data = await res.json();
       setMessages(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -103,23 +128,39 @@ export function Messages() {
   }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm(t('msg_confirm_delete'))) return;
+    const confirmed = await confirmToast(t('msg_confirm_delete'));
+    if (!confirmed) return;
     try {
-      await fetch(`http://localhost:5000/api/messages/${id}`, { method: 'DELETE' });
+      await fetch(`http://localhost:5000/api/messages/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       setMessages(messages.filter(m => m.id !== id));
       if (selected?.id === id) setSelected(null);
+      toast.success(t('status_removed') || 'Message deleted successfully');
     } catch (err) {
       console.error(err);
+      toast.error('Failed to delete message');
     }
   };
 
   const handleMarkRead = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/messages/${id}/read`, { method: 'PATCH' });
+      await fetch(`http://localhost:5000/api/messages/${id}/read`, { 
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       setMessages(messages.map(m => m.id === id ? { ...m, isRead: true } : m));
-      if (selected?.id === id) setSelected({ ...selected, isRead: true });
+      if (selected?.id === id) setSelected(prev => ({ ...prev, isRead: true }));
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleSelectMessage = (m) => {
+    setSelected(m);
+    if (!m.isRead) {
+      handleMarkRead(m.id);
     }
   };
 
@@ -127,16 +168,46 @@ export function Messages() {
     <div className="animate-in fade-in duration-500 h-[calc(100vh-160px)] flex flex-col">
       {/* Ultra-Slim Header */}
       <div className="flex items-center justify-between mb-8 px-2">
-        <div className="flex items-center gap-4">
-           <h2 className="text-2xl font-black text-slate-800 tracking-tighter uppercase tracking-widest">{t('msg_inbox')}</h2>
-           <div className="flex items-center gap-2">
-             <span className="px-2.5 py-1 rounded-full bg-slate-100 text-[10px] font-black text-slate-500 border border-slate-200">{messages.length}</span>
-             <span className="px-2.5 py-1 rounded-full bg-brand/10 text-[10px] font-black text-brand border border-brand/20">
-               {messages.filter(m => !m.isRead).length} {t('msg_unread')}
-             </span>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+           <div className="flex items-center gap-4">
+             <h2 className="text-2xl font-black text-slate-800 tracking-tighter uppercase tracking-widest">{t('msg_inbox')}</h2>
+             <div className="flex items-center gap-2">
+               <span className="px-2.5 py-1 rounded-full bg-slate-100 text-[10px] font-black text-slate-500 border border-slate-200">{messages.length}</span>
+               <span className="px-2.5 py-1 rounded-full bg-brand/10 text-[10px] font-black text-brand border border-brand/20">
+                 {messages.filter(m => !m.isRead).length} {t('msg_unread')}
+               </span>
+             </div>
+           </div>
+           
+           <div className="flex items-center gap-2 flex-wrap">
+             <select 
+               value={typeFilter} 
+               onChange={(e) => {
+                 setTypeFilter(e.target.value);
+                 if (e.target.value !== 'Service-Related') setCategoryFilter('All');
+               }}
+               className="bg-white border border-slate-200 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-lg px-3 py-2 outline-none focus:border-brand"
+             >
+               <option value="All">{t('msg_filter_all') || 'All'}</option>
+               <option value="General">{t('msg_type_general_label') || 'General'}</option>
+               <option value="Service-Related">{t('msg_type_service_label') || 'Service-Related'}</option>
+             </select>
+             
+             {typeFilter === 'Service-Related' && (
+               <select 
+                 value={categoryFilter} 
+                 onChange={(e) => setCategoryFilter(e.target.value)}
+                 className="bg-white border border-slate-200 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-lg px-3 py-2 outline-none focus:border-brand"
+               >
+                 <option value="All">{t('msg_category_label') || 'Category'} ({t('msg_filter_all') || 'All'})</option>
+                 {Array.from(new Set(messages.filter(m => m.messageType === 'Service-Related' && m.serviceCategory).map(m => m.serviceCategory))).map(cat => (
+                   <option key={cat} value={cat}>{cat}</option>
+                 ))}
+               </select>
+             )}
            </div>
         </div>
-        <div className="hidden sm:flex items-center gap-2">
+        <div className="hidden lg:flex items-center gap-2">
            <button onClick={fetchMessages} className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-brand transition-colors">{t('msg_refresh')}</button>
         </div>
       </div>
@@ -165,10 +236,14 @@ export function Messages() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50 text-xs">
-                {messages.map((m) => (
+                {messages.filter(m => {
+                  if (typeFilter !== 'All' && m.messageType !== typeFilter) return false;
+                  if (typeFilter === 'Service-Related' && categoryFilter !== 'All' && m.serviceCategory !== categoryFilter) return false;
+                  return true;
+                }).map((m) => (
                   <tr 
                     key={m.id} 
-                    onClick={() => setSelected(m)}
+                    onClick={() => handleSelectMessage(m)}
                     className={`group cursor-pointer hover:bg-slate-50/80 transition-all ${!m.isRead ? 'bg-brand/[0.02]' : ''}`}
                   >
                     <td className="px-6 py-3.5 whitespace-nowrap">

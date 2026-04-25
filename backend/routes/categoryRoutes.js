@@ -3,6 +3,8 @@ const router = express.Router();
 const db = require('../config/db');
 const { categories } = require('../config/schema');
 const { desc, eq } = require('drizzle-orm');
+const authMiddleware = require('./authMiddleware');
+const { checkPerm } = require('./adminRoleMiddleware');
 
 // @route   GET /api/categories
 // @desc    Get all categories
@@ -18,7 +20,7 @@ router.get('/', async (req, res) => {
 
 // @route   POST /api/categories
 // @desc    Create a category
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware, checkPerm('canManageCategories'), async (req, res) => {
   try {
     const { name, nameAm, description, descriptionAm, categoryNumber } = req.body;
     const newCategory = await db.insert(categories).values({
@@ -37,7 +39,7 @@ router.post('/', async (req, res) => {
 
 // @route   PUT /api/categories/:id
 // @desc    Update a category
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, checkPerm('canManageCategories'), async (req, res) => {
   try {
     const { name, nameAm, description, descriptionAm, categoryNumber } = req.body;
     const updated = await db.update(categories)
@@ -61,7 +63,7 @@ router.put('/:id', async (req, res) => {
 
 // @route   DELETE /api/categories/:id
 // @desc    Delete a category
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, checkPerm('canManageCategories'), async (req, res) => {
   try {
     const result = await db.delete(categories).where(eq(categories.id, parseInt(req.params.id))).returning();
     if (result.length === 0) return res.status(404).json({ msg: 'Category not found' });

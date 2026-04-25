@@ -3,6 +3,8 @@ const router = express.Router();
 const db = require('../config/db');
 const { serviceDetails, services } = require('../config/schema');
 const { eq } = require('drizzle-orm');
+const authMiddleware = require('./authMiddleware');
+const { checkPerm } = require('./adminRoleMiddleware');
 
 // @route   GET /api/service-details/:serviceId
 // @desc    Get service details by service ID
@@ -28,7 +30,7 @@ router.get('/:serviceId', async (req, res) => {
 
 // @route   PUT /api/service-details/:serviceId
 // @desc    Upsert service details by service ID
-router.put('/:serviceId', async (req, res) => {
+router.put('/:serviceId', authMiddleware, checkPerm('canManageServices'), async (req, res) => {
   try {
     const serviceId = parseInt(req.params.serviceId);
     const { 
@@ -70,7 +72,7 @@ router.put('/:serviceId', async (req, res) => {
 
 // @route   DELETE /api/service-details/:serviceId
 // @desc    Delete service details by service ID
-router.delete('/:serviceId', async (req, res) => {
+router.delete('/:serviceId', authMiddleware, checkPerm('canManageServices'), async (req, res) => {
   try {
     const serviceId = parseInt(req.params.serviceId);
     

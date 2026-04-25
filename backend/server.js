@@ -56,7 +56,11 @@ const galleryRoutes = require('./routes/galleryRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const serviceDetailsRoutes = require('./routes/serviceDetailsRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
+app.use('/api/auth', authRoutes);
+app.use('/api/admins', adminRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/services', servicesRoutes);
 app.use('/api/gallery', galleryRoutes);

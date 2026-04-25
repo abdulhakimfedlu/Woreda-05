@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Search, Settings, FileText, Star } from 'lucide-react';
 import { Modal } from '../components/Modal';
 import { useLanguage } from '../context/LanguageContext';
+import toast from 'react-hot-toast';
+import { confirmToast } from '../utils/toast-utils';
+import { useAuth } from '../context/AuthContext';
 
 export function Services() {
   const { language, t } = useLanguage();
+  const { token } = useAuth();
   const [activeTab, setActiveTab] = useState('list');
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -61,38 +65,53 @@ export function Services() {
     try {
       const res = await fetch(`http://localhost:5000/api/services/${serviceId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        },
         body: JSON.stringify({ isPopular: !currentStatus })
       });
       if (res.ok) {
         fetchData();
-        alert(`Service ${!currentStatus ? 'added to' : 'removed from'} popular section!`);
+        toast.success(`Service ${!currentStatus ? 'added to' : 'removed from'} popular section!`);
       } else {
-        alert('Failed to update service popularity status.');
+        toast.error('Failed to update service popularity status.');
       }
     } catch (error) {
       console.error('Error updating service popularity:', error);
-      alert('Error updating service popularity.');
+      toast.error('Error updating service popularity.');
     }
   };
 
   const deleteService = async (id) => {
-    if(!confirm('Are you sure you want to delete this service?')) return;
+    const confirmed = await confirmToast('Are you sure you want to delete this service?');
+    if(!confirmed) return;
     try {
-      await fetch(`http://localhost:5000/api/services/${id}`, { method: 'DELETE' });
+      await fetch(`http://localhost:5000/api/services/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       fetchData();
+      toast.success(t('status_removed'));
     } catch (error) {
       console.error('Error deleting service:', error);
+      toast.error(t('status_error'));
     }
   };
 
   const deleteCategory = async (id) => {
-    if(!confirm('Are you sure you want to delete this category? Services using this category name will remain.')) return;
+    const confirmed = await confirmToast('Are you sure you want to delete this category? Services using this category name will remain.');
+    if(!confirmed) return;
     try {
-      await fetch(`http://localhost:5000/api/categories/${id}`, { method: 'DELETE' });
+      await fetch(`http://localhost:5000/api/categories/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       fetchData();
+      toast.success(t('status_removed'));
     } catch (error) {
       console.error('Error deleting category:', error);
+      toast.error(t('status_error'));
     }
   };
 
@@ -131,7 +150,10 @@ export function Services() {
     try {
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(serviceFormData)
       });
       if (res.ok) {
@@ -139,14 +161,14 @@ export function Services() {
         setEditingService(null);
         setServiceFormData({ title: '', titleAm: '', department: '', departmentAm: '', category: '', isPopular: false });
         fetchData();
-        alert(editingService ? 'Service updated successfully!' : 'New service initialized successfully!');
+        toast.success(editingService ? 'Service updated successfully!' : 'New service initialized successfully!');
       } else {
         const errorData = await res.json();
-        alert(`Failed to save: ${errorData.msg || 'Unknown error'}`);
+        toast.error(`Failed to save: ${errorData.msg || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error saving service:', error);
-      alert('Internal Server Error. Please check if the backend is running.');
+      toast.error('Internal Server Error. Please check if the backend is running.');
     }
   };
 
@@ -160,7 +182,10 @@ export function Services() {
     try {
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(categoryFormData)
       });
       if (res.ok) {
@@ -168,14 +193,14 @@ export function Services() {
         setEditingCategory(null);
         setCategoryFormData({ name: '', nameAm: '', description: '', descriptionAm: '', categoryNumber: '' });
         fetchData();
-        alert(editingCategory ? 'Category updated successfully!' : 'New category created successfully!');
+        toast.success(editingCategory ? 'Category updated successfully!' : 'New category created successfully!');
       } else {
         const errorData = await res.json();
-        alert(`Failed to save: ${errorData.msg || 'Unknown error'}`);
+        toast.error(`Failed to save: ${errorData.msg || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error saving category:', error);
-      alert('Internal Server Error. Please check if the backend is running.');
+      toast.error('Internal Server Error. Please check if the backend is running.');
     }
   };
 
@@ -227,12 +252,12 @@ export function Services() {
           setIsServiceModalOpen(false);
           setEditingService(null);
         }} 
-        title={editingService ? "Update Service Details" : "Register New Service"}
+        title={editingService ? t('serv_form_update') : t('serv_form_create')}
       >
         <form onSubmit={handleServiceSubmit} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Service Title (English)</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('serv_form_title_en')}</label>
               <input 
                 required
                 type="text"
@@ -243,7 +268,7 @@ export function Services() {
               />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Service Title (Amharic)</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('serv_form_title_am')}</label>
               <input 
                 type="text"
                 value={serviceFormData.titleAm}
@@ -255,7 +280,7 @@ export function Services() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Department (English)</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('serv_form_dept_en')}</label>
               <input 
                 required
                 type="text"
@@ -266,7 +291,7 @@ export function Services() {
               />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Department (Amharic)</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('serv_form_dept_am')}</label>
               <input 
                 type="text"
                 value={serviceFormData.departmentAm}
@@ -277,7 +302,7 @@ export function Services() {
             </div>
           </div>
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Category</label>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('serv_form_cat')}</label>
             <select 
               required
               value={serviceFormData.category}
@@ -296,8 +321,8 @@ export function Services() {
             <div className="flex items-center gap-3">
               <Star className="w-5 h-5 text-amber-500" />
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Popular Service</label>
-                <p className="text-xs text-slate-500 mt-1">Display this service in the Popular section</p>
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('serv_form_pop')}</label>
+                <p className="text-xs text-slate-500 mt-1">{t('serv_form_pop_desc')}</p>
               </div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer ml-auto">
@@ -314,7 +339,7 @@ export function Services() {
             type="submit"
             className="w-full py-4 mt-4 bg-[#00B4D8] text-white font-black text-xs uppercase tracking-[0.3em] rounded-2xl shadow-xl shadow-[#00B4D8]/20 hover:bg-[#0077B6] hover:shadow-[#00B4D8]/30 transition-all"
           >
-            {editingService ? "Save Service Changes" : "Create Service"}
+            {editingService ? t('serv_btn_save_serv') : t('serv_btn_create_serv')}
           </button>
         </form>
       </Modal>
@@ -326,12 +351,12 @@ export function Services() {
           setIsCategoryModalOpen(false);
           setEditingCategory(null);
         }} 
-        title={editingCategory ? "Update Category Details" : "Register New Category"}
+        title={editingCategory ? t('cat_form_update') : t('cat_form_create')}
       >
         <form onSubmit={handleCategorySubmit} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Category Name (English)</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('cat_form_name_en')}</label>
               <input 
                 required
                 type="text"
@@ -342,7 +367,7 @@ export function Services() {
               />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Category Name (Amharic)</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('cat_form_name_am')}</label>
               <input 
                 type="text"
                 value={categoryFormData.nameAm}
@@ -353,7 +378,7 @@ export function Services() {
             </div>
           </div>
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Category Number (Order)</label>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('cat_form_num')}</label>
             <input 
               type="number"
               value={categoryFormData.categoryNumber}
@@ -363,7 +388,7 @@ export function Services() {
             />
           </div>
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Description (English)</label>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('cat_form_desc_en')}</label>
             <textarea 
               rows="3"
               value={categoryFormData.description}
@@ -373,7 +398,7 @@ export function Services() {
             />
           </div>
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Description (Amharic)</label>
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('cat_form_desc_am')}</label>
             <textarea 
               rows="3"
               value={categoryFormData.descriptionAm}
@@ -386,7 +411,7 @@ export function Services() {
             type="submit"
             className="w-full py-4 mt-4 bg-[#00B4D8] text-white font-black text-xs uppercase tracking-[0.3em] rounded-2xl shadow-xl shadow-[#00B4D8]/20 hover:bg-[#0077B6] hover:shadow-[#00B4D8]/30 transition-all"
           >
-            {editingCategory ? "Save Category Changes" : "Create Category"}
+            {editingCategory ? t('cat_btn_save') : t('cat_btn_create')}
           </button>
         </form>
       </Modal>

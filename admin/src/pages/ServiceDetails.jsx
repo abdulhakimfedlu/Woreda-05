@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Save, ChevronLeft, Info, FileText, User, Users, Briefcase, Mail, Phone, MapPin, Search } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 
 export function ServiceDetails() {
   const { id } = useParams();
   const { language, t } = useLanguage();
+  const { token } = useAuth();
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -30,12 +33,16 @@ export function ServiceDetails() {
     try {
       const res = await fetch(`http://localhost:5000/api/services/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(service)
       });
-      if (res.ok) alert(t('btn_save') === 'አስቀምጥ' ? 'አገልግሎት በተሳካ ሁኔታ ተዘምኗል!' : 'Service updated successfully!');
+      if (res.ok) toast.success(t('status_saving') === 'በማስቀመጥ ላይ...' ? 'አገልግሎት በተሳካ ሁኔታ ተዘምኗል!' : 'Service updated successfully!');
     } catch (err) {
       console.error(err);
+      toast.error(t('status_error'));
     } finally {
       setSaving(false);
     }
@@ -287,8 +294,8 @@ export function ServiceDetails() {
                       value={service.isPopular}
                       onChange={e => setService({ ...service, isPopular: e.target.value === 'true' })}
                     >
-                      <option value="true">{t('btn_save') === 'አስቀምጥ' ? 'አዎ' : 'Yes'}</option>
-                      <option value="false">{t('btn_save') === 'አስቀምጥ' ? 'አይ' : 'No'}</option>
+                      <option value="true">{language === 'am' ? 'አዎ' : 'Yes'}</option>
+                      <option value="false">{language === 'am' ? 'አይ' : 'No'}</option>
                     </select>
                   </div>
                   <div>

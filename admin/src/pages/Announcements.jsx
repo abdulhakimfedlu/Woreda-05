@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Search, Filter, Calendar } from 'lucide-react';
 import { Modal } from '../components/Modal';
 import { useLanguage } from '../context/LanguageContext';
+import toast from 'react-hot-toast';
+import { confirmToast } from '../utils/toast-utils';
+import { useAuth } from '../context/AuthContext';
 
 export function Announcements() {
   const { t } = useLanguage();
+  const { token } = useAuth();
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,12 +40,18 @@ export function Announcements() {
   };
 
   const deleteAnnouncement = async (id) => {
-    if(!confirm(t('ann_confirm_delete'))) return;
+    const confirmed = await confirmToast(t('ann_confirm_delete'));
+    if(!confirmed) return;
     try {
-      await fetch(`http://localhost:5000/api/announcements/${id}`, { method: 'DELETE' });
+      await fetch(`http://localhost:5000/api/announcements/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       fetchAnnouncements();
+      toast.success(t('status_removed'));
     } catch (error) {
       console.error('Error deleting:', error);
+      toast.error(t('status_error'));
     }
   };
 
@@ -69,7 +79,10 @@ export function Announcements() {
     try {
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(formData)
       });
       if (res.ok) {
@@ -77,14 +90,14 @@ export function Announcements() {
         setEditingItem(null);
         setFormData({ title: '', titleAm: '', status: 'Published', category: 'Urgent', author: 'Admin', content: '', contentAm: '' });
         fetchAnnouncements();
-        alert(editingItem ? t('ann_alert_updated') : t('ann_alert_created'));
+        toast.success(editingItem ? t('ann_alert_updated') : t('ann_alert_created'));
       } else {
         const errorData = await res.json();
-        alert(`${t('ann_alert_save_failed')} ${errorData.msg || 'Unknown error'}`);
+        toast.error(`${t('ann_alert_save_failed')} ${errorData.msg || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error saving announcement:', error);
-      alert(t('ann_alert_server_error'));
+      toast.error(t('ann_alert_server_error'));
     }
   };
 
@@ -258,7 +271,7 @@ export function Announcements() {
                         ? 'bg-blue-50 text-blue-600 border border-blue-100'
                         : 'bg-indigo-50 text-indigo-600 border border-indigo-100'
                     }`}>
-                      {announcement.category || 'Urgent'}
+                      {announcement.category === 'Team' ? t('ann_category_team') : announcement.category === 'Work' ? t('ann_category_work') : t('ann_category_urgent')}
                     </span>
                   </td>
                   <td className="px-8 py-5">
@@ -269,7 +282,7 @@ export function Announcements() {
                         ? 'bg-red-50 text-red-600 border border-red-100'
                         : 'bg-amber-50 text-amber-600 border border-amber-100'
                     }`}>
-                      {announcement.status}
+                      {announcement.status === 'Draft' ? t('ann_status_draft') : announcement.status === 'Urgent' ? t('ann_status_urgent') : t('ann_status_published')}
                     </span>
                   </td>
                   <td className="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-tight">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -14,27 +14,61 @@ import {
   X,
   Plus
 } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
 export function Layout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const { t } = useLanguage();
+  const { admin, token, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const navigation = [
-    { name: t('nav_dashboard'), href: '/', icon: LayoutDashboard },
-    { name: t('nav_announcements'), href: '/announcements', icon: Megaphone },
-    { name: t('nav_services'), href: '/services', icon: Server },
-    { name: t('nav_gallery'), href: '/gallery', icon: ImageIcon },
-    { name: t('nav_messages'), href: '/messages', icon: MessageSquare },
-  ];
+  const navigation = [];
+
+  if (admin?.canViewDashboard || admin?.isPrimary) {
+    navigation.push({ name: t('nav_dashboard'), href: '/', icon: LayoutDashboard });
+  }
+  if (admin?.canManageAnnouncements || admin?.isPrimary) {
+    navigation.push({ name: t('nav_announcements'), href: '/announcements', icon: Megaphone });
+  }
+  if (admin?.canManageServices || admin?.canManageCategories || admin?.isPrimary) {
+    navigation.push({ name: t('nav_services'), href: '/services', icon: Server });
+  }
+  if (admin?.canManageGallery || admin?.isPrimary) {
+    navigation.push({ name: t('nav_gallery'), href: '/gallery', icon: ImageIcon });
+  }
+  if (admin?.isPrimary || (admin?.messageAccess && admin.messageAccess !== 'None')) {
+    navigation.push({ name: t('nav_messages'), href: '/messages', icon: MessageSquare });
+  }
+  if (admin?.canManageAdmins || admin?.isPrimary) {
+    navigation.push({ name: t('nav_manage_admins'), href: '/manage-admins', icon: Shield });
+  }
 
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
+    logout();
     navigate('/login');
   };
+
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/messages/unread-count', {
+           headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        setUnreadCount(data.count || 0);
+      } catch (err) {
+        console.error('Failed to fetch unread count:', err);
+      }
+    };
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
@@ -66,6 +100,9 @@ export function Layout() {
               >
                 <item.icon size={20} strokeWidth={location.pathname === item.href ? 2.5 : 2} className="shrink-0" />
                 <span className="flex-1">{item.name}</span>
+                {item.href === '/messages' && unreadCount > 0 && (
+                  <span className="px-2.5 py-0.5 rounded-full bg-red-500 text-white text-[10px] font-black">{unreadCount}</span>
+                )}
                 <ChevronRight size={14} className={`opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 ${location.pathname === item.href ? 'opacity-40' : ''}`} />
               </NavLink>
             ))}
@@ -74,12 +111,15 @@ export function Layout() {
 
         <div className="mt-auto p-4 border-t border-slate-50 space-y-3">
           <div className="p-5 rounded-3xl bg-slate-50 flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-sm relative">
               <Bell size={18} className="text-slate-400" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 border-2 border-white rounded-full"></span>
+              )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-black text-slate-800 tracking-tight truncate">{t('nav_admin_user')}</p>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('nav_super_admin')}</p>
+              <p className="text-xs font-black text-slate-800 tracking-tight truncate">{admin?.username || t('nav_admin_user')}</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{admin?.id === 1 ? t('nav_super_admin') : 'Admin User'}</p>
             </div>
           </div>
           <button
@@ -114,8 +154,13 @@ export function Layout() {
           </div>
           <nav className="space-y-6 flex-1">
             {navigation.map(item => (
-              <NavLink key={item.name} to={item.href} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-6 text-3xl font-black text-slate-800 tracking-tighter">
-                <item.icon size={32} className="text-brand" /> {item.name}
+              <NavLink key={item.name} to={item.href} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-between text-3xl font-black text-slate-800 tracking-tighter">
+                <div className="flex items-center gap-6">
+                  <item.icon size={32} className="text-brand" /> {item.name}
+                </div>
+                {item.href === '/messages' && unreadCount > 0 && (
+                  <span className="w-10 h-10 flex items-center justify-center rounded-xl bg-red-500 text-white text-sm font-black shadow-lg shadow-red-500/20">{unreadCount}</span>
+                )}
               </NavLink>
             ))}
           </nav>
@@ -140,8 +185,8 @@ export function Layout() {
           <div className="flex items-center gap-6">
             <LanguageSwitcher />
             <div className="hidden sm:flex items-center gap-3 pl-6 border-l border-slate-100">
-              <div className="w-10 h-10 rounded-2xl bg-brand text-white flex items-center justify-center font-black text-xs shadow-lg shadow-brand/20 ring-4 ring-brand/5">
-                A
+              <div className="w-10 h-10 rounded-2xl bg-brand text-white flex items-center justify-center font-black text-xs shadow-lg shadow-brand/20 ring-4 ring-brand/5 uppercase">
+                {admin?.username ? admin.username.charAt(0) : 'A'}
               </div>
             </div>
           </div>

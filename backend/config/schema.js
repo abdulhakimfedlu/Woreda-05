@@ -1,5 +1,23 @@
 const { pgTable, serial, varchar, text, timestamp, integer, json, boolean } = require('drizzle-orm/pg-core');
 
+const admins = pgTable('admins', {
+  id: serial('id').primaryKey(),
+  username: varchar('username', { length: 255 }).notNull().unique(),
+  passwordHash: varchar('password_hash', { length: 255 }).notNull(),
+  canAddAdmins: boolean('can_add_admins').default(false),
+  canDeleteAdmins: boolean('can_delete_admins').default(false),
+  canEditAdmins: boolean('can_edit_admins').default(false),
+  canManageAdmins: boolean('can_manage_admins').default(false),
+  canManageAnnouncements: boolean('can_manage_announcements').default(false),
+  canManageServices: boolean('can_manage_services').default(false),
+  canManageCategories: boolean('can_manage_categories').default(false),
+  canManageGallery: boolean('can_manage_gallery').default(false),
+  canViewDashboard: boolean('can_view_dashboard').default(false),
+  messageAccess: varchar('message_access', { length: 50 }).default('None'),
+  isPrimary: boolean('is_primary').default(false),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
 const announcements = pgTable('announcements', {
   id: serial('id').primaryKey(),
   title: varchar('title', { length: 255 }).notNull(),
@@ -72,10 +90,13 @@ const messages = pgTable('messages', {
   contactInfo: varchar('contact_info', { length: 20 }),
   isAnonymous: boolean('is_anonymous').default(false),
   isRead: boolean('is_read').default(false),
+  messageType: varchar('message_type', { length: 50 }).default('General'),
+  serviceCategory: varchar('service_category', { length: 255 }),
   createdAt: timestamp('created_at').defaultNow(),
 });
 
 module.exports = {
+  admins,
   announcements,
   categories,
   services,

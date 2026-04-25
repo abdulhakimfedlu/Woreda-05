@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Link, Filter, Image as ImageIcon, Edit2 } from 'lucide-react';
 import { Modal } from '../components/Modal';
 import { useLanguage } from '../context/LanguageContext';
+import toast from 'react-hot-toast';
+import { confirmToast } from '../utils/toast-utils';
+import { useAuth } from '../context/AuthContext';
 
 export function Gallery() {
   const { t } = useLanguage();
+  const { token } = useAuth();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,12 +43,18 @@ export function Gallery() {
   };
 
   const deleteImage = async (id) => {
-    if(!confirm(t('gal_confirm_delete'))) return;
+    const confirmed = await confirmToast(t('gal_confirm_delete'));
+    if(!confirmed) return;
     try {
-      await fetch(`http://localhost:5000/api/gallery/${id}`, { method: 'DELETE' });
+      await fetch(`http://localhost:5000/api/gallery/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       fetchGallery();
+      toast.success(t('status_removed'));
     } catch (error) {
       console.error('Error deleting:', error);
+      toast.error(t('status_error'));
     }
   };
 
@@ -67,7 +77,7 @@ export function Gallery() {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        alert(t('gal_alert_size'));
+        toast.error(t('gal_alert_size'));
         e.target.value = null;
         return;
       }
@@ -90,6 +100,7 @@ export function Gallery() {
         
         const uploadRes = await fetch('http://localhost:5000/api/upload', {
           method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
           body: uploadFormData
         });
         
@@ -107,7 +118,10 @@ export function Gallery() {
 
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           ...formData,
           url: currentUrl,
@@ -121,10 +135,11 @@ export function Gallery() {
         setSelectedFile(null);
         setFormData({ title: '', titleAm: '', url: '', description: '', descriptionAm: '', date: new Date().toISOString().split('T')[0], size: '0 MB' });
         fetchGallery();
+        toast.success(editingItem ? t('status_saving') : t('status_saving')); // You can replace with specialized translation keys if required
       }
     } catch (error) {
       console.error('Error saving gallery item:', error);
-      alert(t('gal_alert_save_failed'));
+      toast.error(t('gal_alert_save_failed'));
     } finally {
       setUploading(false);
     }

@@ -3,6 +3,8 @@ const router = express.Router();
 const db = require('../config/db');
 const { gallery } = require('../config/schema');
 const { desc, eq } = require('drizzle-orm');
+const authMiddleware = require('./authMiddleware');
+const { checkPerm } = require('./adminRoleMiddleware');
 
 // @route   GET /api/gallery
 // @desc    Get all gallery images
@@ -18,7 +20,7 @@ router.get('/', async (req, res) => {
 
 // @route   POST /api/gallery
 // @desc    Upload/Add a gallery image
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware, checkPerm('canManageGallery'), async (req, res) => {
   try {
     const { title, titleAm, url, size, description, descriptionAm, date } = req.body;
     const newImage = await db.insert(gallery).values({
@@ -39,7 +41,7 @@ router.post('/', async (req, res) => {
 
 // @route   PUT /api/gallery/:id
 // @desc    Update an image metadata
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, checkPerm('canManageGallery'), async (req, res) => {
   try {
     const { title, titleAm, url, size, description, descriptionAm, date } = req.body;
     const updated = await db.update(gallery)
@@ -57,7 +59,7 @@ router.put('/:id', async (req, res) => {
 
 // @route   DELETE /api/gallery/:id
 // @desc    Delete an image
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, checkPerm('canManageGallery'), async (req, res) => {
   try {
     const result = await db.delete(gallery).where(eq(gallery.id, parseInt(req.params.id))).returning();
     if (result.length === 0) return res.status(404).json({ msg: 'Image not found' });

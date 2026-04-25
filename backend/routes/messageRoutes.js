@@ -3,12 +3,22 @@ const router = express.Router();
 const db = require('../config/db');
 const { messages } = require('../config/schema');
 const { desc, eq, count, and } = require('drizzle-orm');
+const authMiddleware = require('./authMiddleware');
+const { checkMessageAccess } = require('./adminRoleMiddleware');
 
 // @route   GET /api/messages
 // @desc    Get all messages
-router.get('/', async (req, res) => {
+router.get('/', authMiddleware, checkMessageAccess('Any'), async (req, res) => {
   try {
-    const result = await db.select().from(messages).orderBy(desc(messages.createdAt));
+    let query;
+    if (req.admin.isPrimary || req.admin.messageAccess === 'Both') {
+      query = db.select().from(messages).orderBy(desc(messages.createdAt));
+    } else if (req.admin.messageAccess === 'General') {
+      query = db.select().from(messages).where(eq(messages.messageType, 'General')).orderBy(desc(messages.createdAt));
+    } else if (req.admin.messageAccess === 'Service-Related') {
+      query = db.select().from(messages).where(eq(messages.messageType, 'Service-Related')).orderBy(desc(messages.createdAt));
+    }
+    const result = await query;
     res.json(result);
   } catch (err) {
     console.error(err.message);
@@ -18,9 +28,17 @@ router.get('/', async (req, res) => {
 
 // @route   GET /api/messages/unread-count
 // @desc    Get count of unread messages
-router.get('/unread-count', async (req, res) => {
+router.get('/unread-count', authMiddleware, checkMessageAccess('Any'), async (req, res) => {
   try {
-    const result = await db.select({ value: count() }).from(messages).where(eq(messages.isRead, false));
+    let query;
+    if (req.admin.isPrimary || req.admin.messageAccess === 'Both') {
+      query = db.select({ value: count() }).from(messages).where(eq(messages.isRead, false));
+    } else if (req.admin.messageAccess === 'General') {
+      query = db.select({ value: count() }).from(messages).where(and(eq(messages.isRead, false), eq(messages.messageType, 'General')));
+    } else if (req.admin.messageAccess === 'Service-Related') {
+      query = db.select({ value: count() }).from(messages).where(and(eq(messages.isRead, false), eq(messages.messageType, 'Service-Related')));
+    }
+    const result = await query;
     res.json({ count: result[0].value });
   } catch (err) {
     console.error(err.message);
@@ -32,7 +50,7 @@ router.get('/unread-count', async (req, res) => {
 // @desc    Submit a message
 router.post('/', async (req, res) => {
   try {
-    const { topic, description, contactInfo, isAnonymous } = req.body;
+    const { topic, description, contactInfo, isAnonymous, messageType, serviceCategory } = req.body;
     
     // Server-side validation
     if (!topic || !description) {
@@ -48,7 +66,9 @@ router.post('/', async (req, res) => {
       description,
       contactInfo: isAnonymous ? null : contactInfo,
       isAnonymous: !!isAnonymous,
-      isRead: false
+      isRead: false,
+      messageType: messageType || 'General',
+      serviceCategory: messageType === 'Service-Related' ? serviceCategory : null
     }).returning();
     
     res.json(newMessage[0]);
@@ -60,7 +80,7 @@ router.post('/', async (req, res) => {
 
 // @route   PATCH /api/messages/:id/read
 // @desc    Mark message as read
-router.patch('/:id/read', async (req, res) => {
+router.patch('/:id/read', authMiddleware, checkMessageAccess('Any'), async (req, res) => {
   try {
     const updated = await db.update(messages)
       .set({ isRead: true })
@@ -77,7 +97,7 @@ router.patch('/:id/read', async (req, res) => {
 
 // @route   DELETE /api/messages/:id
 // @desc    Delete a message
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, checkMessageAccess('Any'), async (req, res) => {
   try {
     const result = await db.delete(messages).where(eq(messages.id, parseInt(req.params.id))).returning();
     if (result.length === 0) return res.status(404).json({ msg: 'Message not found' });

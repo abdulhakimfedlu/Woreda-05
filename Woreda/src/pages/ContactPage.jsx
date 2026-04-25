@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Send, Phone, MessageSquare, Info, Shield, CheckCircle, AlertCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -8,17 +8,30 @@ const ContactPage = () => {
     topic: '',
     description: '',
     contactInfo: '',
-    isAnonymous: false
+    isAnonymous: false,
+    messageType: 'General',
+    serviceCategory: ''
   });
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const [valErrors, setValErrors] = useState({});
 
+  useEffect(() => {
+    fetch('http://localhost:5000/api/categories')
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(err => console.error("Error fetching categories:", err));
+  }, []);
+
   const validate = () => {
     const errors = {};
     if (!formData.topic.trim()) errors.topic = t('contact_val_required');
     if (!formData.description.trim()) errors.description = t('contact_val_required');
+    if (formData.messageType === 'Service-Related' && !formData.serviceCategory) {
+      errors.serviceCategory = t('contact_val_required');
+    }
     
     if (!formData.isAnonymous) {
       if (!formData.contactInfo.trim()) {
@@ -49,7 +62,10 @@ const ContactPage = () => {
 
       if (res.ok) {
         setSuccess(true);
-        setFormData({ topic: '', description: '', contactInfo: '', isAnonymous: false });
+        setFormData({ 
+          topic: '', description: '', contactInfo: '', 
+          isAnonymous: false, messageType: 'General', serviceCategory: '' 
+        });
       } else {
         const data = await res.json();
         setError(data.msg || t('contact_error'));
@@ -150,6 +166,43 @@ const ContactPage = () => {
                     <div className="p-4 rounded-2xl bg-red-50 border border-red-100 flex items-center gap-3 text-red-600 text-sm font-bold animate-in slide-in-from-top-2">
                        <AlertCircle className="w-5 h-5 shrink-0" />
                        {error}
+                    </div>
+                  )}
+
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">{t('contact_type')}</label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, messageType: 'General', serviceCategory: '' })}
+                        className={`py-3 px-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${formData.messageType === 'General' ? 'bg-brand text-white shadow-lg shadow-brand/20' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
+                      >
+                        {t('contact_type_general')}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, messageType: 'Service-Related' })}
+                        className={`py-3 px-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${formData.messageType === 'Service-Related' ? 'bg-brand text-white shadow-lg shadow-brand/20' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
+                      >
+                        {t('contact_type_service')}
+                      </button>
+                    </div>
+                  </div>
+
+                  {formData.messageType === 'Service-Related' && (
+                    <div className="space-y-1.5 animate-in slide-in-from-top-2">
+                      <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">{t('contact_service_cat')}</label>
+                      <select
+                        value={formData.serviceCategory}
+                        onChange={(e) => setFormData({...formData, serviceCategory: e.target.value})}
+                        className={`w-full px-6 py-4 bg-slate-50 border-2 rounded-2xl text-sm font-bold transition-all outline-none focus:bg-white ${valErrors.serviceCategory ? 'border-red-200 focus:border-red-400' : 'border-transparent focus:border-brand/40'}`}
+                      >
+                        <option value="">{t('contact_select_cat')}</option>
+                        {categories.map((cat) => (
+                          <option key={cat.id} value={cat.name}>{language === 'am' && cat.nameAm ? cat.nameAm : cat.name}</option>
+                        ))}
+                      </select>
+                      {valErrors.serviceCategory && <p className="text-[11px] text-red-500 font-bold ml-1">{valErrors.serviceCategory}</p>}
                     </div>
                   )}
 

@@ -3,6 +3,8 @@ const router = express.Router();
 const db = require('../config/db');
 const { services } = require('../config/schema');
 const { desc, eq } = require('drizzle-orm');
+const authMiddleware = require('./authMiddleware');
+const { checkPerm } = require('./adminRoleMiddleware');
 
 // @route   GET /api/services
 // @desc    Get all services
@@ -31,7 +33,7 @@ router.get('/:id', async (req, res) => {
 
 // @route   POST /api/services
 // @desc    Create a service
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware, checkPerm('canManageServices'), async (req, res) => {
   try {
     const { title, titleAm, department, departmentAm, category } = req.body;
     const newService = await db.insert(services).values({
@@ -50,7 +52,7 @@ router.post('/', async (req, res) => {
 
 // @route   PUT /api/services/:id
 // @desc    Update a service
-router.put('/:id', async (req, res) => {
+router.put('/:id', authMiddleware, checkPerm('canManageServices'), async (req, res) => {
   try {
     const { title, titleAm, department, departmentAm, category } = req.body;
     const updated = await db.update(services)
@@ -68,7 +70,7 @@ router.put('/:id', async (req, res) => {
 
 // @route   DELETE /api/services/:id
 // @desc    Delete a service
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, checkPerm('canManageServices'), async (req, res) => {
   try {
     const result = await db.delete(services).where(eq(services.id, parseInt(req.params.id))).returning();
     if (result.length === 0) return res.status(404).json({ msg: 'Service not found' });

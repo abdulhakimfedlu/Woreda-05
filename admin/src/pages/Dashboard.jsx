@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Users, FileText, Server, Image as ImageIcon, TrendingUp, TrendingDown, ArrowUpRight, Megaphone, FolderTree, Activity, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Users, FileText, Server, Image as ImageIcon, TrendingUp, TrendingDown, ArrowUpRight, Megaphone, FolderTree, Activity, CheckCircle2, AlertCircle, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 
 export function Dashboard() {
   const { t } = useLanguage();
+  const { token, admin } = useAuth();
   const [data, setData] = useState({
     services: [],
     categories: [],
     gallery: [],
-    announcements: []
+    announcements: [],
+    unreadCount: 0
   });
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState('healthy');
@@ -17,18 +20,22 @@ export function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [servicesRes, categoriesRes, galleryRes, announcementsRes] = await Promise.all([
+        const [servicesRes, categoriesRes, galleryRes, announcementsRes, unreadRes] = await Promise.all([
           fetch('http://localhost:5000/api/services').then(res => res.json()),
           fetch('http://localhost:5000/api/categories').then(res => res.json()),
           fetch('http://localhost:5000/api/gallery').then(res => res.json()),
-          fetch('http://localhost:5000/api/announcements').then(res => res.json())
+          fetch('http://localhost:5000/api/announcements').then(res => res.json()),
+          (admin?.isPrimary || admin?.messageAccess !== 'None') 
+            ? fetch('http://localhost:5000/api/messages/unread-count', { headers: { 'Authorization': `Bearer ${token}` } }).then(res => res.ok ? res.json() : { count: 0 }).catch(() => ({ count: 0 }))
+            : Promise.resolve({ count: 0 })
         ]);
 
         setData({
           services: Array.isArray(servicesRes) ? servicesRes : [],
           categories: Array.isArray(categoriesRes) ? categoriesRes : [],
           gallery: Array.isArray(galleryRes) ? galleryRes : [],
-          announcements: Array.isArray(announcementsRes) ? announcementsRes : []
+          announcements: Array.isArray(announcementsRes) ? announcementsRes : [],
+          unreadCount: unreadRes?.count || 0
         });
         setStatus('healthy');
       } catch (err) {
@@ -80,6 +87,24 @@ export function Dashboard() {
            </div>
         </div>
       </div>
+
+      {/* Unread Messages Banner */}
+      {data.unreadCount > 0 && (
+        <div className="bg-red-50 border-2 border-red-500/20 rounded-3xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-red-500/5">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/20 shrink-0">
+               <MessageSquare className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="text-lg font-black text-red-600 tracking-tight">{data.unreadCount} {t('dash_unread_messages') || 'Unread Messages'}</h4>
+              <p className="text-[10px] text-red-500/80 font-bold uppercase tracking-[0.2em]">{t('dash_unread_desc') || 'You have new messages to review'}</p>
+            </div>
+          </div>
+          <Link to="/messages" className="w-full sm:w-auto px-8 py-3 bg-red-500 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl shadow-lg shadow-red-500/20 hover:bg-red-600 hover:-translate-y-0.5 transition-all text-center">
+            {t('dash_view_messages') || 'Check Inbox'}
+          </Link>
+        </div>
+      )}
 
       {/* Primary Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
