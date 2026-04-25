@@ -97,9 +97,9 @@ const Hero = () => {
               </div>
               {[
                 { img: adanechImg, alt: 'Mayor Adanech Abiebie', tx: '-translate-x-[7.5rem] -translate-y-[7.5rem] sm:-translate-x-[9rem] sm:-translate-y-[9rem] lg:-translate-x-[11.2rem] lg:-translate-y-[11.2rem]' },
-                { img: tayeImg,    alt: 'Lead Personnel',         tx: 'translate-x-[7.5rem] -translate-y-[7.5rem] sm:translate-x-[9rem] sm:-translate-y-[9rem] lg:translate-x-[11.2rem] lg:-translate-y-[11.2rem]' },
-                { img: soldierImg, alt: 'Personnel',              tx: '-translate-x-[7.5rem] translate-y-[7.5rem] sm:-translate-x-[9rem] sm:translate-y-[9rem] lg:-translate-x-[11.2rem] lg:translate-y-[11.2rem]' },
-                { img: ceo,        alt: 'Dr. Mekdes Dabba',       tx: 'translate-x-[7.5rem] translate-y-[7.5rem] sm:translate-x-[9rem] sm:translate-y-[9rem] lg:translate-x-[11.2rem] lg:translate-y-[11.2rem]' },
+                { img: tayeImg, alt: 'Lead Personnel', tx: 'translate-x-[7.5rem] -translate-y-[7.5rem] sm:translate-x-[9rem] sm:-translate-y-[9rem] lg:translate-x-[11.2rem] lg:-translate-y-[11.2rem]' },
+                { img: soldierImg, alt: 'Personnel', tx: '-translate-x-[7.5rem] translate-y-[7.5rem] sm:-translate-x-[9rem] sm:translate-y-[9rem] lg:-translate-x-[11.2rem] lg:translate-y-[11.2rem]' },
+                { img: ceo, alt: 'Dr. Mekdes Dabba', tx: 'translate-x-[7.5rem] translate-y-[7.5rem] sm:translate-x-[9rem] sm:translate-y-[9rem] lg:translate-x-[11.2rem] lg:translate-y-[11.2rem]' },
               ].map(({ img, alt, tx }) => (
                 <div key={alt} className={`absolute z-10 w-40 h-40 sm:w-48 sm:h-48 lg:w-52 lg:h-52 shadow-xl border-4 border-white dark:border-[#0d1420] overflow-hidden rounded-2xl ${tx}`}>
                   <img src={img} alt={alt} className="w-full h-full object-cover" />

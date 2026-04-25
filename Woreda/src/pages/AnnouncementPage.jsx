@@ -112,7 +112,7 @@ const AnnouncementModal = ({ announcement, onClose, language }) => {
                   {cat.label[language] || cat.label.en}
                 </span>
               </div>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
+              <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest flex items-center gap-1">
                 <Clock className="w-3 h-3" />
                 {announcement.createdAt
                   ? new Date(announcement.createdAt).toLocaleDateString(language === 'am' ? 'am-ET' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -120,7 +120,7 @@ const AnnouncementModal = ({ announcement, onClose, language }) => {
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all shrink-0">
+          <button onClick={onClose} className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:text-white/30 dark:hover:text-white dark:hover:bg-white/5 transition-all shrink-0">
             <X size={20} />
           </button>
         </div>
@@ -181,7 +181,7 @@ const AnnouncementCard = ({ announcement, index, onViewMore, language, t }) => {
               </span>
             </div>
           </div>
-          <span className="text-[11px] font-black text-black/20 tabular-nums shrink-0 mt-0.5">
+          <span className="text-[11px] font-black text-black/20 dark:text-white/20 tabular-nums shrink-0 mt-0.5">
             {String(index + 1).padStart(2, '0')}
           </span>
         </div>
@@ -196,7 +196,7 @@ const AnnouncementCard = ({ announcement, index, onViewMore, language, t }) => {
 
         {/* Footer */}
         <div className="flex items-center justify-between">
-          <span className="flex items-center gap-1.5 text-[10px] font-bold text-black/25 uppercase tracking-widest">
+          <span className="flex items-center gap-1.5 text-[10px] font-bold text-black/25 dark:text-white/25 uppercase tracking-widest">
             <Calendar className="w-3 h-3" />
             {announcement.createdAt
               ? new Date(announcement.createdAt).toLocaleDateString(language === 'am' ? 'am-ET' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -265,6 +265,9 @@ const AnnouncementPage = () => {
     { id: 'Work',   label: language === 'am' ? 'የሥራ ዜና'              : 'Job News' },
   ];
 
+  const localizedAnnounce = language === 'am' ? 'ማስታወቂያዎች' : 'Announce';
+  const localizedUpdates = language === 'am' ? 'እና ዜናዎች' : '& Updates';
+
   const filtered = announcements.filter(a => {
     if (!a) return false;
     const q = search.toLowerCase();
@@ -319,12 +322,12 @@ const AnnouncementPage = () => {
               className="w-full bg-black/5 dark:bg-white/5 border-2 border-transparent py-4 pl-14 pr-6 rounded-2xl text-sm font-bold text-black dark:text-white placeholder:text-black/25 dark:placeholder:text-white/20 focus:bg-white dark:focus:bg-[#0d1420] focus:border-[#00B4D8] focus:shadow-[0_0_30px_rgba(0,180,216,0.12)] transition-all outline-none"
             />
           </div>
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 pb-2 overflow-x-auto scrollbar-hide -mx-1 px-1 sm:overflow-visible sm:pb-0 sm:mx-0 sm:px-0 sm:flex-wrap">
             {filters.map(f => (
               <button
                 key={f.id}
                 onClick={() => setActiveFilter(f.id)}
-                className={`px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${
+                className={`whitespace-nowrap px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${
                   activeFilter === f.id
                     ? 'bg-[#00B4D8] text-white shadow-lg shadow-[#00B4D8]/25'
                     : 'bg-black/5 dark:bg-white/5 text-black/40 dark:text-white/40 hover:bg-[#00B4D8]/10 hover:text-[#0077B6] dark:hover:bg-brand/20 dark:hover:text-brand'

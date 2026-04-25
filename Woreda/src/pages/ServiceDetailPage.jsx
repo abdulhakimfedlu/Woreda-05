@@ -186,7 +186,7 @@ const ServiceDetailPage = () => {
                   </h2>
                 )}
                 {officerRole && (
-                  <p className="text-base font-bold text-black/40 uppercase tracking-widest mb-4">
+                  <p className="text-base font-bold text-black/40 dark:text-white/40 uppercase tracking-widest mb-4">
                     {officerRole}
                   </p>
                 )}
@@ -205,7 +205,7 @@ const ServiceDetailPage = () => {
                     {details.contactEmail && (
                       <a
                         href={`mailto:${details.contactEmail}`}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 hover:bg-brand/10 hover:text-brand text-black/50 text-xs font-black uppercase tracking-widest transition-colors"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/5 hover:bg-brand/10 hover:text-brand text-black/50 dark:text-white/50 text-xs font-black uppercase tracking-widest transition-colors"
                       >
                         <Mail className="w-3.5 h-3.5" /> {details.contactEmail}
                       </a>
@@ -243,7 +243,7 @@ const ServiceDetailPage = () => {
               <section>
                 <div className="flex items-center gap-3 mb-7">
                   <span className="w-8 h-[3px] bg-brand rounded-full" />
-                  <h2 className="text-[10px] font-black text-black/35 uppercase tracking-[0.3em]">{t('sd_requirements')}</h2>
+                  <h2 className="text-[10px] font-black text-black/35 dark:text-white/30 uppercase tracking-[0.3em]">{t('sd_requirements')}</h2>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-3">
                   {requirements.map((req, i) => (
@@ -326,10 +326,10 @@ const ServiceDetailPage = () => {
                           <Clock className="w-4 h-4 text-brand" />
                         </div>
                         <div>
-                          <p className="text-[9px] font-black text-black/25 uppercase tracking-[0.2em] mb-1">
+                          <p className="text-[9px] font-black text-black/25 dark:text-white/25 uppercase tracking-[0.2em] mb-1">
                             {language === 'am' ? 'ሰዓት' : 'Hours'}
                           </p>
-                          <p className="text-base font-black text-black leading-snug">{details.hours}</p>
+                          <p className="text-base font-black text-black dark:text-white leading-snug">{details.hours}</p>
                         </div>
                       </div>
                     )}
@@ -339,10 +339,10 @@ const ServiceDetailPage = () => {
 
               {/* Contact fallback */}
               {!hasOfficerInfo && hasContactInfo && (
-                <div className="rounded-3xl border border-black/5 bg-white shadow-lg shadow-black/5 overflow-hidden">
-                  <div className="px-7 py-4 border-b border-black/5 flex items-center gap-2">
+                <div className="rounded-3xl border border-black/5 dark:border-white/8 bg-white dark:bg-[#0d1420] shadow-lg shadow-black/5 dark:shadow-brand/5 overflow-hidden">
+                  <div className="px-7 py-4 border-b border-black/5 dark:border-white/8 flex items-center gap-2">
                     <PhoneCall className="w-3.5 h-3.5 text-brand" />
-                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-black/35">{t('sd_contact')}</span>
+                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-black/35 dark:text-white/30">{t('sd_contact')}</span>
                   </div>
                   <div className="p-7 space-y-3">
                     {details.contactPhone && (
@@ -353,10 +353,10 @@ const ServiceDetailPage = () => {
                         <div className="w-9 h-9 rounded-xl bg-brand/10 flex items-center justify-center shrink-0 group-hover:bg-brand/20 transition-colors">
                           <PhoneCall className="w-3.5 h-3.5 text-brand" />
                         </div>
-                        <span className="text-sm font-bold text-black/60 group-hover:text-brand transition-colors flex-1">
+                        <span className="text-sm font-bold text-black/60 dark:text-white/50 group-hover:text-brand transition-colors flex-1">
                           {details.contactPhone}
                         </span>
-                        <ChevronRight className="w-4 h-4 text-black/15 group-hover:text-brand transition-colors" />
+                        <ChevronRight className="w-4 h-4 text-black/15 dark:text-white/20 group-hover:text-brand transition-colors" />
                       </a>
                     )}
                     {details.contactEmail && (
@@ -367,10 +367,10 @@ const ServiceDetailPage = () => {
                         <div className="w-9 h-9 rounded-xl bg-brand/10 flex items-center justify-center shrink-0 group-hover:bg-brand/20 transition-colors">
                           <Mail className="w-3.5 h-3.5 text-brand" />
                         </div>
-                        <span className="text-sm font-bold text-black/60 group-hover:text-brand transition-colors flex-1 truncate">
+                        <span className="text-sm font-bold text-black/60 dark:text-white/50 group-hover:text-brand transition-colors flex-1 truncate">
                           {details.contactEmail}
                         </span>
-                        <ChevronRight className="w-4 h-4 text-black/15 group-hover:text-brand transition-colors shrink-0" />
+                        <ChevronRight className="w-4 h-4 text-black/15 dark:text-white/20 group-hover:text-brand transition-colors shrink-0" />
                       </a>
                     )}
                   </div>
@@ -381,7 +381,6 @@ const ServiceDetailPage = () => {
               <Link
                 to="/services"
                 className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl border-2 border-black/8 dark:border-white/10 text-black/40 dark:text-white/40 hover:border-brand hover:text-brand font-black text-sm uppercase tracking-widest transition-all duration-300"
-                style={{ borderColor: 'rgba(0,0,0,0.08)' }}
               >
                 <ArrowLeft className="w-4 h-4" /> {t('sd_back')}
               </Link>

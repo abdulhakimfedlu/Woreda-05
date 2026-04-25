@@ -33,7 +33,7 @@ function App() {
   return (
     <ThemeProvider>
       <LanguageProvider>
-        <div className="min-h-screen flex flex-col font-sans selection:bg-brand/20 bg-white dark:bg-[#080d14] transition-colors duration-300">
+        <div className="min-h-screen flex flex-col font-sans selection:bg-brand/20 bg-white dark:bg-[#080d14] overflow-x-hidden transition-colors duration-300">
           <Navbar />
           <main className="flex-grow">
             <Routes>

@@ -138,7 +138,7 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu */}
-      <div className={`md:hidden overflow-hidden transition-all duration-500 bg-white dark:bg-[#0d1420] ${isOpen ? 'max-h-screen border-b border-black/5 dark:border-white/8 pb-12' : 'max-h-0'}`}>
+      <div className={`md:hidden overflow-y-auto transition-all duration-500 bg-white dark:bg-[#0d1420] ${isOpen ? 'max-h-[calc(100vh-80px)] border-b border-black/5 dark:border-white/8 pb-12' : 'max-h-0'}`}>
         <div className="px-10 pt-12 flex flex-col gap-8 items-center">
           {links.map((link) => {
             const active = isActive(link.path);
