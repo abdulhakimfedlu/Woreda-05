@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import {
   LayoutDashboard,
   Megaphone,
@@ -17,7 +17,7 @@ import {
 import { useLanguage } from '../context/LanguageContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
-export function Layout({ children }) {
+export function Layout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -64,7 +64,7 @@ export function Layout({ children }) {
                   }`
                 }
               >
-                <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
+                <item.icon size={20} strokeWidth={location.pathname === item.href ? 2.5 : 2} className="shrink-0" />
                 <span className="flex-1">{item.name}</span>
                 <ChevronRight size={14} className={`opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 ${location.pathname === item.href ? 'opacity-40' : ''}`} />
               </NavLink>
@@ -148,71 +148,9 @@ export function Layout({ children }) {
         </div>
 
         <div className="p-6 lg:p-10 max-w-7xl mx-auto">
-          {children}
+          <Outlet />
         </div>
       </main>
-    </div>
-  );
-}
-        </button >
-        <div className="hidden sm:block h-8 w-[1px] bg-slate-100 mx-1"></div>
-        <div className="flex items-center gap-3 cursor-pointer group rounded-2xl hover:bg-slate-50 p-1.5 transition-all">
-          <div className="text-right hidden sm:block">
-            <p className="text-sm font-black text-slate-800 tracking-tight">{t('nav_admin_user')}</p>
-            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{t('nav_super_admin')}</p>
-          </div>
-          <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-2xl border-2 border-white overflow-hidden shadow-lg shadow-slate-200 group-hover:shadow-[#00B4D8]/20 transition-all">
-            <img src="https://ui-avatars.com/api/?name=Admin+User&background=00B4D8&color=fff&size=64&bold=true" alt="Admin" className="w-full h-full object-cover" />
-          </div>
-        </div>
-      </div >
-    </header >
-  );
-}
-
-export function Layout() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const unreadCount = useUnreadCount();
-
-  return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-800 font-sans selection:bg-[#90E0EF] selection:text-[#0077B6]">
-
-      {/* Desktop Sidebar */}
-      <Sidebar unreadCount={unreadCount} />
-
-      {/* Mobile Sidebar Overlay */}
-      {mobileOpen && (
-        <div
-          className="fixed inset-0 z-30 bg-slate-900/40 backdrop-blur-sm lg:hidden"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
-
-      {/* Mobile Sidebar Drawer */}
-      <div className={`fixed left-0 top-0 h-full w-72 bg-white/95 backdrop-blur-xl shadow-2xl z-40 flex flex-col lg:hidden transition-transform duration-300 ease-in-out ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="flex items-center justify-between p-4 border-b border-slate-100">
-          <p className="text-lg font-black text-slate-800 tracking-tighter">Woreda <span className="text-[#00B4D8]">05</span></p>
-          <button
-            onClick={() => setMobileOpen(false)}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto">
-          <SidebarContent onNavClick={() => setMobileOpen(false)} unreadCount={unreadCount} />
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="w-full min-h-screen flex flex-col lg:pl-64">
-        <TopBar onMenuClick={() => setMobileOpen(true)} unreadCount={unreadCount} />
-        <main className="flex-1 p-4 sm:p-6 lg:p-10 overflow-x-hidden">
-          <div className="w-full max-w-[1400px] mx-auto">
-            <Outlet />
-          </div>
-        </main>
-      </div>
     </div>
   );
 }

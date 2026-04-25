@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Link, Filter, Image as ImageIcon, Edit2 } from 'lucide-react';
 import { Modal } from '../components/Modal';
+import { useLanguage } from '../context/LanguageContext';
 
 export function Gallery() {
+  const { t } = useLanguage();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,7 +39,7 @@ export function Gallery() {
   };
 
   const deleteImage = async (id) => {
-    if(!confirm('Are you sure you want to delete this image?')) return;
+    if(!confirm(t('gal_confirm_delete'))) return;
     try {
       await fetch(`http://localhost:5000/api/gallery/${id}`, { method: 'DELETE' });
       fetchGallery();
@@ -65,7 +67,7 @@ export function Gallery() {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        alert('File size exceeds 5MB limit');
+        alert(t('gal_alert_size'));
         e.target.value = null;
         return;
       }
@@ -122,7 +124,7 @@ export function Gallery() {
       }
     } catch (error) {
       console.error('Error saving gallery item:', error);
-      alert('Failed to save gallery item');
+      alert(t('gal_alert_save_failed'));
     } finally {
       setUploading(false);
     }
@@ -132,13 +134,13 @@ export function Gallery() {
     <div className="space-y-10 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-slate-100 pb-8">
         <div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Media Gallery</h2>
-          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">Photos & Community Images</p>
+          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">{t('gal_title')}</h2>
+          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">{t('gal_subtitle')}</p>
         </div>
         <div className="flex items-center gap-4 w-full sm:w-auto">
           <button className="flex-1 sm:flex-none flex items-center justify-center px-6 py-3 bg-white text-slate-500 text-sm font-black uppercase tracking-widest rounded-2xl border border-slate-200 shadow-sm hover:bg-slate-50 hover:text-[#00B4D8] transition-all">
             <Filter className="w-4 h-4 mr-2" />
-            Filter
+            {t('gal_filter')}
           </button>
           <button 
             onClick={() => {
@@ -150,7 +152,7 @@ export function Gallery() {
             className="flex-1 sm:flex-none flex items-center justify-center px-6 py-3 bg-[#00B4D8] text-white text-sm font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-[#00B4D8]/30 hover:bg-[#0077B6] hover:-translate-y-0.5 transition-all"
           >
             <Plus className="w-5 h-5 mr-1" />
-            Add Media
+            {t('gal_add_media')}
           </button>
         </div>
       </div>
@@ -163,29 +165,29 @@ export function Gallery() {
             setEditingItem(null);
           }
         }} 
-        title={editingItem ? "Update Media Details" : "Upload New Media"}
+        title={editingItem ? t('gal_update_modal_title') : t('gal_create_modal_title')}
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Title (English)</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('gal_title_en')}</label>
               <input 
                 required
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({...formData, title: e.target.value})}
-                placeholder="e.g. Community Cleanup Day"
+                placeholder={t('gal_placeholder_title')}
                 className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
               />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Title (Amharic)</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('gal_title_am')}</label>
               <input 
                 type="text"
                 value={formData.titleAm}
                 onChange={(e) => setFormData({...formData, titleAm: e.target.value})}
-                placeholder="ለምሳሌ፡ የማህበረሰብ ጽዳት ቀን"
+                placeholder={t('gal_placeholder_title_am')}
                 className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
               />
             </div>
@@ -193,7 +195,7 @@ export function Gallery() {
             
             <div className="grid grid-cols-2 gap-6">
                <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Event Date</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('gal_event_date')}</label>
                   <input 
                     required
                     type="date"
@@ -203,7 +205,7 @@ export function Gallery() {
                   />
                </div>
                <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Source File (Max 5MB)</label>
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('gal_source_file')}</label>
                   <div className="relative group">
                     <input 
                       type="file"
@@ -213,29 +215,29 @@ export function Gallery() {
                     />
                     <div className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium flex items-center text-slate-400 group-hover:border-[#00B4D8] transition-all">
                        <ImageIcon className="w-4 h-4 mr-2" />
-                       <span className="truncate">{selectedFile ? selectedFile.name : (editingItem ? "Keep current file" : "Select image...")}</span>
+                       <span className="truncate">{selectedFile ? selectedFile.name : (editingItem ? t('gal_keep_current') : t('gal_select_image'))}</span>
                     </div>
                   </div>
                </div>
             </div>
 
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">Description (English)</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('gal_desc_en')}</label>
               <textarea 
                 rows="3"
                 value={formData.description}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
-                placeholder="Briefly describe this media asset..."
+                placeholder={t('gal_placeholder_desc')}
                 className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all resize-none"
               />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">Description (Amharic)</label>
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('gal_desc_am')}</label>
               <textarea 
                 rows="3"
                 value={formData.descriptionAm}
                 onChange={(e) => setFormData({...formData, descriptionAm: e.target.value})}
-                placeholder="ስለዚህ ምስል አጭር መግለጫ..."
+                placeholder={t('gal_placeholder_desc_am')}
                 className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all resize-none"
               />
             </div>
@@ -248,7 +250,7 @@ export function Gallery() {
               uploading ? 'bg-slate-400 cursor-not-allowed shadow-none' : 'bg-[#00B4D8] shadow-[#00B4D8]/20 hover:bg-[#0077B6] hover:shadow-[#00B4D8]/30'
             }`}
           >
-            {uploading ? 'Uploading File...' : (editingItem ? "Update Image" : "Start Upload")}
+            {uploading ? t('gal_uploading') : (editingItem ? t('gal_update_image') : t('gal_start_upload'))}
           </button>
         </form>
       </Modal>
@@ -266,12 +268,12 @@ export function Gallery() {
            <div className="w-16 h-16 rounded-3xl bg-white shadow-lg border border-slate-100 group-hover:bg-[#00B4D8] group-hover:text-white group-hover:border-[#00B4D8] flex items-center justify-center mb-4 transition-all duration-500">
               <Plus className="w-8 h-8" />
            </div>
-           <span className="font-black text-xs text-slate-600 group-hover:text-[#00B4D8] transition-colors uppercase tracking-widest">Add New Image</span>
-           <span className="text-[10px] mt-2 text-slate-300 font-black uppercase tracking-[0.2em]">Size: 5MB Max</span>
+           <span className="font-black text-xs text-slate-600 group-hover:text-[#00B4D8] transition-colors uppercase tracking-widest">{t('gal_add_new_image')}</span>
+           <span className="text-[10px] mt-2 text-slate-300 font-black uppercase tracking-[0.2em]">{t('gal_size_limit')}</span>
         </div>
 
         {loading ? (
-           <div className="col-span-full py-24 text-center text-slate-300 font-black uppercase tracking-widest animate-pulse">Loading Images...</div>
+           <div className="col-span-full py-24 text-center text-slate-300 font-black uppercase tracking-widest animate-pulse">{t('gal_loading')}</div>
         ) : images.map((image) => (
           <div key={image.id} className="bg-white border border-slate-100 rounded-3xl overflow-hidden group hover:shadow-2xl hover:shadow-[#00B4D8]/20 hover:-translate-y-2 transition-all duration-500 shadow-xl shadow-slate-200/40 relative">
             <div className="aspect-[4/3] relative overflow-hidden bg-slate-900 flex items-center justify-center">
@@ -298,7 +300,7 @@ export function Gallery() {
                  <div className="flex justify-between items-end w-full translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                     <button className="px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest flex items-center hover:bg-white hover:text-slate-900 transition-all">
                        <Link className="w-3.5 h-3.5 mr-2" />
-                       Link
+                       {t('gal_link')}
                     </button>
                     <span className="text-white text-[10px] font-black bg-[#00B4D8]/80 px-2.5 py-1 rounded-lg backdrop-blur-md shadow-lg">{image.size}</span>
                  </div>
@@ -307,11 +309,11 @@ export function Gallery() {
             <div className="p-5">
               <div className="flex items-center gap-2 mb-2">
                  <span className="text-[9px] font-black px-2 py-0.5 rounded-md bg-slate-50 text-slate-400 uppercase tracking-widest border border-slate-100">
-                    {image.date || "No Date"}
+                    {image.date || t('gal_no_date')}
                  </span>
               </div>
               <h3 className="font-black text-slate-800 text-sm tracking-tight truncate">{image.title}</h3>
-              <p className="text-[10px] text-slate-400 font-medium line-clamp-1 mt-1">{image.description || "No description provided."}</p>
+              <p className="text-[10px] text-slate-400 font-medium line-clamp-1 mt-1">{image.description || t('gal_no_description')}</p>
             </div>
           </div>
         ))}

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Users, FileText, Server, Image as ImageIcon, TrendingUp, TrendingDown, ArrowUpRight, Megaphone, FolderTree, Activity, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 
 export function Dashboard() {
+  const { t } = useLanguage();
   const [data, setData] = useState({
     services: [],
     categories: [],
@@ -44,10 +46,10 @@ export function Dashboard() {
   }, []);
 
   const stats = [
-    { name: 'Total Services', value: data.services.length, icon: Server, color: 'text-brand', gradient: 'from-[#00B4D8] to-[#0077B6]' },
-    { name: 'Service Categories', value: data.categories.length, icon: FolderTree, color: 'text-emerald-500', gradient: 'from-emerald-400 to-teal-600' },
-    { name: 'Gallery Images', value: data.gallery.length, icon: ImageIcon, color: 'text-purple-500', gradient: 'from-purple-500 to-indigo-600' },
-    { name: 'Announcements', value: data.announcements.length, icon: Megaphone, color: 'text-orange-500', gradient: 'from-orange-400 to-red-500' },
+    { name: t('dash_total_services'), value: data.services.length, icon: Server, color: 'text-brand', gradient: 'from-[#00B4D8] to-[#0077B6]' },
+    { name: t('dash_service_categories'), value: data.categories.length, icon: FolderTree, color: 'text-emerald-500', gradient: 'from-emerald-400 to-teal-600' },
+    { name: t('dash_gallery_images'), value: data.gallery.length, icon: ImageIcon, color: 'text-purple-500', gradient: 'from-purple-500 to-indigo-600' },
+    { name: t('dash_announcements'), value: data.announcements.length, icon: Megaphone, color: 'text-orange-500', gradient: 'from-orange-400 to-red-500' },
   ];
 
   if (loading) {
@@ -55,7 +57,7 @@ export function Dashboard() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-brand/20 border-t-brand rounded-full animate-spin"></div>
-          <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Loading Dashboard...</p>
+          <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">{t('dash_loading')}</p>
         </div>
       </div>
     );
@@ -65,8 +67,8 @@ export function Dashboard() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Dashboard <span className="text-brand">Overview</span></h2>
-          <p className="mt-1.5 text-slate-500 font-medium">Real-time control center for Woreda 05 digital services.</p>
+          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">{t('dash_title')} <span className="text-brand">{t('dash_title_highlight')}</span></h2>
+          <p className="mt-1.5 text-slate-500 font-medium">{t('dash_subtitle')}</p>
         </div>
         <div className="flex items-center gap-3">
            <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100 text-xs font-black uppercase tracking-widest">
@@ -74,7 +76,7 @@ export function Dashboard() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
-              Live Sync Active
+              {t('dash_live_sync')}
            </div>
         </div>
       </div>
@@ -108,11 +110,11 @@ export function Dashboard() {
           <div className="glass-panel rounded-[32px] p-8 border-none shadow-[0_20px_60px_-20px_rgba(0,0,0,0.03)]">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h3 className="text-lg font-black text-slate-800 tracking-tight">Recent Services</h3>
-                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Latest items</p>
+                <h3 className="text-lg font-black text-slate-800 tracking-tight">{t('dash_recent_services')}</h3>
+                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">{t('dash_latest_items')}</p>
               </div>
               <Link to="/services" className="px-4 py-2 bg-slate-50 text-slate-500 hover:text-brand text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">
-                Service List
+                {t('dash_service_list')}
               </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -125,7 +127,7 @@ export function Dashboard() {
                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{service.category}</p>
                 </div>
               ))}
-              {data.services.length === 0 && <p className="col-span-3 text-center py-6 text-slate-300 font-bold uppercase tracking-widest text-xs">No services registered</p>}
+              {data.services.length === 0 && <p className="col-span-3 text-center py-6 text-slate-300 font-bold uppercase tracking-widest text-xs">{t('dash_no_services')}</p>}
             </div>
           </div>
 
@@ -133,11 +135,11 @@ export function Dashboard() {
           <div className="glass-panel rounded-[32px] p-8 border-none shadow-[0_20px_60px_-20px_rgba(0,0,0,0.03)]">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h3 className="text-lg font-black text-slate-800 tracking-tight">Service Categories</h3>
-                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Organized Groups</p>
+                <h3 className="text-lg font-black text-slate-800 tracking-tight">{t('dash_categories_title')}</h3>
+                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">{t('dash_organized_groups')}</p>
               </div>
               <Link to="/services" className="px-4 py-2 bg-slate-50 text-slate-500 hover:text-brand text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">
-                Manage
+                {t('dash_manage')}
               </Link>
             </div>
             <div className="space-y-3">
@@ -149,15 +151,15 @@ export function Dashboard() {
                      </div>
                      <div>
                        <h4 className="text-sm font-black text-slate-800">{cat.name}</h4>
-                       <p className="text-[10px] font-bold text-brand uppercase tracking-widest">{cat.nameAm || 'Category'}</p>
+                       <p className="text-[10px] font-bold text-brand uppercase tracking-widest">{cat.nameAm || t('dash_category_fallback')}</p>
                      </div>
                    </div>
                    <div className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-lg">
-                      Active
+                      {t('dash_active')}
                    </div>
                 </div>
               ))}
-               {data.categories.length === 0 && <p className="text-center py-6 text-slate-300 font-bold uppercase tracking-widest text-xs">No categories defined</p>}
+               {data.categories.length === 0 && <p className="text-center py-6 text-slate-300 font-bold uppercase tracking-widest text-xs">{t('dash_no_categories')}</p>}
             </div>
           </div>
         </div>
@@ -165,7 +167,7 @@ export function Dashboard() {
         {/* System Monitor */}
         <div className="lg:col-span-1">
           <div className="glass-panel rounded-[32px] p-8 border-none shadow-[0_20px_60px_-20px_rgba(0,0,0,0.03)] h-full flex flex-col">
-            <h3 className="text-lg font-black text-slate-800 tracking-tight mb-8">System Health</h3>
+            <h3 className="text-lg font-black text-slate-800 tracking-tight mb-8">{t('dash_system_health')}</h3>
             
             <div className="flex-1 flex flex-col justify-center items-center text-center">
               <div className="relative mb-8">
@@ -184,20 +186,20 @@ export function Dashboard() {
               
               <div className="space-y-4 mb-8">
                 <h4 className={`text-xl font-black tracking-tight ${status === 'healthy' ? 'text-emerald-700' : 'text-red-700'}`}>
-                  {status === 'healthy' ? 'All Systems Operational' : 'Node Connection Warning'}
+                  {status === 'healthy' ? t('dash_all_operational') : t('dash_connection_warning')}
                 </h4>
                 <p className="text-sm text-slate-500 font-medium leading-relaxed px-4">
-                  Frontend and backend are responding quickly. Server load is normal.
+                  {t('dash_system_description')}
                 </p>
               </div>
 
               <div className="w-full space-y-3">
                 <button className="w-full py-4 rounded-2xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black transition-all shadow-xl shadow-slate-900/20">
-                  View Detailed Logs
+                  {t('dash_view_logs')}
                 </button>
                 <div className="flex items-center justify-center gap-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                  <span className="flex items-center gap-1.5"><Activity className="w-3 h-3" /> Latency: 24ms</span>
-                  <span className="flex items-center gap-1.5"><Activity className="w-3 h-3" /> Uptime: 99.9%</span>
+                  <span className="flex items-center gap-1.5"><Activity className="w-3 h-3" /> {t('dash_latency')}: 24ms</span>
+                  <span className="flex items-center gap-1.5"><Activity className="w-3 h-3" /> {t('dash_uptime')}: 99.9%</span>
                 </div>
               </div>
             </div>
@@ -212,12 +214,12 @@ export function Dashboard() {
              <Megaphone size={20} />
           </div>
           <div>
-            <h4 className="font-black text-slate-800">Manage Announcements</h4>
-            <p className="text-xs text-slate-500 font-medium">Draft, publish or schedule community news and alerts.</p>
+            <h4 className="font-black text-slate-800">{t('dash_manage_announcements')}</h4>
+            <p className="text-xs text-slate-500 font-medium">{t('dash_manage_announcements_desc')}</p>
           </div>
         </div>
         <Link to="/announcements" className="w-full sm:w-auto px-8 py-3 bg-brand text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl shadow-lg shadow-brand/20 hover:bg-brand-dark transition-all text-center">
-          Go to Feed
+          {t('dash_go_to_feed')}
         </Link>
       </div>
     </div>
