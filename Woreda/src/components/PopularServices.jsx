@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import { motion } from 'framer-motion';
 import ServiceCard from './ServiceCard';
 
 const PopularServices = () => {
@@ -43,13 +44,13 @@ const PopularServices = () => {
   }
 
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-20 text-center">
-          <h2 className="text-5xl font-black text-black mb-6 tracking-tight">
+    <section className="py-32 bg-white relative overflow-hidden text-left">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <div className="mb-16">
+          <h2 className="text-5xl md:text-7xl font-black text-black mb-8 leading-[0.95] tracking-tighter">
             <span className="stylized-underline decoration-brand pb-2">{t('section_popular').split(' ')[0]}</span> {t('section_popular').split(' ').slice(1).join(' ')}
           </h2>
-          <p className="text-xl text-black/50 max-w-2xl mx-auto font-medium">
+          <p className="text-xl md:text-2xl text-black/50 max-w-2xl font-black uppercase tracking-tight opacity-40">
             {t('footer_mission')}
           </p>
         </div>
@@ -59,19 +60,21 @@ const PopularServices = () => {
             const title = language === 'am' && service.titleAm ? service.titleAm : service.title;
             const dept = language === 'am' && service.departmentAm ? service.departmentAm : service.department;
             return (
-            <Link key={service.id} to={`/services/${service.id}`}>
-              <ServiceCard
-                title={title}
-                description={dept ? `${t('nav_services')}: ${dept}` : `${t('ann_header')}: ${service.category || 'General'}`}
-              />
-            </Link>
+            <div key={service.id}>
+              <Link to={`/services/${service.id}`}>
+                <ServiceCard
+                  title={title}
+                  description={dept ? `${t('nav_services')}: ${dept}` : `${t('ann_header')}: ${service.category || 'General'}`}
+                />
+              </Link>
+            </div>
           )})}
         </div>
 
         <div className="mt-20 text-center">
           <Link
             to="/services"
-            className="inline-block px-12 py-5 border-2 border-black text-black rounded-full font-black text-xl hover:bg-brand hover:border-brand hover:text-white hover:shadow-2xl hover:shadow-brand/20 transition-all duration-500 active:scale-95"
+            className="inline-block px-10 py-5 bg-white border-2 border-black text-black rounded-2xl font-black text-lg shadow-xl hover:bg-brand hover:border-brand hover:text-white hover:-translate-y-1 hover:shadow-brand/30 transition-all duration-500 active:scale-95 leading-none"
           >
             {t('btn_view_all')}
           </Link>

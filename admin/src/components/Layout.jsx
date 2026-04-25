@@ -1,160 +1,160 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Megaphone, Server, Image as ImageIcon, LogOut, Bell, Search, Settings, FileText, Menu, X, Mail } from 'lucide-react';
+import React, { useState } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import {
+  LayoutDashboard,
+  Megaphone,
+  Server,
+  Image as ImageIcon,
+  MessageSquare,
+  LogOut,
+  Bell,
+  Search,
+  ChevronRight,
+  Menu,
+  X,
+  Plus
+} from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
-// Shared hook for unread message count
-function useUnreadCount() {
-  const [unreadCount, setUnreadCount] = useState(0);
-
-  const fetchUnreadCount = async () => {
-    try {
-      const res = await fetch('http://localhost:5000/api/messages/unread-count');
-      if (!res.ok) return;
-      const data = await res.json();
-      setUnreadCount(data.count || 0);
-    } catch (err) {
-      // Silently fail — don't crash the UI if backend is temporarily unavailable
-    }
-  };
-
-  useEffect(() => {
-    fetchUnreadCount();
-    const interval = setInterval(fetchUnreadCount, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return unreadCount;
-}
-
-function SidebarContent({ onNavClick, unreadCount }) {
-  const location = useLocation();
+export function Layout({ children }) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { t } = useLanguage();
-  
-  const navItems = [
-    { name: t('nav_dashboard'), path: '/', icon: LayoutDashboard },
-    { name: t('nav_announcements'), path: '/announcements', icon: Megaphone },
-    { name: t('nav_services'), path: '/services', icon: Server },
-    { name: t('nav_service_content'), path: '/service-details', icon: FileText },
-    { name: t('nav_gallery'), path: '/gallery', icon: ImageIcon },
-    { name: t('nav_messages'), path: '/messages', icon: Mail },
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const navigation = [
+    { name: t('nav_dashboard'), href: '/', icon: LayoutDashboard },
+    { name: t('nav_announcements'), href: '/announcements', icon: Megaphone },
+    { name: t('nav_services'), href: '/services', icon: Server },
+    { name: t('nav_gallery'), href: '/gallery', icon: ImageIcon },
+    { name: t('nav_messages'), href: '/messages', icon: MessageSquare },
   ];
 
-  return (
-    <div className="flex flex-col h-full">
-      <div className="p-6 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00B4D8] to-[#0077B6] flex items-center justify-center text-white shadow-lg shadow-[#00B4D8]/30 shrink-0">
-            <LayoutDashboard strokeWidth={2.5} size={18} />
-          </div>
-          <div>
-            <h1 className="text-xl font-black text-slate-800 tracking-tighter">Woreda <span className="text-[#00B4D8]">05</span></h1>
-            <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">{t('nav_management')}</p>
-          </div>
-        </div>
-      </div>
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    navigate('/login');
+  };
 
-      <div className="px-4 pb-4 mt-4 space-y-6 flex-1 overflow-y-auto">
-        <div>
-          <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4 ml-4">{t('nav_main_menu')}</p>
-          <nav className="space-y-1.5 font-bold">
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  onClick={onNavClick}
-                  className={`flex items-center px-4 py-3 text-sm rounded-2xl transition-all duration-200 group relative ${
-                    isActive
-                      ? 'text-[#0077B6] bg-[#90E0EF]/30'
-                      : 'text-slate-500 hover:text-[#00B4D8] hover:bg-[#90E0EF]/10'
-                  }`}
-                >
-                  <div className={`mr-3 p-2 rounded-xl transition-all duration-300 ${isActive ? 'bg-white shadow-md text-[#00B4D8]' : 'text-slate-400 group-hover:text-[#00B4D8] group-hover:bg-white group-hover:shadow-sm'}`}>
-                    <item.icon className="w-4 h-4" />
-                  </div>
-                  <span className="tracking-tight">{item.name}</span>
-                  {item.name === t('nav_messages') && unreadCount > 0 && (
-                    <div className="ml-auto bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-red-500/30">
-                      {unreadCount}
-                    </div>
-                  )}
-                  {isActive && !(item.name === t('nav_messages') && unreadCount > 0) && (
-                    <div className="absolute right-3 w-1.5 h-1.5 rounded-full bg-[#00B4D8] shadow-[0_0_8px_#00B4D8]" />
-                  )}
-                </NavLink>
-              );
-            })}
+  return (
+    <div className="min-h-screen bg-[#F8FAFC]">
+      {/* Sidebar - Desktop */}
+      <aside className="fixed inset-y-0 left-0 hidden w-72 bg-white border-r border-slate-100 lg:flex flex-col z-50">
+        <div className="p-8">
+          <div className="flex items-center gap-3.5 mb-10 group cursor-pointer">
+            <div className="w-11 h-11 bg-gradient-to-br from-[#00B4D8] to-[#0077B6] rounded-2xl flex items-center justify-center shadow-lg shadow-[#00B4D8]/20 group-hover:scale-110 transition-transform duration-300">
+              <Server className="text-white w-6 h-6" strokeWidth={2.5} />
+            </div>
+            <div>
+              <h1 className="text-xl font-black text-slate-800 tracking-tighter leading-none">WOREDA <span className="text-[#00B4D8]">05</span></h1>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1.5">{t('nav_management')}</p>
+            </div>
+          </div>
+
+          <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-6 ml-1">{t('nav_main_menu')}</p>
+          <nav className="space-y-1.5">
+            {navigation.map((item) => (
+              <NavLink
+                key={item.name}
+                to={item.href}
+                className={({ isActive }) =>
+                  `flex items-center gap-4 px-5 py-4 rounded-2xl text-sm font-bold tracking-tight transition-all duration-300 group ${isActive
+                    ? 'bg-[#E0F2FE] text-[#0077B6] shadow-sm shadow-[#0077B6]/5'
+                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
+                  }`
+                }
+              >
+                <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
+                <span className="flex-1">{item.name}</span>
+                <ChevronRight size={14} className={`opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 ${location.pathname === item.href ? 'opacity-40' : ''}`} />
+              </NavLink>
+            ))}
           </nav>
         </div>
-      </div>
 
-      <div className="p-6 border-t border-slate-100">
-        <button className="flex items-center w-full px-4 py-3 text-sm font-bold text-slate-400 rounded-2xl hover:bg-red-50 hover:text-red-600 transition-all duration-200 group">
-          <div className="p-2 rounded-xl mr-3 text-slate-300 group-hover:text-red-500 group-hover:bg-red-100 transition-colors">
-            <LogOut className="w-4 h-4" />
+        <div className="mt-auto p-4 border-t border-slate-50 space-y-3">
+          <div className="p-5 rounded-3xl bg-slate-50 flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-sm">
+              <Bell size={18} className="text-slate-400" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-black text-slate-800 tracking-tight truncate">{t('nav_admin_user')}</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('nav_super_admin')}</p>
+            </div>
           </div>
-          {t('nav_logout')}
+          <button
+            onClick={handleLogout}
+            className="flex items-center w-full gap-4 px-6 py-4 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] transition-all group"
+          >
+            <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
+            {t('nav_logout')}
+          </button>
+        </div>
+      </aside>
+
+      {/* Mobile Header */}
+      <header className="lg:hidden fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-slate-100 z-40 px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 bg-brand rounded-xl flex items-center justify-center shadow-lg shadow-brand/20">
+            <Server className="text-white w-5 h-5" />
+          </div>
+          <h1 className="text-lg font-black text-slate-800 tracking-tighter">WOREDA <span className="text-brand">05</span></h1>
+        </div>
+        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-slate-500 bg-slate-50 rounded-xl">
+          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
-      </div>
+      </header>
+
+      {/* Mobile Nav Overlay */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 bg-white z-50 p-10 flex flex-col animate-in fade-in duration-300">
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">{t('nav_main_menu')}</h2>
+            <button onClick={() => setIsMobileMenuOpen(false)}><X size={24} className="text-slate-300" /></button>
+          </div>
+          <nav className="space-y-6 flex-1">
+            {navigation.map(item => (
+              <NavLink key={item.name} to={item.href} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-6 text-3xl font-black text-slate-800 tracking-tighter">
+                <item.icon size={32} className="text-brand" /> {item.name}
+              </NavLink>
+            ))}
+          </nav>
+          <button onClick={handleLogout} className="mt-auto flex items-center gap-4 text-slate-400 font-bold uppercase tracking-widest text-xs">
+            <LogOut size={20} /> {t('nav_logout')}
+          </button>
+        </div>
+      )}
+
+      {/* Main Content */}
+      <main className="lg:pl-72 pt-20 lg:pt-0">
+        {/* Top Navbar - Search & Switcher */}
+        <div className="h-20 bg-white/50 backdrop-blur-sm border-b border-slate-100 flex items-center justify-between px-6 lg:px-10 sticky top-0 z-30">
+          <div className="relative w-full max-w-md hidden sm:block">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
+            <input
+              type="text"
+              placeholder={t('search_quick_placeholder')}
+              className="w-full bg-white border border-slate-200 rounded-2xl pl-12 pr-4 py-3 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all"
+            />
+          </div>
+          <div className="flex items-center gap-6">
+            <LanguageSwitcher />
+            <div className="hidden sm:flex items-center gap-3 pl-6 border-l border-slate-100">
+              <div className="w-10 h-10 rounded-2xl bg-brand text-white flex items-center justify-center font-black text-xs shadow-lg shadow-brand/20 ring-4 ring-brand/5">
+                A
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-6 lg:p-10 max-w-7xl mx-auto">
+          {children}
+        </div>
+      </main>
     </div>
   );
 }
-
-export function Sidebar({ unreadCount }) {
-  return (
-    <div className="w-64 bg-white/95 backdrop-blur-xl border-r border-slate-100 h-screen fixed left-0 top-0 shadow-xl shadow-slate-200/50 z-20 hidden lg:flex flex-col">
-      <SidebarContent unreadCount={unreadCount} />
-    </div>
-  );
-}
-
-export function TopBar({ onMenuClick, unreadCount }) {
-  const { t } = useLanguage();
-  
-  return (
-    <header className="h-16 lg:h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-10 flex items-center justify-between px-4 lg:px-10">
-      {/* Mobile Menu Button */}
-      <button
-        onClick={onMenuClick}
-        className="lg:hidden p-2.5 rounded-xl text-slate-500 hover:text-[#00B4D8] hover:bg-[#90E0EF]/10 transition-all mr-2"
-      >
-        <Menu className="w-5 h-5" />
-      </button>
-
-      {/* Search - hidden on small screens */}
-      <div className="relative hidden md:block flex-1 max-w-sm lg:max-w-96">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-        <input
-          type="text"
-          placeholder={t('search_quick_placeholder') || "Quick search everything..."}
-          className="w-full pl-12 pr-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-2xl text-sm font-medium text-slate-700 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
-        />
-      </div>
-
-      {/* Mobile brand name */}
-      <div className="lg:hidden flex-1">
-        <p className="text-sm font-black text-slate-800 tracking-tighter">Woreda <span className="text-[#00B4D8]">05</span></p>
-      </div>
-
-      <div className="flex items-center gap-2 lg:gap-4">
-        <LanguageSwitcher />
-        <a
-          href="/messages"
-          className="relative p-2.5 rounded-xl text-slate-400 hover:text-[#00B4D8] hover:bg-[#90E0EF]/10 transition-all"
-        >
-          <Bell className="w-5 h-5" />
-          {unreadCount > 0 && (
-            <span className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] rounded-full bg-red-500 border-2 border-white text-[8px] flex items-center justify-center font-black text-white px-1">
-              {unreadCount}
-            </span>
-          )}
-        </a>
-        <button className="hidden sm:block p-2.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all">
-          <Settings className="w-5 h-5" />
-        </button>
+        </button >
         <div className="hidden sm:block h-8 w-[1px] bg-slate-100 mx-1"></div>
         <div className="flex items-center gap-3 cursor-pointer group rounded-2xl hover:bg-slate-50 p-1.5 transition-all">
           <div className="text-right hidden sm:block">
@@ -165,8 +165,8 @@ export function TopBar({ onMenuClick, unreadCount }) {
             <img src="https://ui-avatars.com/api/?name=Admin+User&background=00B4D8&color=fff&size=64&bold=true" alt="Admin" className="w-full h-full object-cover" />
           </div>
         </div>
-      </div>
-    </header>
+      </div >
+    </header >
   );
 }
 

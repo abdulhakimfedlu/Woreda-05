@@ -14,11 +14,19 @@ import GalleryPage from './pages/GalleryPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 
+// New Components
+import AboutSection from './components/AboutSection';
+import FeaturesSection from './components/FeaturesSection';
+import CtaSection from './components/CtaSection';
+
 // Home Component
 const Home = () => (
   <>
     <Hero />
+    <AboutSection />
     <PopularServices />
+    <FeaturesSection />
+    <CtaSection />
   </>
 );
 

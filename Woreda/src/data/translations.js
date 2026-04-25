@@ -101,6 +101,33 @@ export const translations = {
     "contact_privacy_desc": "Your communications are handled with strict confidentiality. Choosing anonymous submission hides your contact data completely.",
     "contact_btn_another": "Send Another Message",
     "contact_sending": "Sending...",
+
+    // New Homepage Sections
+    "home_about_subtitle": "OUR VISION & PURPOSE",
+    "home_about_title": "Building a Better Woreda Together",
+    "home_about_desc": "Woreda 05 is committed to excellence in public service. We strive to create a seamless bridge between the government and its citizens through technology and dedicated human service.",
+    
+    "home_stats_residents": "Residents Served",
+    "home_stats_services": "Services Available",
+    "home_stats_efficiency": "Efficiency Rate",
+    "home_stats_hours": "Operating Hours",
+    
+    "home_vision_subtitle": "OUR FUTURE FOCUS",
+    "home_vision_title": "Redefining Governance for the Digital Age",
+    "home_vision_desc": "We are bridging the gap between community needs and government solutions with speed and transparency.",
+    
+    "home_features_title": "Why Use Our Digital Portal?",
+    "home_features_1_title": "Transparent",
+    "home_features_1_desc": "Real-time updates and clear procedures for every service.",
+    "home_features_2_title": "Accessible",
+    "home_features_2_desc": "Access government services from anywhere, anytime.",
+    "home_features_3_title": "Secure",
+    "home_features_3_desc": "Your data and communications are protected with modern standards.",
+    
+    "home_cta_title": "Stay Connected with Your Community",
+    "home_cta_desc": "Check latest announcements or browse our gallery to see our community in action.",
+    "home_cta_btn_gallery": "View Gallery",
+    "home_cta_btn_ann": "Recent News",
   },
   am: {
     // Navbar
@@ -204,5 +231,32 @@ export const translations = {
     "contact_privacy_desc": "የእርስዎ ግንኙነቶች በጥብቅ ሚስጥራዊነት ይያዛሉ። ስም ሳይጠቅሱ መላክን መምረጥ የእርስዎን የእውቂያ መረጃ ሙሉ በሙሉ ይደብቃል።",
     "contact_btn_another": "ሌላ መልእክት ይላኩ",
     "contact_sending": "በመላክ ላይ...",
+
+    // New Homepage Sections
+    "home_about_subtitle": "ራዕያችን እና ግባችን",
+    "home_about_title": "የተሻለ ወረዳን በጋራ መገንባት",
+    "home_about_desc": "ወረዳ 05 ጥራት ያለው የህዝብ አገልግሎት ለመስጠት ቁርጠኛ ነው። በቴክኖሎጂ እና በትጋት በተሞላ የሰው ኃይል አማካኝነት በመንግስት እና በዜጎች መካከል ምቹ ድልድይ ለመፍጠር እንጥራለን።",
+
+    "home_stats_residents": "የሚገለገሉ ነዋሪዎች",
+    "home_stats_services": "የሚሰጡ አገልግሎቶች",
+    "home_stats_efficiency": "የአገልግሎት ቅልጥፍና",
+    "home_stats_hours": "የስራ ሰዓት",
+
+    "home_vision_subtitle": "የወደፊት ትኩረታችን",
+    "home_vision_title": "አመራርን ለዲጂታል ዘመን ስንቀርጽ",
+    "home_vision_desc": "በማህበረሰብ ፍላጎቶች እና በመንግስት መፍትሄዎች መካከል ያለውን ልዩነት በፈጣን እና ግልጽ በሆነ መንገድ እያጠባን ነው።",
+
+    "home_features_title": "ለምን የእኛን ዲጂታል ፖርታል ይጠቀማሉ?",
+    "home_features_1_title": "ግልጽነት",
+    "home_features_1_desc": "ለእያንዳንዱ አገልግሎት ወቅታዊ መረጃ እና ግልጽ አሰራሮች::",
+    "home_features_2_title": "ተደራሽነት",
+    "home_features_2_desc": "የመንግስት አገልግሎቶችን ከየትኛውም ቦታ እና በማንኛውም ጊዜ ያግኙ::",
+    "home_features_3_title": "ደህንነት",
+    "home_features_3_desc": "የእርስዎ መረጃ እና ግንኙነቶች በዘመናዊ ደረጃዎች የተጠበቁ ናቸው::",
+
+    "home_cta_title": "ከማህበረሰብዎ ጋር ይገናኙ",
+    "home_cta_desc": "የቅርብ ጊዜ ማስታወቂያዎችን ይመልከቱ ወይም የማህበረሰባችንን እንቅስቃሴዎች በጋለሪችን ውስጥ ይቃኙ::",
+    "home_cta_btn_gallery": "ጋለሪውን ይመልከቱ",
+    "home_cta_btn_ann": "የቅርብ ጊዜ ዜናዎች",
   }
 };
