@@ -62,6 +62,7 @@ const serviceDetails = pgTable('service_details', {
   officerRole: varchar('officer_role', { length: 255 }),
   officerRoleAm: varchar('officer_role_am', { length: 255 }),
   officerPhoto: text('officer_photo'),
+  officerPhotoPublicId: text('officer_photo_public_id'),
   contactPhone: varchar('contact_phone', { length: 100 }),
   contactEmail: varchar('contact_email', { length: 255 }),
   officeNumber: varchar('office_number', { length: 100 }),
@@ -69,6 +70,7 @@ const serviceDetails = pgTable('service_details', {
   additionalDetails: text('additional_details'),
   additionalDetailsAm: text('additional_details_am'),
   bannerPhoto: text('banner_photo'),
+  bannerPhotoPublicId: text('banner_photo_public_id'),
 });
 
 const gallery = pgTable('gallery', {
@@ -76,6 +78,7 @@ const gallery = pgTable('gallery', {
   title: varchar('title', { length: 255 }).notNull(),
   titleAm: varchar('title_am', { length: 255 }),
   url: text('url').notNull(),
+  publicId: text('public_id'),
   description: text('description'),
   descriptionAm: text('description_am'),
   date: varchar('date', { length: 100 }),

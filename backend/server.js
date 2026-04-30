@@ -1,11 +1,11 @@
+const dotenv = require('dotenv');
+dotenv.config(); // MUST be first — loads .env before any module reads process.env
+
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
-const path = require('path');
 const multer = require('multer');
-
-// Load environment variables
-dotenv.config();
+const streamifier = require('streamifier');
+const cloudinary = require('./config/cloudinary');
 
 const app = express();
 
@@ -14,34 +14,48 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from 'uploads' directory
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Multer Setup for local storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+// Multer: use memory storage — Cloudinary handles persistence
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith('image/')) {
+      return cb(new Error('Only image files are allowed'), false);
+    }
+    cb(null, true);
   }
 });
 
-const upload = multer({ 
-  storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
-});
+// Helper: stream a buffer to Cloudinary and return the result
+const uploadToCloudinary = (buffer, folder = 'woreda05') =>
+  new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder, resource_type: 'image' },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      }
+    );
+    streamifier.createReadStream(buffer).pipe(stream);
+  });
 
-// Upload Endpoint
-app.post('/api/upload', upload.single('image'), (req, res) => {
+// Upload Endpoint — returns Cloudinary secure URL + size
+app.post('/api/upload', upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded' });
   }
-  const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-  res.status(200).json({ 
-    url: fileUrl, 
-    size: (req.file.size / (1024 * 1024)).toFixed(2) + ' MB' 
-  });
+  try {
+    const result = await uploadToCloudinary(req.file.buffer);
+    const sizeMB = (req.file.size / (1024 * 1024)).toFixed(2) + ' MB';
+    res.status(200).json({
+      url:       result.secure_url,
+      public_id: result.public_id,
+      size:      sizeMB,
+    });
+  } catch (err) {
+    console.error('Cloudinary upload error:', err.message);
+    res.status(500).json({ message: 'Image upload failed', error: err.message });
+  }
 });
 
 // Basic route to test server
@@ -73,3 +87,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+

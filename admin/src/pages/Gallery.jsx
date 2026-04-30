@@ -20,6 +20,7 @@ export function Gallery() {
     title: '',
     titleAm: '',
     url: '',
+    publicId: '',
     description: '',
     descriptionAm: '',
     date: new Date().toISOString().split('T')[0],
@@ -64,6 +65,7 @@ export function Gallery() {
       title: image.title,
       titleAm: image.titleAm || '',
       url: image.url,
+      publicId: image.publicId || '',
       description: image.description || '',
       descriptionAm: image.descriptionAm || '',
       date: image.date || new Date().toISOString().split('T')[0],
@@ -76,7 +78,7 @@ export function Gallery() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
+      if (file.size > 10 * 1024 * 1024) {
         toast.error(t('gal_alert_size'));
         e.target.value = null;
         return;
@@ -87,36 +89,47 @@ export function Gallery() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate: new items must have a file selected
+    if (!editingItem && !selectedFile) {
+      toast.error('Please select an image file to upload.');
+      return;
+    }
+
     setUploading(true);
     
     let currentUrl = formData.url;
+    let currentPublicId = formData.publicId;
     let currentSize = formData.size;
 
     try {
-      // 1. If a new file is selected, upload it first
+      // 1. If a new file is selected, upload it to Cloudinary first
       if (selectedFile) {
         const uploadFormData = new FormData();
         uploadFormData.append('image', selectedFile);
         
         const uploadRes = await fetch('http://localhost:5000/api/upload', {
           method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` },
           body: uploadFormData
         });
         
-        if (!uploadRes.ok) throw new Error('Upload failed');
+        if (!uploadRes.ok) {
+          const errData = await uploadRes.json().catch(() => ({}));
+          throw new Error(errData.message || 'Image upload to Cloudinary failed');
+        }
         const uploadData = await uploadRes.json();
         currentUrl = uploadData.url;
+        currentPublicId = uploadData.public_id;
         currentSize = uploadData.size;
       }
 
       // 2. Save/Update metadata
-      const url = editingItem 
+      const apiUrl = editingItem 
         ? `http://localhost:5000/api/gallery/${editingItem.id}`
         : 'http://localhost:5000/api/gallery';
       const method = editingItem ? 'PUT' : 'POST';
 
-      const res = await fetch(url, {
+      const res = await fetch(apiUrl, {
         method,
         headers: { 
           'Content-Type': 'application/json',
@@ -125,21 +138,25 @@ export function Gallery() {
         body: JSON.stringify({
           ...formData,
           url: currentUrl,
+          publicId: currentPublicId,
           size: currentSize
         })
       });
 
-      if (res.ok) {
-        setIsModalOpen(false);
-        setEditingItem(null);
-        setSelectedFile(null);
-        setFormData({ title: '', titleAm: '', url: '', description: '', descriptionAm: '', date: new Date().toISOString().split('T')[0], size: '0 MB' });
-        fetchGallery();
-        toast.success(editingItem ? t('status_saving') : t('status_saving')); // You can replace with specialized translation keys if required
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.msg || errData.message || `Server error (${res.status})`);
       }
+
+      setIsModalOpen(false);
+      setEditingItem(null);
+      setSelectedFile(null);
+      setFormData({ title: '', titleAm: '', url: '', publicId: '', description: '', descriptionAm: '', date: new Date().toISOString().split('T')[0], size: '0 MB' });
+      fetchGallery();
+      toast.success(editingItem ? 'Image updated successfully!' : 'Image uploaded successfully!');
     } catch (error) {
       console.error('Error saving gallery item:', error);
-      toast.error(t('gal_alert_save_failed'));
+      toast.error(error.message || t('gal_alert_save_failed'));
     } finally {
       setUploading(false);
     }
@@ -160,7 +177,7 @@ export function Gallery() {
           <button 
             onClick={() => {
               setEditingItem(null);
-              setFormData({ title: '', titleAm: '', url: '', description: '', descriptionAm: '', date: new Date().toISOString().split('T')[0], size: '0 MB' });
+              setFormData({ title: '', titleAm: '', url: '', publicId: '', description: '', descriptionAm: '', date: new Date().toISOString().split('T')[0], size: '0 MB' });
               setSelectedFile(null);
               setIsModalOpen(true);
             }}
@@ -274,7 +291,7 @@ export function Gallery() {
         <div 
           onClick={() => {
             setEditingItem(null);
-            setFormData({ title: '', url: '', description: '', date: new Date().toISOString().split('T')[0], size: '0 MB' });
+            setFormData({ title: '', titleAm: '', url: '', publicId: '', description: '', descriptionAm: '', date: new Date().toISOString().split('T')[0], size: '0 MB' });
             setSelectedFile(null);
             setIsModalOpen(true);
           }}

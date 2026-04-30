@@ -12,7 +12,8 @@ import {
   ChevronRight,
   Menu,
   X,
-  Plus
+  Plus,
+  FileText
 } from 'lucide-react';
 import { Shield } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
@@ -37,6 +38,7 @@ export function Layout() {
   }
   if (admin?.canManageServices || admin?.canManageCategories || admin?.isPrimary) {
     navigation.push({ name: t('nav_services'), href: '/services', icon: Server });
+    navigation.push({ name: t('nav_service_details') || 'Service Details', href: '/service-details', icon: FileText });
   }
   if (admin?.canManageGallery || admin?.isPrimary) {
     navigation.push({ name: t('nav_gallery'), href: '/gallery', icon: ImageIcon });
