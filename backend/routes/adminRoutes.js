@@ -3,10 +3,64 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const db = require('../config/db');
 const { admins } = require('../config/schema');
-const { eq } = require('drizzle-orm');
+const { eq, sql } = require('drizzle-orm');
 const authMiddleware = require('./authMiddleware');
 
-// All routes here require authentication
+// Get current admin details (permissions) by email
+router.get('/me', async (req, res) => {
+  const { email } = req.query;
+  if (!email) return res.status(400).json({ msg: 'Email is required' });
+
+  try {
+    const normalizedEmail = email.toLowerCase().trim();
+    const adminRows = await db.select().from(admins).where(
+      sql`LOWER(${admins.email}) = ${normalizedEmail}`
+    );
+
+    if (adminRows.length === 0) {
+      return res.status(404).json({ msg: 'Admin not found' });
+    }
+
+    const admin = adminRows[0];
+    const robustAdmin = {
+      ...admin,
+      isPrimary: admin.isPrimary || admin.is_primary,
+      canManageAnnouncements: admin.canManageAnnouncements || admin.can_manage_announcements,
+      canManageServices: admin.canManageServices || admin.can_manage_services,
+      canManageCategories: admin.canManageCategories || admin.can_manage_categories,
+      canManageGallery: admin.canManageGallery || admin.can_manage_gallery,
+      canViewDashboard: admin.canViewDashboard || admin.can_view_dashboard,
+      canManageAdmins: admin.canManageAdmins || admin.can_manage_admins,
+      canAddAdmins: admin.canAddAdmins || admin.can_add_admins,
+      canEditAdmins: admin.canEditAdmins || admin.can_edit_admins,
+      canDeleteAdmins: admin.canDeleteAdmins || admin.can_delete_admins,
+      messageAccess: admin.messageAccess || admin.message_access
+    };
+
+    res.json(robustAdmin);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// Public route to check if an email is approved
+router.get('/check/:email', async (req, res) => {
+  const { email } = req.params;
+  try {
+    const adminRows = await db.select().from(admins).where(eq(admins.email, email));
+    if (adminRows.length > 0) {
+      res.json({ approved: true });
+    } else {
+      res.json({ approved: false });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// All routes below require authentication
 router.use(authMiddleware);
 
 // Middleware to check if user has manage admins permission
@@ -26,6 +80,7 @@ router.get('/', checkManagePerms('canManageAdmins'), async (req, res) => {
     const result = await db.select({
       id: admins.id,
       username: admins.username,
+      email: admins.email,
       canAddAdmins: admins.canAddAdmins,
       canDeleteAdmins: admins.canDeleteAdmins,
       canEditAdmins: admins.canEditAdmins,
@@ -50,26 +105,30 @@ router.get('/', checkManagePerms('canManageAdmins'), async (req, res) => {
 // @desc    Create a new admin
 router.post('/', checkManagePerms('canAddAdmins'), async (req, res) => {
   const { 
-    username, password, 
+    username, email, password, 
     canAddAdmins, canDeleteAdmins, canEditAdmins, canManageAdmins,
     canManageAnnouncements, canManageServices, canManageCategories, canManageGallery,
     canViewDashboard, messageAccess 
   } = req.body;
 
   try {
-    // Check if admin exists
+    // Check if email exists
+    if (email) {
+      const existingEmail = await db.select().from(admins).where(eq(admins.email, email));
+      if (existingEmail.length > 0) {
+        return res.status(400).json({ msg: 'Email already assigned to another admin' });
+      }
+    }
+
+    // Check if username exists
     const existingAdmin = await db.select().from(admins).where(eq(admins.username, username));
     if (existingAdmin.length > 0) {
       return res.status(400).json({ msg: 'Admin already exists' });
     }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
-
-    const newAdmin = await db.insert(admins).values({
+    const insertValues = {
       username,
-      passwordHash,
+      email,
       canAddAdmins: !!canAddAdmins,
       canDeleteAdmins: !!canDeleteAdmins,
       canEditAdmins: !!canEditAdmins,
@@ -80,9 +139,17 @@ router.post('/', checkManagePerms('canAddAdmins'), async (req, res) => {
       canManageGallery: !!canManageGallery,
       canViewDashboard: !!canViewDashboard,
       messageAccess: messageAccess || 'None'
-    }).returning({
+    };
+
+    if (password) {
+       const salt = await bcrypt.genSalt(10);
+       insertValues.passwordHash = await bcrypt.hash(password, salt);
+    }
+
+    const newAdmin = await db.insert(admins).values(insertValues).returning({
       id: admins.id,
-      username: admins.username
+      username: admins.username,
+      email: admins.email
     });
 
     res.json(newAdmin[0]);
@@ -96,7 +163,7 @@ router.post('/', checkManagePerms('canAddAdmins'), async (req, res) => {
 // @desc    Update an admin
 router.put('/:id', checkManagePerms('canEditAdmins'), async (req, res) => {
   const { 
-    username, password, 
+    username, email, password, 
     canAddAdmins, canDeleteAdmins, canEditAdmins, canManageAdmins,
     canManageAnnouncements, canManageServices, canManageCategories, canManageGallery,
     canViewDashboard, messageAccess 
@@ -114,6 +181,7 @@ router.put('/:id', checkManagePerms('canEditAdmins'), async (req, res) => {
 
     const updateFields = {
       username: username,
+      email: email,
       canAddAdmins: !!canAddAdmins,
       canDeleteAdmins: !!canDeleteAdmins,
       canEditAdmins: !!canEditAdmins,
@@ -136,7 +204,8 @@ router.put('/:id', checkManagePerms('canEditAdmins'), async (req, res) => {
       .where(eq(admins.id, adminId))
       .returning({
         id: admins.id,
-        username: admins.username
+        username: admins.username,
+        email: admins.email
       });
     
     if (updated.length === 0) return res.status(404).json({ msg: 'Admin not found' });

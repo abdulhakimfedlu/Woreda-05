@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 
 export function Dashboard() {
   const { t } = useLanguage();
-  const { token, admin } = useAuth();
+  const { admin, authFetch } = useAuth();
   const [data, setData] = useState({
     services: [],
     categories: [],
@@ -21,12 +21,12 @@ export function Dashboard() {
     const fetchData = async () => {
       try {
         const [servicesRes, categoriesRes, galleryRes, announcementsRes, unreadRes] = await Promise.all([
-          fetch('http://localhost:5000/api/services').then(res => res.json()),
-          fetch('http://localhost:5000/api/categories').then(res => res.json()),
-          fetch('http://localhost:5000/api/gallery').then(res => res.json()),
-          fetch('http://localhost:5000/api/announcements').then(res => res.json()),
+          authFetch('http://localhost:5000/api/services').then(res => res.json()),
+          authFetch('http://localhost:5000/api/categories').then(res => res.json()),
+          authFetch('http://localhost:5000/api/gallery').then(res => res.json()),
+          authFetch('http://localhost:5000/api/announcements').then(res => res.json()),
           (admin?.isPrimary || admin?.messageAccess !== 'None') 
-            ? fetch('http://localhost:5000/api/messages/unread-count', { headers: { 'Authorization': `Bearer ${token}` } }).then(res => res.ok ? res.json() : { count: 0 }).catch(() => ({ count: 0 }))
+            ? authFetch('http://localhost:5000/api/messages/unread-count').then(res => res.ok ? res.json() : { count: 0 }).catch(() => ({ count: 0 }))
             : Promise.resolve({ count: 0 })
         ]);
 
@@ -47,10 +47,9 @@ export function Dashboard() {
     };
 
     fetchData();
-    // Refresh every 30 seconds for "real-time" feel
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [admin, authFetch]);
 
   const stats = [
     { name: t('dash_total_services'), value: data.services.length, icon: Server, color: 'text-brand', gradient: 'from-[#00B4D8] to-[#0077B6]' },

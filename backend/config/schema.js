@@ -3,7 +3,8 @@ const { pgTable, serial, varchar, text, timestamp, integer, json, boolean } = re
 const admins = pgTable('admins', {
   id: serial('id').primaryKey(),
   username: varchar('username', { length: 255 }).notNull().unique(),
-  passwordHash: varchar('password_hash', { length: 255 }).notNull(),
+  email: varchar('email', { length: 255 }).unique(),
+  passwordHash: varchar('password_hash', { length: 255 }), // Removed .notNull() to allow Clerk users
   canAddAdmins: boolean('can_add_admins').default(false),
   canDeleteAdmins: boolean('can_delete_admins').default(false),
   canEditAdmins: boolean('can_edit_admins').default(false),

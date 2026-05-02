@@ -1,78 +1,74 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
+import { useUser, useAuth as useClerkAuth } from '@clerk/clerk-react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const { isLoaded, isSignedIn, user } = useUser();
+  const { getToken } = useClerkAuth();
   const [admin, setAdmin] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('adminToken'));
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Since JWT is stateless on the server, we just decode or assume validity
-  // A better approach would be to have a GET /api/auth/me to verify,
-  // but for now, we rely on the user object stored during login
-  useEffect(() => {
-    const storedUser = localStorage.getItem('adminUser');
-    if (token && storedUser) {
-      setAdmin(JSON.parse(storedUser));
-    } else {
-      localStorage.removeItem('adminToken');
-      localStorage.removeItem('adminUser');
+  const fetchAdminData = useCallback(async () => {
+    if (!isLoaded || !isSignedIn || !user) {
+      setAdmin(null);
       setToken(null);
+      setLoading(false);
+      return;
     }
-    setLoading(false);
-  }, [token]);
 
-  const login = async (username, password) => {
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
+      const clerkToken = await getToken();
+      setToken(clerkToken);
 
-      const data = await res.json();
+      const email = user.primaryEmailAddress?.emailAddress;
+      if (email) {
+        // Fetch admin permissions from our backend
+        const res = await fetch(`http://localhost:5000/api/admins/me?email=${encodeURIComponent(email)}`, {
+          headers: {
+            'Authorization': `Bearer ${clerkToken}`,
+            'X-Admin-Email': email
+          }
+        });
 
-      if (!res.ok) {
-         throw new Error(data.msg || 'Login failed');
+        if (res.ok) {
+          const data = await res.json();
+          setAdmin(data);
+          console.log("Admin permissions loaded:", data.username);
+        } else {
+          const errorData = await res.json().catch(() => ({}));
+          console.error("Failed to fetch admin permissions:", errorData.msg || res.statusText);
+          toast.error("Account restricted: Your email is not in the approved admin list.");
+        }
       }
-
-      localStorage.setItem('adminToken', data.token);
-      localStorage.setItem('adminUser', JSON.stringify(data.user));
-      setToken(data.token);
-      setAdmin(data.user);
-      
-      toast.success(`Welcome, ${data.user.username}`, {
-         style: {
-            borderRadius: '16px',
-            background: '#333',
-            color: '#fff',
-         },
-      });
-
-      return true;
     } catch (err) {
-      toast.error(err.message, {
-         style: {
-            borderRadius: '16px',
-            background: '#ff4b4b',
-            color: '#fff',
-         },
-      });
-      return false;
+      console.error("Error in AuthProvider:", err);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [isLoaded, isSignedIn, user, getToken]);
 
-  const logout = () => {
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('adminUser');
-    setToken(null);
-    setAdmin(null);
-    toast.success('Logged out successfully');
-  };
+  useEffect(() => {
+    fetchAdminData();
+  }, [fetchAdminData]);
+
+  // Centralized fetch helper that includes Clerk token and Admin Email
+  const authFetch = useCallback(async (url, options = {}) => {
+    const clerkToken = await getToken();
+    const email = user?.primaryEmailAddress?.emailAddress;
+
+    const headers = {
+      ...options.headers,
+      'Authorization': `Bearer ${clerkToken}`,
+      'X-Admin-Email': email || '',
+    };
+
+    return fetch(url, { ...options, headers });
+  }, [getToken, user]);
 
   return (
-    <AuthContext.Provider value={{ admin, token, loading, login, logout }}>
+    <AuthContext.Provider value={{ admin, token, loading, authFetch }}>
       {children}
     </AuthContext.Provider>
   );

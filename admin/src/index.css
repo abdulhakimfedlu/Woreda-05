@@ -14,7 +14,7 @@
   .glass-panel {
     @apply bg-white/80 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300;
   }
-  
+
   .glass-card-premium {
     @apply bg-white/90 backdrop-blur-2xl border border-white shadow-[0_15px_60px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_60px_-15px_rgba(0,180,216,0.2)] transition-all duration-500 hover:-translate-y-1;
   }
@@ -22,4 +22,13 @@
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-brand to-brand-dark;
   }
+}
+
+/* Hide Clerk Branding only (not the footer action links) */
+.cl-internal-ph7264,
+.cl-internal-17f63sh,
+.cl-internal-1au6s4j,
+.cl-branding,
+a[href*='clerk.com'] {
+  display: none !important;
 }

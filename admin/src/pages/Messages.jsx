@@ -102,7 +102,7 @@ const SideSheet = ({ m, onClose, onDelete, onMarkRead, t }) => {
 
 export function Messages() {
   const { t } = useLanguage();
-  const { token } = useAuth();
+  const { authFetch } = useAuth();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
@@ -111,9 +111,7 @@ export function Messages() {
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/messages', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const res = await authFetch('http://localhost:5000/api/messages');
       const data = await res.json();
       setMessages(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -131,9 +129,8 @@ export function Messages() {
     const confirmed = await confirmToast(t('msg_confirm_delete'));
     if (!confirmed) return;
     try {
-      await fetch(`http://localhost:5000/api/messages/${id}`, { 
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+      await authFetch(`http://localhost:5000/api/messages/${id}`, { 
+        method: 'DELETE'
       });
       setMessages(messages.filter(m => m.id !== id));
       if (selected?.id === id) setSelected(null);
@@ -146,9 +143,8 @@ export function Messages() {
 
   const handleMarkRead = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/messages/${id}/read`, { 
-        method: 'PATCH',
-        headers: { 'Authorization': `Bearer ${token}` }
+      await authFetch(`http://localhost:5000/api/messages/${id}/read`, { 
+        method: 'PATCH'
       });
       setMessages(messages.map(m => m.id === id ? { ...m, isRead: true } : m));
       if (selected?.id === id) setSelected(prev => ({ ...prev, isRead: true }));

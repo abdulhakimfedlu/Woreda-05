@@ -9,27 +9,22 @@ import { ServiceDetailsIndex } from './pages/ServiceDetailsIndex';
 import { Gallery } from './pages/Gallery';
 import { Messages } from './pages/Messages';
 import { Login } from './pages/Login';
+import { SignUpPage } from './pages/SignUpPage';
+import { ForgotPassword } from './pages/ForgotPassword';
 import { ManageAdmins } from './pages/ManageAdmins';
 import { LanguageProvider } from './context/LanguageContext';
-import { AuthProvider, useAuth } from './context/AuthContext';
-
-function ProtectedRoute() {
-  const { token, loading } = useAuth();
-  
-  if (loading) return null;
-  
-  return token ? <Outlet /> : <Navigate to="/login" replace />;
-}
+import { AuthGuard } from './components/AuthGuard';
 
 function App() {
   return (
-    <AuthProvider>
-      <LanguageProvider>
-        <Toaster position="top-center" />
+    <LanguageProvider>
+      <Toaster position="top-center" />
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route element={<ProtectedRoute />}>
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route element={<AuthGuard />}>
              <Route path="/" element={<Layout />}>
                <Route index element={<Dashboard />} />
                <Route path="announcements" element={<Announcements />} />
@@ -44,7 +39,6 @@ function App() {
         </Routes>
       </BrowserRouter>
     </LanguageProvider>
-  </AuthProvider>
   )
 }
 

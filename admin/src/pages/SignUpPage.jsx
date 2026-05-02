@@ -1,9 +1,8 @@
 import React from 'react';
-import { SignIn } from '@clerk/clerk-react';
+import { SignUp } from '@clerk/clerk-react';
 import { Shield } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
-export function Login() {
+export function SignUpPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 relative overflow-hidden">
       {/* Dynamic Background Elements */}
@@ -19,13 +18,13 @@ export function Login() {
             <Shield size={40} className="text-[#00B4D8] relative z-10" strokeWidth={2.5} />
           </div>
           <h1 className="text-3xl md:text-4xl font-black text-slate-800 tracking-tighter text-center">
-            ADMIN <span className="text-[#00B4D8]">PORTAL</span>
+            JOIN <span className="text-[#00B4D8]">PORTAL</span>
           </h1>
-          <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] mt-3 text-center">Woreda 05 Management System</p>
+          <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] mt-3 text-center">Register for Administrative Access</p>
         </div>
 
         <div className="bg-white rounded-[2.5rem] shadow-[0_30px_70px_-20px_rgba(0,180,216,0.15)] border border-[#00B4D8]/5 overflow-hidden w-full">
-          <SignIn
+          <SignUp
             appearance={{
               elements: {
                 rootBox: "w-full",
@@ -42,10 +41,6 @@ export function Login() {
                 formButtonPrimary: "bg-[#00B4D8] hover:bg-[#0077B6] text-[10px] font-black uppercase tracking-[0.2em] h-14 rounded-2xl shadow-xl shadow-[#00B4D8]/20 transition-all transform hover:-translate-y-0.5 mt-2",
                 footerActionText: "text-slate-400 font-bold text-xs",
                 footerActionLink: "text-[#00B4D8] hover:text-[#0077B6] font-black text-xs transition-colors",
-                identityPreviewText: "text-slate-600 font-bold",
-                identityPreviewEditButtonIcon: "text-[#00B4D8]",
-                formResendCodeLink: "text-[#00B4D8] font-bold",
-                otpCodeFieldInput: "border-slate-200 focus:border-[#00B4D8] focus:ring-[#00B4D8]/20",
               },
               layout: {
                 socialButtonsPlacement: "top",
@@ -61,20 +56,16 @@ export function Login() {
                 borderRadius: '1rem',
               }
             }}
-            signUpUrl="/signup"
-            afterSignInUrl="/"
+            signInUrl="/login"
+            afterSignUpUrl="/"
           />
         </div>
 
-        <div className="mt-8 text-center px-6">
-          <Link to="/forgot-password" size="sm" className="text-[10px] font-black text-[#00B4D8] uppercase tracking-[0.2em] hover:text-[#0077B6] transition-colors">
-            Forgot Password?
-          </Link>
-          <div className="mt-4 pt-4 border-t border-slate-100">
-            <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">
-              Enterprise Security Verified
-            </p>
-          </div>
+        <div className="mt-8 text-center p-6 bg-[#00B4D8]/5 rounded-[2rem] border border-[#00B4D8]/10 max-w-xs mx-auto">
+          <p className="text-[10px] font-bold text-slate-500 leading-relaxed uppercase tracking-tighter">
+            <span className="block mb-2 text-[#00B4D8] uppercase tracking-widest text-[10px] font-black">Verification Notice:</span>
+            Your account will require manual approval from a senior administrator.
+          </p>
         </div>
       </div>
     </div>

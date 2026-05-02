@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Plus, Edit2, Trash2, CheckCircle, XCircle, Users, Crown, KeyRound, Eye, EyeOff } from 'lucide-react';
+import { Shield, Plus, Edit2, Trash2, CheckCircle, XCircle, Users, Crown, KeyRound, Eye, EyeOff, Mail } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { confirmToast } from '../utils/toast-utils';
@@ -8,27 +8,19 @@ import { Modal } from '../components/Modal';
 
 export function ManageAdmins() {
   const { t } = useLanguage();
-  const { token, admin: currentAdmin, logout } = useAuth();
+  const { admin: currentAdmin, authFetch } = useAuth();
   
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [editingAdmin, setEditingAdmin] = useState(null);
   const [transferTarget, setTransferTarget] = useState(null);
-  const [showPassword, setShowPassword] = useState({
-    manage: false,
-    current: false,
-    new: false,
-    confirm: false,
-    transfer: false
-  });
   
   // Form State
   const [formData, setFormData] = useState({
     username: '',
-    password: '',
+    email: '',
     canAddAdmins: false,
     canDeleteAdmins: false,
     canEditAdmins: false,
@@ -41,23 +33,9 @@ export function ManageAdmins() {
     messageAccess: 'None'
   });
 
-  const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  });
-
-  const [transferData, setTransferData] = useState({
-    password: ''
-  });
-
   const fetchAdmins = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/admins', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const res = await authFetch('http://localhost:5000/api/admins');
       if (res.ok) {
         const data = await res.json();
         setAdmins(data);
@@ -71,15 +49,17 @@ export function ManageAdmins() {
   };
 
   useEffect(() => {
-    fetchAdmins();
-  }, []);
+    if (currentAdmin) {
+      fetchAdmins();
+    }
+  }, [currentAdmin]);
 
   const openModal = (admin = null) => {
     if (admin) {
       setEditingAdmin(admin);
       setFormData({
         username: admin.username,
-        password: '',
+        email: admin.email || '',
         canAddAdmins: admin.canAddAdmins,
         canDeleteAdmins: admin.canDeleteAdmins,
         canEditAdmins: admin.canEditAdmins,
@@ -95,7 +75,7 @@ export function ManageAdmins() {
       setEditingAdmin(null);
       setFormData({
         username: '',
-        password: '',
+        email: '',
         canAddAdmins: false,
         canDeleteAdmins: false,
         canEditAdmins: false,
@@ -116,14 +96,8 @@ export function ManageAdmins() {
     setEditingAdmin(null);
   };
 
-  const openPasswordModal = () => {
-    setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-    setIsPasswordModalOpen(true);
-  };
-
   const openTransferModal = (admin) => {
     setTransferTarget(admin);
-    setTransferData({ password: '' });
     setIsTransferModalOpen(true);
   };
 
@@ -134,7 +108,7 @@ export function ManageAdmins() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.username) return toast.error(t('admin_mgmt_req_username'));
-    if (!editingAdmin && !formData.password) return toast.error(t('admin_mgmt_req_password'));
+    if (!formData.email) return toast.error("Email is required for Clerk authentication");
 
     toast.loading(t('status_saving'), { id: 'save_admin' });
     
@@ -145,16 +119,12 @@ export function ManageAdmins() {
         
       const method = editingAdmin ? 'PUT' : 'POST';
       
-      const payload = { ...formData };
-      if (editingAdmin && !payload.password) delete payload.password; // Don't send empty pass on edit
-
-      const res = await fetch(url, {
+      const res = await authFetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(formData)
       });
 
       const data = await res.json();
@@ -179,9 +149,8 @@ export function ManageAdmins() {
     if (!confirmed) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/admins/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+      const res = await authFetch(`http://localhost:5000/api/admins/${id}`, {
+        method: 'DELETE'
       });
       
       const data = await res.json();
@@ -194,51 +163,15 @@ export function ManageAdmins() {
     }
   };
 
-  const handleChangePassword = async (e) => {
-    e.preventDefault();
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      return toast.error(t('admin_mgmt_pwd_no_match'));
-    }
-
-    toast.loading(t('status_pwd_updating'), { id: 'pwd_change' });
-    try {
-      const res = await fetch('http://localhost:5000/api/auth/change-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          currentPassword: passwordData.currentPassword,
-          newPassword: passwordData.newPassword
-        })
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.msg || 'Failed to update password');
-
-      toast.success(t('status_pwd_success'), { id: 'pwd_change' });
-      setIsPasswordModalOpen(false);
-    } catch (err) {
-      toast.error(err.message, { id: 'pwd_change' });
-    }
-  };
-
   const handleTransferPrimary = async (e) => {
     e.preventDefault();
     if (!transferTarget) return;
 
     toast.loading(t('status_transferring'), { id: 'transfer_primary' });
     try {
-      const res = await fetch(`http://localhost:5000/api/admins/${transferTarget.id}/transfer-primary`, {
+      const res = await authFetch(`http://localhost:5000/api/admins/${transferTarget.id}/transfer-primary`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          password: transferData.password
-        })
+        body: JSON.stringify({})
       });
 
       const data = await res.json();
@@ -246,10 +179,7 @@ export function ManageAdmins() {
 
       toast.success(t('status_transfer_success'), { id: 'transfer_primary' });
       setIsTransferModalOpen(false);
-      
-      setTimeout(() => {
-        logout();
-      }, 2000);
+      fetchAdmins();
     } catch (err) {
       toast.error(err.message, { id: 'transfer_primary' });
     }
@@ -320,13 +250,16 @@ export function ManageAdmins() {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 text-xs uppercase">
-                          {admin.username.charAt(0)}
+                           {admin.username.charAt(0)}
                         </div>
                         <div>
                           <p className="font-bold text-slate-800 text-sm flex items-center gap-2">
                              {admin.username}
                              {admin.isPrimary && <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-700 text-[9px] uppercase tracking-widest">{t('admin_mgmt_badge_primary')}</span>}
                              {admin.id === currentAdmin.id && <span className="px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-600 text-[9px] uppercase tracking-widest">{t('admin_mgmt_badge_you')}</span>}
+                          </p>
+                          <p className="text-[10px] font-medium text-slate-400 flex items-center gap-1 mt-0.5">
+                            <Mail size={10} /> {admin.email || 'No email assigned'}
                           </p>
                         </div>
                       </div>
@@ -360,15 +293,6 @@ export function ManageAdmins() {
                               title={t('admin_mgmt_transfer_title')}
                             >
                               <Crown size={16} />
-                            </button>
-                        )}
-                        {admin.id === currentAdmin.id && (
-                            <button 
-                              onClick={() => openPasswordModal()}
-                              className="p-2 text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 rounded-xl transition-all"
-                              title={t('admin_mgmt_pwd_title')}
-                            >
-                              <KeyRound size={16} />
                             </button>
                         )}
                         {currentAdmin?.canEditAdmins && !admin.isPrimary && (
@@ -420,26 +344,23 @@ export function ManageAdmins() {
                  placeholder="username"
                />
              </div>
-             
+
              <div>
                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
-                 {t('admin_mgmt_lbl_password')}
+                 Email Address (Must match Clerk account)
                </label>
                <div className="relative">
                  <input
-                   type={showPassword.manage ? "text" : "password"}
-                   value={formData.password}
-                   onChange={(e) => setFormData({...formData, password: e.target.value})}
-                   className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium pr-12 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all placeholder-slate-300 placeholder-opacity-70 font-normal"
-                   placeholder={editingAdmin ? t('admin_mgmt_pwd_placeholder') : "••••••••"}
+                   required
+                   type="email"
+                   value={formData.email}
+                   onChange={(e) => setFormData({...formData, email: e.target.value})}
+                   className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium pr-12 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                   placeholder="email@example.com"
                  />
-                 <button
-                   type="button"
-                   onClick={() => setShowPassword({ ...showPassword, manage: !showPassword.manage })}
-                   className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-300 hover:text-slate-500 focus:outline-none"
-                 >
-                   {showPassword.manage ? <EyeOff size={16} /> : <Eye size={16} />}
-                 </button>
+                 <div className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-300">
+                   <Mail size={16} />
+                 </div>
                </div>
              </div>
           </div>
@@ -524,68 +445,6 @@ export function ManageAdmins() {
         </form>
       </Modal>
 
-      {/* Change Password Modal */}
-      <Modal
-        isOpen={isPasswordModalOpen}
-        onClose={() => setIsPasswordModalOpen(false)}
-        title={t('admin_mgmt_pwd_title')}
-      >
-        <form onSubmit={handleChangePassword} className="space-y-4">
-          <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{t('admin_mgmt_pwd_current')}</label>
-            <div className="relative">
-              <input
-                type={showPassword.current ? "text" : "password"}
-                required
-                value={passwordData.currentPassword}
-                onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium pr-12 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
-                placeholder="••••••••"
-              />
-              <button type="button" onClick={() => setShowPassword({...showPassword, current: !showPassword.current})} className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-300 hover:text-slate-500">
-                {showPassword.current ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
-          </div>
-          <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{t('admin_mgmt_pwd_new')}</label>
-            <div className="relative">
-              <input
-                type={showPassword.new ? "text" : "password"}
-                required
-                value={passwordData.newPassword}
-                onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium pr-12 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
-                placeholder="••••••••"
-              />
-              <button type="button" onClick={() => setShowPassword({...showPassword, new: !showPassword.new})} className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-300 hover:text-slate-500">
-                {showPassword.new ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
-          </div>
-          <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{t('admin_mgmt_pwd_confirm')}</label>
-            <div className="relative">
-              <input
-                type={showPassword.confirm ? "text" : "password"}
-                required
-                value={passwordData.confirmPassword}
-                onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium pr-12 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
-                placeholder="••••••••"
-              />
-              <button type="button" onClick={() => setShowPassword({...showPassword, confirm: !showPassword.confirm})} className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-300 hover:text-slate-500">
-                {showPassword.confirm ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
-          </div>
-          <div className="flex gap-3 pt-4">
-            <button type="button" onClick={() => setIsPasswordModalOpen(false)} className="flex-1 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-500 bg-slate-100 hover:bg-slate-200">{t('btn_cancel')}</button>
-            <button type="submit" className="flex-1 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-white bg-indigo-500 hover:bg-indigo-600 shadow-lg shadow-indigo-500/20">{t('btn_update')}</button>
-          </div>
-        </form>
-      </Modal>
-
       {/* Transfer Primary Modal */}
       <Modal
         isOpen={isTransferModalOpen}
@@ -598,22 +457,6 @@ export function ManageAdmins() {
               {t('admin_mgmt_transfer_warn')} <span className="font-bold">{transferTarget?.username}</span>. 
               {t('admin_mgmt_transfer_warn_2')}
             </p>
-          </div>
-          <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{t('admin_mgmt_transfer_verify')}</label>
-            <div className="relative">
-              <input
-                type={showPassword.transfer ? "text" : "password"}
-                required
-                value={transferData.password}
-                onChange={(e) => setTransferData({ password: e.target.value })}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium pr-12 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
-                placeholder="••••••••"
-              />
-              <button type="button" onClick={() => setShowPassword({...showPassword, transfer: !showPassword.transfer})} className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-300 hover:text-slate-500">
-                {showPassword.transfer ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
           </div>
           <div className="flex gap-3 pt-4">
             <button type="button" onClick={() => setIsTransferModalOpen(false)} className="flex-1 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-500 bg-slate-100 hover:bg-slate-200">{t('btn_cancel')}</button>

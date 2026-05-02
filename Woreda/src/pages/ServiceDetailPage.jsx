@@ -63,22 +63,43 @@ const ServiceDetailPage = () => {
   const service = serviceData;
   const details = service.details || {};
   
-  const title = language === 'am' && service.titleAm ? service.titleAm : (service.title || service.name);
-  const department = language === 'am' && service.departmentAm ? service.departmentAm : service.department;
-  const description = language === 'am' && details.descriptionAm ? details.descriptionAm : details.description;
-  const officerName = language === 'am' && details.officerNameAm ? details.officerNameAm : details.officerName;
-  const officerRole = language === 'am' && details.officerRoleAm ? details.officerRoleAm : details.officerRole;
-  const additionalDetails = language === 'am' && details.additionalDetailsAm ? details.additionalDetailsAm : details.additionalDetails;
+  // Robust data extraction with fallbacks
+  const title = (language === 'am' ? (service.titleAm || service.title) : (service.title || service.titleAm)) || t('nav_services');
+  const department = (language === 'am' ? (service.departmentAm || service.department) : (service.department || service.departmentAm));
   
-  const rawRequirements = language === 'am' && Array.isArray(details.requirementsAm) && details.requirementsAm.length > 0 
-    ? details.requirementsAm 
-    : (Array.isArray(details.requirements) && details.requirements.length > 0 ? details.requirements : null);
+  const description = language === 'am' 
+    ? (details.descriptionAm || details.description) 
+    : (details.description || details.descriptionAm);
     
-  const requirements = rawRequirements;
+  const officerName = language === 'am' 
+    ? (details.officerNameAm || details.officerName) 
+    : (details.officerName || details.officerNameAm);
+    
+  const officerRole = language === 'am' 
+    ? (details.officerRoleAm || details.officerRole) 
+    : (details.officerRole || details.officerRoleAm);
+    
+  const additionalDetails = language === 'am' 
+    ? (details.additionalDetailsAm || details.additionalDetails) 
+    : (details.additionalDetails || details.additionalDetailsAm);
+  
+  // Requirements logic: use active language if available, otherwise fallback
+  let requirements = null;
+  if (language === 'am') {
+    requirements = (Array.isArray(details.requirementsAm) && details.requirementsAm.length > 0) 
+      ? details.requirementsAm 
+      : (Array.isArray(details.requirements) && details.requirements.length > 0 ? details.requirements : null);
+  } else {
+    requirements = (Array.isArray(details.requirements) && details.requirements.length > 0) 
+      ? details.requirements 
+      : (Array.isArray(details.requirementsAm) && details.requirementsAm.length > 0 ? details.requirementsAm : null);
+  }
 
-  const hasOfficerInfo = officerName || officerRole || details.officerPhoto;
-  const hasContactInfo = details.contactPhone || details.contactEmail;
-  const hasLocationHoursInfo = details.officeNumber || details.hours;
+  // Check if we have any actual data to show in specific sections
+  const hasOfficerInfo = !!(officerName || officerRole || details.officerPhoto);
+  const hasContactInfo = !!(details.contactPhone || details.contactEmail);
+  const hasLocationHoursInfo = !!(details.officeNumber || details.hours);
+  const hasAnyDetails = !!(description || requirements || additionalDetails || hasOfficerInfo || hasContactInfo || hasLocationHoursInfo);
 
   return (
     <div className="bg-white dark:bg-[#080d14] min-h-screen pb-40 transition-colors duration-300">
@@ -281,7 +302,7 @@ const ServiceDetailPage = () => {
               </section>
             )}
 
-            {Object.keys(details).length === 0 && (
+            {!hasAnyDetails && (
               <div className="py-24 text-center border-2 border-dashed border-slate-100 rounded-3xl">
                 <Shield className="w-12 h-12 text-slate-200 mx-auto mb-4" />
                 <h3 className="text-xl font-black text-slate-400 tracking-tight">

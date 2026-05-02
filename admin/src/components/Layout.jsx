@@ -18,13 +18,15 @@ import {
 import { Shield } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
+import { useClerk } from '@clerk/clerk-react';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
 export function Layout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const { t } = useLanguage();
-  const { admin, token, logout } = useAuth();
+  const { admin, authFetch } = useAuth();
+  const { signOut } = useClerk();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -50,27 +52,27 @@ export function Layout() {
     navigation.push({ name: t('nav_manage_admins'), href: '/manage-admins', icon: Shield });
   }
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await signOut();
     navigate('/login');
   };
 
   useEffect(() => {
     const fetchUnreadCount = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/messages/unread-count', {
-           headers: { 'Authorization': `Bearer ${token}` }
-        });
+        const res = await authFetch('http://localhost:5000/api/messages/unread-count');
         const data = await res.json();
         setUnreadCount(data.count || 0);
       } catch (err) {
         console.error('Failed to fetch unread count:', err);
       }
     };
-    fetchUnreadCount();
-    const interval = setInterval(fetchUnreadCount, 30000);
-    return () => clearInterval(interval);
-  }, []);
+    if (admin) {
+      fetchUnreadCount();
+      const interval = setInterval(fetchUnreadCount, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [admin, authFetch]);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">

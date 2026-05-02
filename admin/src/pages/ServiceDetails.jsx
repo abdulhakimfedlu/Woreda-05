@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 export function ServiceDetails() {
   const { id } = useParams();
   const { language, t } = useLanguage();
-  const { token } = useAuth();
+  const { token, authFetch } = useAuth();
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -48,7 +48,7 @@ export function ServiceDetails() {
   const uploadPhoto = async (file) => {
     const formData = new FormData();
     formData.append('image', file);
-    const res = await fetch('http://localhost:5000/api/upload', {
+    const res = await authFetch('http://localhost:5000/api/upload', {
       method: 'POST',
       body: formData,
     });
@@ -100,14 +100,18 @@ export function ServiceDetails() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!token) {
+      toast.error('Authentication error. Please log in again.');
+      return;
+    }
+    
     setSaving(true);
     try {
       // Save basic service info
-      await fetch(`http://localhost:5000/api/services/${id}`, {
+      const serviceRes = await authFetch(`http://localhost:5000/api/services/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           title: service.title,
@@ -118,12 +122,16 @@ export function ServiceDetails() {
         })
       });
 
+      if (!serviceRes.ok) {
+        const errorData = await serviceRes.json().catch(() => ({}));
+        throw new Error(errorData.msg || 'Failed to update basic service info');
+      }
+
       // Save service details (officer info, contact, description, banner, etc.)
-      const detailsRes = await fetch(`http://localhost:5000/api/service-details/${id}`, {
+      const detailsRes = await authFetch(`http://localhost:5000/api/service-details/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           description: service.description,
@@ -149,10 +157,13 @@ export function ServiceDetails() {
 
       if (detailsRes.ok) {
         toast.success(t('sd_update_success'));
+      } else {
+        const errorData = await detailsRes.json().catch(() => ({}));
+        throw new Error(errorData.msg || 'Failed to update service details');
       }
     } catch (err) {
       console.error(err);
-      toast.error(t('status_error'));
+      toast.error(err.message || t('status_error'));
     } finally {
       setSaving(false);
     }

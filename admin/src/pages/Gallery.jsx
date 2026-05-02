@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 
 export function Gallery() {
   const { t } = useLanguage();
-  const { token } = useAuth();
+  const { authFetch } = useAuth();
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,7 +33,7 @@ export function Gallery() {
 
   const fetchGallery = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/gallery');
+      const res = await authFetch('http://localhost:5000/api/gallery');
       const data = await res.json();
       setImages(data);
     } catch (error) {
@@ -47,9 +47,8 @@ export function Gallery() {
     const confirmed = await confirmToast(t('gal_confirm_delete'));
     if(!confirmed) return;
     try {
-      await fetch(`http://localhost:5000/api/gallery/${id}`, { 
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+      await authFetch(`http://localhost:5000/api/gallery/${id}`, { 
+        method: 'DELETE'
       });
       fetchGallery();
       toast.success(t('status_removed'));
@@ -90,7 +89,6 @@ export function Gallery() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate: new items must have a file selected
     if (!editingItem && !selectedFile) {
       toast.error('Please select an image file to upload.');
       return;
@@ -103,12 +101,11 @@ export function Gallery() {
     let currentSize = formData.size;
 
     try {
-      // 1. If a new file is selected, upload it to Cloudinary first
       if (selectedFile) {
         const uploadFormData = new FormData();
         uploadFormData.append('image', selectedFile);
         
-        const uploadRes = await fetch('http://localhost:5000/api/upload', {
+        const uploadRes = await authFetch('http://localhost:5000/api/upload', {
           method: 'POST',
           body: uploadFormData
         });
@@ -123,17 +120,15 @@ export function Gallery() {
         currentSize = uploadData.size;
       }
 
-      // 2. Save/Update metadata
       const apiUrl = editingItem 
         ? `http://localhost:5000/api/gallery/${editingItem.id}`
         : 'http://localhost:5000/api/gallery';
       const method = editingItem ? 'PUT' : 'POST';
 
-      const res = await fetch(apiUrl, {
+      const res = await authFetch(apiUrl, {
         method,
         headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           ...formData,

@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 
 export function Services() {
   const { language, t } = useLanguage();
-  const { token } = useAuth();
+  const { authFetch } = useAuth();
   const [activeTab, setActiveTab] = useState('list');
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -47,8 +47,8 @@ export function Services() {
     setLoading(true);
     try {
       const [servicesRes, categoriesRes] = await Promise.all([
-        fetch('http://localhost:5000/api/services'),
-        fetch('http://localhost:5000/api/categories')
+        authFetch('http://localhost:5000/api/services'),
+        authFetch('http://localhost:5000/api/categories')
       ]);
       const servicesData = await servicesRes.json();
       const categoriesData = await categoriesRes.json();
@@ -63,11 +63,10 @@ export function Services() {
 
   const togglePopular = async (serviceId, currentStatus) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/services/${serviceId}`, {
+      const res = await authFetch(`http://localhost:5000/api/services/${serviceId}`, {
         method: 'PUT',
         headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` 
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ isPopular: !currentStatus })
       });
@@ -87,9 +86,8 @@ export function Services() {
     const confirmed = await confirmToast('Are you sure you want to delete this service?');
     if(!confirmed) return;
     try {
-      await fetch(`http://localhost:5000/api/services/${id}`, { 
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+      await authFetch(`http://localhost:5000/api/services/${id}`, { 
+        method: 'DELETE'
       });
       fetchData();
       toast.success(t('status_removed'));
@@ -103,9 +101,8 @@ export function Services() {
     const confirmed = await confirmToast('Are you sure you want to delete this category? Services using this category name will remain.');
     if(!confirmed) return;
     try {
-      await fetch(`http://localhost:5000/api/categories/${id}`, { 
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+      await authFetch(`http://localhost:5000/api/categories/${id}`, { 
+        method: 'DELETE'
       });
       fetchData();
       toast.success(t('status_removed'));
@@ -148,11 +145,10 @@ export function Services() {
     const method = editingService ? 'PUT' : 'POST';
 
     try {
-      const res = await fetch(url, {
+      const res = await authFetch(url, {
         method,
         headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(serviceFormData)
       });
@@ -180,11 +176,10 @@ export function Services() {
     const method = editingCategory ? 'PUT' : 'POST';
 
     try {
-      const res = await fetch(url, {
+      const res = await authFetch(url, {
         method,
         headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(categoryFormData)
       });

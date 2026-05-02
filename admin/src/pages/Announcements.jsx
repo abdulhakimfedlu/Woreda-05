@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 
 export function Announcements() {
   const { t } = useLanguage();
-  const { token } = useAuth();
+  const { authFetch } = useAuth();
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,7 +29,7 @@ export function Announcements() {
 
   const fetchAnnouncements = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/announcements');
+      const res = await authFetch('http://localhost:5000/api/announcements');
       const data = await res.json();
       setAnnouncements(data);
     } catch (error) {
@@ -43,9 +43,8 @@ export function Announcements() {
     const confirmed = await confirmToast(t('ann_confirm_delete'));
     if(!confirmed) return;
     try {
-      await fetch(`http://localhost:5000/api/announcements/${id}`, { 
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+      await authFetch(`http://localhost:5000/api/announcements/${id}`, { 
+        method: 'DELETE'
       });
       fetchAnnouncements();
       toast.success(t('status_removed'));
@@ -77,11 +76,10 @@ export function Announcements() {
     const method = editingItem ? 'PUT' : 'POST';
 
     try {
-      const res = await fetch(url, {
+      const res = await authFetch(url, {
         method,
         headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
       });
