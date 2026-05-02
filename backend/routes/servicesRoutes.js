@@ -18,6 +18,20 @@ router.get('/', async (req, res) => {
   }
 });
 
+// @route   GET /api/services/popular
+// @desc    Get popular services
+router.get('/popular', async (req, res) => {
+  try {
+    const result = await db.select().from(services)
+      .where(eq(services.isPopular, true))
+      .orderBy(desc(services.createdAt));
+    res.json(result);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // @route   GET /api/services/:id
 // @desc    Get service by ID
 router.get('/:id', async (req, res) => {
@@ -35,13 +49,14 @@ router.get('/:id', async (req, res) => {
 // @desc    Create a service
 router.post('/', authMiddleware, checkPerm('canManageServices'), async (req, res) => {
   try {
-    const { title, titleAm, department, departmentAm, category } = req.body;
+    const { title, titleAm, department, departmentAm, category, isPopular } = req.body;
     const newService = await db.insert(services).values({
       title,
       titleAm,
       department,
       departmentAm,
-      category
+      category,
+      isPopular: isPopular || false
     }).returning();
     res.json(newService[0]);
   } catch (err) {
@@ -54,12 +69,16 @@ router.post('/', authMiddleware, checkPerm('canManageServices'), async (req, res
 // @desc    Update a service
 router.put('/:id', authMiddleware, checkPerm('canManageServices'), async (req, res) => {
   try {
-    const { title, titleAm, department, departmentAm, category } = req.body;
+    const { title, titleAm, department, departmentAm, category, isPopular } = req.body;
+    
+    const updateData = { title, titleAm, department, departmentAm, category };
+    if (isPopular !== undefined) updateData.isPopular = isPopular;
+
     const updated = await db.update(services)
-      .set({ title, titleAm, department, departmentAm, category })
+      .set(updateData)
       .where(eq(services.id, parseInt(req.params.id)))
       .returning();
-    
+
     if (updated.length === 0) return res.status(404).json({ msg: 'Service not found' });
     res.json(updated[0]);
   } catch (err) {

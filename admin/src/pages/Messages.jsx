@@ -5,8 +5,14 @@ import { useAuth } from '../context/AuthContext';
 import { confirmToast } from '../utils/toast-utils';
 import toast from 'react-hot-toast';
 
-const SideSheet = ({ m, onClose, onDelete, onMarkRead, t }) => {
+const SideSheet = ({ m, onClose, onDelete, onMarkRead, t, categories, language }) => {
   if (!m) return null;
+
+  const getTranslatedCategory = (catName) => {
+    if (!catName) return '';
+    const cat = categories.find(c => c.name === catName);
+    return (language === 'am' && cat?.nameAm) ? cat.nameAm : catName;
+  };
   return (
     <>
       <div className="fixed inset-0 bg-slate-900/10 backdrop-blur-[2px] z-40 lg:pl-64" onClick={onClose} />
@@ -61,9 +67,9 @@ const SideSheet = ({ m, onClose, onDelete, onMarkRead, t }) => {
             {m.serviceCategory && (
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{t('msg_category_label') || 'Category'}</p>
-                 <div className="flex items-center gap-2 text-xs font-bold text-slate-700 truncate">
-                    {m.serviceCategory}
-                 </div>
+                  <div className="flex items-center gap-2 text-xs font-bold text-slate-700 truncate">
+                     {getTranslatedCategory(m.serviceCategory)}
+                  </div>
               </div>
             )}
           </div>
@@ -101,19 +107,24 @@ const SideSheet = ({ m, onClose, onDelete, onMarkRead, t }) => {
 };
 
 export function Messages() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { authFetch } = useAuth();
   const [messages, setMessages] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
   const [typeFilter, setTypeFilter] = useState('All');
   const [categoryFilter, setCategoryFilter] = useState('All');
 
-  const fetchMessages = async () => {
+  const fetchData = async () => {
     try {
-      const res = await authFetch('http://localhost:5000/api/messages');
-      const data = await res.json();
-      setMessages(Array.isArray(data) ? data : []);
+      const [msgRes, catRes] = await Promise.all([
+        authFetch('http://localhost:5000/api/messages'),
+        fetch('http://localhost:5000/api/categories').then(r => r.json())
+      ]);
+      const msgData = await msgRes.json();
+      setMessages(Array.isArray(msgData) ? msgData : []);
+      setCategories(Array.isArray(catRes) ? catRes : []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -122,7 +133,7 @@ export function Messages() {
   };
 
   useEffect(() => {
-    fetchMessages();
+    fetchData();
   }, []);
 
   const handleDelete = async (id) => {
@@ -190,21 +201,25 @@ export function Messages() {
              </select>
              
              {typeFilter === 'Service-Related' && (
-               <select 
-                 value={categoryFilter} 
-                 onChange={(e) => setCategoryFilter(e.target.value)}
-                 className="bg-white border border-slate-200 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-lg px-3 py-2 outline-none focus:border-brand"
-               >
-                 <option value="All">{t('msg_category_label') || 'Category'} ({t('msg_filter_all') || 'All'})</option>
-                 {Array.from(new Set(messages.filter(m => m.messageType === 'Service-Related' && m.serviceCategory).map(m => m.serviceCategory))).map(cat => (
-                   <option key={cat} value={cat}>{cat}</option>
-                 ))}
-               </select>
+                <select 
+                  value={categoryFilter} 
+                  onChange={(e) => setCategoryFilter(e.target.value)}
+                  className="bg-white border border-slate-200 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-lg px-3 py-2 outline-none focus:border-brand"
+                >
+                  <option value="All">{t('msg_category_label') || 'Category'} ({t('msg_filter_all') || 'All'})</option>
+                  {Array.from(new Set(messages.filter(m => m.messageType === 'Service-Related' && m.serviceCategory).map(m => m.serviceCategory))).map(catName => {
+                    const catObj = categories.find(c => c.name === catName);
+                    const displayName = (language === 'am' && catObj?.nameAm) ? catObj.nameAm : catName;
+                    return (
+                      <option key={catName} value={catName}>{displayName}</option>
+                    );
+                  })}
+                </select>
              )}
            </div>
         </div>
         <div className="hidden lg:flex items-center gap-2">
-           <button onClick={fetchMessages} className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-brand transition-colors">{t('msg_refresh')}</button>
+           <button onClick={fetchData} className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-brand transition-colors">{t('msg_refresh')}</button>
         </div>
       </div>
 
@@ -278,6 +293,8 @@ export function Messages() {
         onDelete={handleDelete}
         onMarkRead={handleMarkRead}
         t={t}
+        categories={categories}
+        language={language}
       />
     </div>
   );

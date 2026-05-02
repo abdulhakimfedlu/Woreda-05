@@ -48,6 +48,7 @@ const services = pgTable('services', {
   department: varchar('department', { length: 100 }),
   departmentAm: varchar('department_am', { length: 100 }),
   category: varchar('category', { length: 100 }),
+  isPopular: boolean('is_popular').default(false),
   createdAt: timestamp('created_at').defaultNow(),
 });
 

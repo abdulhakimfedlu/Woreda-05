@@ -10,10 +10,10 @@ const PopularServices = () => {
   const { language, t } = useLanguage();
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/services')
+    fetch('http://localhost:5000/api/services/popular')
       .then(res => res.json())
       .then(data => {
-        setServices(Array.isArray(data) ? data.slice(0, 6) : []);
+        setServices(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch(() => { setLoading(false); setServices([]); });
