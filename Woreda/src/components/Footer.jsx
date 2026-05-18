@@ -58,14 +58,19 @@ const Footer = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:info@woreda05.gov.et" className="flex items-center gap-2 text-[12px] font-bold text-black/40 dark:text-white/40 hover:text-brand transition-colors">
-                    <Mail className="w-3 h-3 text-brand shrink-0" /> info@woreda05.gov.et
+                  <a href="mailto:woreda05yekasubcity@gmail.com" className="flex items-center gap-2 text-[12px] font-bold text-black/40 dark:text-white/40 hover:text-brand transition-colors">
+                    <Mail className="w-3 h-3 text-brand shrink-0" /> woreda05yekasubcity@gmail.com
                   </a>
                 </li>
                 <li>
-                  <span className="flex items-start gap-2 text-[12px] font-bold text-black/40 dark:text-white/40">
+                  <a 
+                    href="https://www.google.com/maps/dir//Yeka+Sub+City+woreda+5+Administration+Office,+2RC3%2BX5Q,+Addis+Ababa/@9.0292562,38.8728189,6881m/data=!3m1!1e3!4m8!4m7!1m0!1m5!1m1!1s0x164b855c59edb583:0xd0b8498a4a4058e7!2m2!1d38.8029102!2d9.0224352?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-2 text-[12px] font-bold text-black/40 dark:text-white/40 hover:text-brand transition-colors"
+                  >
                     <MapPin className="w-3 h-3 text-brand shrink-0 mt-0.5" /> {t('footer_address')}
-                  </span>
+                  </a>
                 </li>
               </ul>
             </div>

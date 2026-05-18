@@ -129,6 +129,11 @@ export const adminTranslations = {
     // Gallery Page
     "gal_title": "Media Gallery",
     "gal_subtitle": "Photos & Community Images",
+    "gal_search_placeholder": "Search gallery...",
+    "gal_items_found": "items found",
+    "gal_item_found": "item found",
+    "gal_no_results": "No matching gallery items found",
+    "gal_no_images": "No gallery items available",
     "gal_filter": "Filter",
     "gal_add_media": "Add Media",
     "gal_update_modal_title": "Update Media Details",
@@ -461,6 +466,11 @@ export const adminTranslations = {
     // Gallery Page
     "gal_title": "የሚዲያ ጋለሪ",
     "gal_subtitle": "ፎቶዎች እና የማህበረሰብ ምስሎች",
+    "gal_search_placeholder": "ይፈልጉ...",
+    "gal_items_found": "ምስሎች ተገኝተዋል",
+    "gal_item_found": "ምስል ተገኝቷል",
+    "gal_no_results": "ምንም የሚዛመድ ምስል አልተገኘም",
+    "gal_no_images": "ምንም ምስሎች የሉም",
     "gal_filter": "አጣራ",
     "gal_add_media": "ሚዲያ ጨምር",
     "gal_update_modal_title": "የሚዲያ ዝርዝሮችን አዘምን",

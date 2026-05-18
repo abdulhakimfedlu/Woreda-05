@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Link, Filter, Image as ImageIcon, Edit2 } from 'lucide-react';
+import { Plus, Trash2, Link, Filter, Image as ImageIcon, Edit2, Search } from 'lucide-react';
 import { Modal } from '../components/Modal';
 import { useLanguage } from '../context/LanguageContext';
 import toast from 'react-hot-toast';
@@ -15,6 +15,14 @@ export function Gallery() {
   const [editingItem, setEditingItem] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredImages = images.filter(image =>
+    (image.title && image.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (image.titleAm && image.titleAm.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (image.description && image.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (image.descriptionAm && image.descriptionAm.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
   
   const [formData, setFormData] = useState({
     title: '',
@@ -184,6 +192,23 @@ export function Gallery() {
         </div>
       </div>
 
+      {/* Search Bar */}
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">
+        <div className="relative w-full sm:w-80">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 dark:text-slate-500" />
+          <input
+            type="text"
+            placeholder={t('gal_search_placeholder') || 'Search media by title or description...'}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 rounded-2xl text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
+          />
+        </div>
+        <div className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+          {filteredImages.length} {filteredImages.length === 1 ? t('gal_item_found') : t('gal_items_found')}
+        </div>
+      </div>
+
       <Modal 
         isOpen={isModalOpen} 
         onClose={() => {
@@ -301,7 +326,11 @@ export function Gallery() {
 
         {loading ? (
            <div className="col-span-full py-24 text-center text-slate-300 dark:text-slate-600 font-black uppercase tracking-widest animate-pulse">{t('gal_loading')}</div>
-        ) : images.map((image) => (
+        ) : filteredImages.length === 0 ? (
+           <div className="col-span-full py-24 text-center text-slate-300 dark:text-slate-600 font-black uppercase tracking-widest">
+              {searchTerm ? t('gal_no_results') : t('gal_no_images')}
+           </div>
+        ) : filteredImages.map((image) => (
           <div key={image.id} className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl overflow-hidden group hover:shadow-2xl hover:shadow-[#00B4D8]/20 dark:hover:shadow-[#00B4D8]/10 hover:-translate-y-2 transition-all duration-500 shadow-xl shadow-slate-200/40 dark:shadow-none relative">
             <div className="aspect-[4/3] relative overflow-hidden bg-slate-900 flex items-center justify-center">
               <img 

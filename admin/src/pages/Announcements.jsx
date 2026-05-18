@@ -13,6 +13,17 @@ export function Announcements() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredAnnouncements = announcements.filter(announcement =>
+    (announcement.title && announcement.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (announcement.titleAm && announcement.titleAm.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (announcement.content && announcement.content.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (announcement.contentAm && announcement.contentAm.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (announcement.author && announcement.author.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (announcement.category && announcement.category.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
   const [formData, setFormData] = useState({
     title: '',
     titleAm: '',
@@ -224,6 +235,8 @@ export function Announcements() {
             <input 
               type="text" 
               placeholder={t('ann_search_placeholder')} 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-11 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
             />
           </div>
@@ -247,9 +260,9 @@ export function Announcements() {
             <tbody className="divide-y divide-slate-50 dark:divide-slate-800/40">
               {loading ? (
                 <tr><td colSpan="6" className="text-center py-12 text-slate-300 dark:text-slate-600 font-black uppercase tracking-widest animate-pulse">{t('ann_loading')}</td></tr>
-              ) : announcements.length === 0 ? (
-                <tr><td colSpan="6" className="text-center py-12 text-slate-300 dark:text-slate-600 font-bold">{t('ann_no_items')}</td></tr>
-              ) : announcements.map((announcement) => (
+              ) : filteredAnnouncements.length === 0 ? (
+                <tr><td colSpan="6" className="text-center py-12 text-slate-300 dark:text-slate-600 font-bold">{searchTerm ? 'No matching announcements found' : t('ann_no_items')}</td></tr>
+              ) : filteredAnnouncements.map((announcement) => (
                 <tr key={announcement.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-all group">
                   <td className="px-8 py-5">
                     <p className="font-black text-slate-800 dark:text-slate-200 text-sm tracking-tight">{announcement.title}</p>

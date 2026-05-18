@@ -92,16 +92,20 @@ const Hero = () => {
             className="lg:col-span-6 relative h-[500px] sm:h-[550px] lg:h-[600px] flex items-center justify-center lg:-translate-x-24 mt-16 lg:mt-0"
           >
             <div className="relative w-full h-full flex items-center justify-center animate-float-calm scale-90 sm:scale-95 lg:scale-100">
-              <div className="relative z-30 w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 shadow-2xl shadow-black/20 dark:shadow-brand/10 border-4 border-white dark:border-[#0d1420] overflow-hidden rounded-2xl shrink-0">
+              
+              {/* Central Photo */}
+              <div className="relative z-30 w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 shadow-2xl shadow-black/20 dark:shadow-brand/15 border-2 border-brand/30 dark:border-brand/25 overflow-hidden rounded-3xl shrink-0">
                 <img src={abiyImg} alt="PM Abiy Ahmed" className="w-full h-full object-cover" />
               </div>
+
+              {/* Surrounding Photos */}
               {[
                 { img: adanechImg, alt: 'Mayor Adanech Abiebie', tx: '-translate-x-[7.5rem] -translate-y-[7.5rem] sm:-translate-x-[9rem] sm:-translate-y-[9rem] lg:-translate-x-[11.2rem] lg:-translate-y-[11.2rem]' },
                 { img: tayeImg, alt: 'Lead Personnel', tx: 'translate-x-[7.5rem] -translate-y-[7.5rem] sm:translate-x-[9rem] sm:-translate-y-[9rem] lg:translate-x-[11.2rem] lg:-translate-y-[11.2rem]' },
                 { img: soldierImg, alt: 'Personnel', tx: '-translate-x-[7.5rem] translate-y-[7.5rem] sm:-translate-x-[9rem] sm:translate-y-[9rem] lg:-translate-x-[11.2rem] lg:translate-y-[11.2rem]' },
                 { img: ceo, alt: 'Dr. Mekdes Dabba', tx: 'translate-x-[7.5rem] translate-y-[7.5rem] sm:translate-x-[9rem] sm:translate-y-[9rem] lg:translate-x-[11.2rem] lg:translate-y-[11.2rem]' },
               ].map(({ img, alt, tx }) => (
-                <div key={alt} className={`absolute z-10 w-40 h-40 sm:w-48 sm:h-48 lg:w-52 lg:h-52 shadow-xl border-4 border-white dark:border-[#0d1420] overflow-hidden rounded-2xl ${tx}`}>
+                <div key={alt} className={`absolute z-10 w-40 h-40 sm:w-48 sm:h-48 lg:w-52 lg:h-52 shadow-xl border-2 border-brand/30 dark:border-brand/25 overflow-hidden rounded-3xl ${tx}`}>
                   <img src={img} alt={alt} className="w-full h-full object-cover" />
                 </div>
               ))}

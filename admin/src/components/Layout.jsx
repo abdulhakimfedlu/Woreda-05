@@ -13,9 +13,7 @@ import {
   Menu,
   X,
   Plus,
-  FileText,
-  Sun,
-  Moon
+  FileText
 } from 'lucide-react';
 import { Shield } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
@@ -192,23 +190,6 @@ export function Layout() {
           </div>
           <div className="flex items-center gap-4 sm:gap-6">
             <LanguageSwitcher />
-
-            {/* Dark Mode Toggle */}
-            <button
-              onClick={toggleTheme}
-              className={`relative flex items-center w-[60px] h-8 rounded-full p-1 transition-colors duration-300 focus:outline-none shrink-0 ${isDark ? 'bg-slate-800 border border-slate-700' : 'bg-[#E2E8F0] border border-[#CBD5E1]'}`}
-              aria-label="Toggle dark mode"
-            >
-              <div 
-                className={`absolute left-1 w-6 h-6 rounded-full bg-white flex items-center justify-center transform transition-transform duration-500 shadow-md ${isDark ? 'translate-x-[28px] bg-slate-900 shadow-black/50' : 'translate-x-0 shadow-slate-400/30'}`}
-              >
-                {isDark ? (
-                  <Moon className="w-3.5 h-3.5 text-brand" />
-                ) : (
-                  <Sun className="w-3.5 h-3.5 text-amber-500" />
-                )}
-              </div>
-            </button>
 
             <div className="hidden sm:flex items-center gap-3 pl-6 border-l border-slate-100 dark:border-slate-800/40">
               <div className="w-10 h-10 rounded-2xl bg-brand text-white flex items-center justify-center font-black text-xs shadow-lg shadow-brand/20 ring-4 ring-brand/5 dark:ring-brand/10 uppercase">

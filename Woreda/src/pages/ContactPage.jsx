@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Send, Phone, MessageSquare, Shield, CheckCircle, AlertCircle } from 'lucide-react';
+import { Send, Phone, MessageSquare, Shield, CheckCircle, AlertCircle, MapPin } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 const ContactPage = () => {
@@ -65,7 +65,7 @@ const ContactPage = () => {
 
   return (
     <div className="bg-white dark:bg-[#080d14] min-h-screen pt-4 pb-40 lg:pt-8 transition-colors duration-300">
-      <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
 
         {/* Header */}
         <div className="text-center mb-14 pt-4">
@@ -73,20 +73,31 @@ const ContactPage = () => {
             {t('nav_contact')}
           </div>
           <h1 className="text-5xl md:text-7xl font-black text-black dark:text-white leading-tight mb-4 tracking-tighter">
-            {t('contact_title').split(' ')[0]} <br />
-            <span className="relative inline-block text-brand">
-              {t('contact_title').split(' ').slice(1).join(' ')}
-              <span className="absolute left-0 -bottom-2 w-full h-1.5 bg-brand/20 rounded-full" />
-            </span>
+            {t('contact_title').split(' ').length > 1 ? (
+              <>
+                {t('contact_title').split(' ')[0]} <br />
+                <span className="relative inline-block text-brand">
+                  {t('contact_title').split(' ').slice(1).join(' ')}
+                  <span className="absolute left-0 -bottom-2 w-full rounded-full" style={{ height: '6px', background: 'linear-gradient(90deg,#00B4D8 0%,#90E0EF 50%,#00B4D8 100%)', boxShadow: '0 0 16px rgba(0,180,216,0.6)', borderRadius: '999px', display: 'block' }} />
+                </span>
+              </>
+            ) : (
+              <span className="relative inline-block text-black dark:text-white">
+                {t('contact_title')}
+                <span className="absolute left-0 -bottom-2 w-full rounded-full" style={{ height: '6px', background: 'linear-gradient(90deg,#00B4D8 0%,#90E0EF 50%,#00B4D8 100%)', boxShadow: '0 0 16px rgba(0,180,216,0.6)', borderRadius: '999px', display: 'block' }} />
+              </span>
+            )}
           </h1>
           <p className="text-base text-black/40 dark:text-white/35 font-bold max-w-xl mx-auto mt-6">
             {t('contact_subtitle')}
           </p>
         </div>
 
-        {/* Card */}
-        <div className="bg-white dark:bg-[#0d1420] rounded-[2.5rem] border border-black/5 dark:border-white/8 shadow-[0_20px_60px_-15px_rgba(0,180,216,0.12)] dark:shadow-[0_20px_60px_-15px_rgba(0,180,216,0.08)] overflow-hidden">
-          <div className="flex flex-col md:flex-row min-h-[500px]">
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          
+          {/* Card */}
+          <div className="lg:col-span-8 bg-white dark:bg-[#0d1420] rounded-[2.5rem] border border-black/5 dark:border-white/8 shadow-[0_20px_60px_-15px_rgba(0,180,216,0.12)] dark:shadow-[0_20px_60px_-15px_rgba(0,180,216,0.08)] overflow-hidden flex flex-col md:flex-row min-h-[500px]">
 
             {/* Info Side — always brand-coloured */}
             <div className="md:w-1/3 bg-brand p-10 text-white flex flex-col justify-between relative overflow-hidden">
@@ -126,6 +137,10 @@ const ContactPage = () => {
 
             {/* Form Side */}
             <div className="md:w-2/3 p-10 lg:p-14">
+              <h4 className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-8 pb-3 border-b border-black/5 dark:border-white/5">
+                {t('contact_form_title')}
+              </h4>
+
               {success ? (
                 <div className="h-full flex flex-col items-center justify-center text-center py-10 animate-in zoom-in-95 duration-500">
                   <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-500 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-500/20">
@@ -256,6 +271,55 @@ const ContactPage = () => {
               )}
             </div>
           </div>
+
+          {/* Interactive Google Map Card */}
+          <div className="lg:col-span-4 bg-white dark:bg-[#0d1420] rounded-[2.5rem] border border-black/5 dark:border-white/8 shadow-[0_20px_60px_-15px_rgba(0,180,216,0.12)] dark:shadow-[0_20px_60px_-15px_rgba(0,180,216,0.08)] overflow-hidden flex flex-col p-6 min-h-[480px] lg:min-h-0 relative group hover:border-[#00B4D8]/30 dark:hover:border-[#00B4D8]/30 hover:shadow-[0_20px_60px_-15px_rgba(0,180,216,0.2)] transition-all duration-500">
+            
+            {/* Map Frame Container */}
+            <div className="flex-1 rounded-[2rem] overflow-hidden border border-black/5 dark:border-white/5 relative min-h-[320px] lg:min-h-0 bg-slate-50 dark:bg-[#080d14]">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.23126998634!2d38.800335274577884!3d9.02244048956972!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b855c59edb583%3A0xd0b8498a4a4058e7!2sYeka%20Sub%20City%20woreda%205%20Administration%20Office!5e0!3m2!1sen!2set!4v1715978135894!5m2!1sen!2set" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen="" 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                className="absolute inset-0 w-full h-full opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+              />
+              
+              {/* Custom Map Floating Tag */}
+              <div className="absolute top-4 left-4 z-10 bg-brand/90 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] shadow-lg flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>{language === 'am' ? 'የወረዳው ዋና ጽ/ቤት' : 'Woreda HQ'}</span>
+              </div>
+            </div>
+
+            {/* Address Details & Action */}
+            <div className="mt-6 flex flex-col gap-4">
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-xl bg-brand/10 dark:bg-brand/15 flex items-center justify-center shrink-0 text-brand">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-1">{t('contact_map_badge')}</h4>
+                  <p className="text-xs font-bold text-black/60 dark:text-white/50 leading-relaxed truncate-2-lines">{t('contact_office_addr') || 'Woreda 05, Yeka Subcity, Addis Ababa'}</p>
+                </div>
+              </div>
+              
+              {/* Premium Glow directions button */}
+              <a 
+                href="https://www.google.com/maps/dir//Yeka+Sub+City+woreda+5+Administration+Office,+2RC3%2BX5Q,+Addis+Ababa/@9.0292562,38.8728189,6881m/data=!3m1!1e3!4m8!4m7!1m0!1m5!1m1!1s0x164b855c59edb583:0xd0b8498a4a4058e7!2m2!1d38.8029102!2d9.0224352?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-full py-4.5 bg-gradient-to-r from-[#00B4D8] to-[#90E0EF] hover:from-[#0077B6] hover:to-[#00B4D8] text-white text-xs font-black uppercase tracking-widest rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-[#00B4D8]/20 hover:shadow-[#00B4D8]/40 hover:-translate-y-0.5"
+              >
+                <span>{language === 'am' ? 'አቅጣጫዎችን ያግኙ' : 'Get Directions'}</span>
+                <Send className="w-3.5 h-3.5 rotate-45 shrink-0" />
+              </a>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
