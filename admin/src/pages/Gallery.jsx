@@ -159,13 +159,13 @@ export function Gallery() {
 
   return (
     <div className="space-y-10 animate-in fade-in duration-500">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-slate-100 pb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-slate-100 dark:border-slate-800/50 pb-8">
         <div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">{t('gal_title')}</h2>
-          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">{t('gal_subtitle')}</p>
+          <h2 className="text-3xl font-black text-slate-800 dark:text-slate-100 tracking-tighter">{t('gal_title')}</h2>
+          <p className="mt-1 text-sm text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest">{t('gal_subtitle')}</p>
         </div>
         <div className="flex items-center gap-4 w-full sm:w-auto">
-          <button className="flex-1 sm:flex-none flex items-center justify-center px-6 py-3 bg-white text-slate-500 text-sm font-black uppercase tracking-widest rounded-2xl border border-slate-200 shadow-sm hover:bg-slate-50 hover:text-[#00B4D8] transition-all">
+          <button className="flex-1 sm:flex-none flex items-center justify-center px-6 py-3 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 text-sm font-black uppercase tracking-widest rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-[#00B4D8] dark:hover:text-[#00B4D8] transition-all">
             <Filter className="w-4 h-4 mr-2" />
             {t('gal_filter')}
           </button>
@@ -198,41 +198,41 @@ export function Gallery() {
           <div className="space-y-4">
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('gal_title_en')}</label>
+              <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('gal_title_en')}</label>
               <input 
-                required
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({...formData, title: e.target.value})}
                 placeholder={t('gal_placeholder_title')}
-                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+                className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all"
               />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('gal_title_am')}</label>
+              <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('gal_title_am')}</label>
               <input 
+                required
                 type="text"
                 value={formData.titleAm}
                 onChange={(e) => setFormData({...formData, titleAm: e.target.value})}
                 placeholder={t('gal_placeholder_title_am')}
-                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+                className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all"
               />
             </div>
           </div>
             
             <div className="grid grid-cols-2 gap-6">
                <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('gal_event_date')}</label>
+                  <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('gal_event_date')}</label>
                   <input 
                     required
                     type="date"
                     value={formData.date}
                     onChange={(e) => setFormData({...formData, date: e.target.value})}
-                    className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+                    className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all"
                   />
                </div>
                <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('gal_source_file')}</label>
+                  <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('gal_source_file')}</label>
                   <div className="relative group">
                     <input 
                       type="file"
@@ -240,7 +240,7 @@ export function Gallery() {
                       onChange={handleFileChange}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     />
-                    <div className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium flex items-center text-slate-400 group-hover:border-[#00B4D8] transition-all">
+                    <div className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium flex items-center text-slate-400 dark:text-slate-500 group-hover:border-[#00B4D8] transition-all">
                        <ImageIcon className="w-4 h-4 mr-2" />
                        <span className="truncate">{selectedFile ? selectedFile.name : (editingItem ? t('gal_keep_current') : t('gal_select_image'))}</span>
                     </div>
@@ -249,23 +249,23 @@ export function Gallery() {
             </div>
 
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('gal_desc_en')}</label>
+              <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('gal_desc_en')}</label>
               <textarea 
                 rows="3"
                 value={formData.description}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
                 placeholder={t('gal_placeholder_desc')}
-                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all resize-none"
+                className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all resize-none"
               />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('gal_desc_am')}</label>
+              <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('gal_desc_am')}</label>
               <textarea 
                 rows="3"
                 value={formData.descriptionAm}
                 onChange={(e) => setFormData({...formData, descriptionAm: e.target.value})}
                 placeholder={t('gal_placeholder_desc_am')}
-                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all resize-none"
+                className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all resize-none"
               />
             </div>
           </div>
@@ -290,19 +290,19 @@ export function Gallery() {
             setSelectedFile(null);
             setIsModalOpen(true);
           }}
-          className="bg-white border-2 border-dashed border-slate-200 hover:border-[#00B4D8] hover:bg-[#90E0EF]/5 hover:shadow-2xl hover:shadow-[#00B4D8]/10 transition-all duration-500 rounded-3xl flex flex-col items-center justify-center min-h-[280px] cursor-pointer text-slate-400 hover:text-[#00B4D8] group"
+          className="bg-white dark:bg-slate-900 border-2 border-dashed border-slate-200 dark:border-slate-800 hover:border-[#00B4D8] dark:hover:border-[#00B4D8] hover:bg-[#90E0EF]/5 dark:hover:bg-[#90E0EF]/5 hover:shadow-2xl hover:shadow-[#00B4D8]/10 transition-all duration-500 rounded-3xl flex flex-col items-center justify-center min-h-[280px] cursor-pointer text-slate-400 dark:text-slate-500 hover:text-[#00B4D8] group"
         >
-           <div className="w-16 h-16 rounded-3xl bg-white shadow-lg border border-slate-100 group-hover:bg-[#00B4D8] group-hover:text-white group-hover:border-[#00B4D8] flex items-center justify-center mb-4 transition-all duration-500">
+           <div className="w-16 h-16 rounded-3xl bg-white dark:bg-slate-800 shadow-lg border border-slate-100 dark:border-slate-700 group-hover:bg-[#00B4D8] group-hover:text-white group-hover:border-[#00B4D8] flex items-center justify-center mb-4 transition-all duration-500">
               <Plus className="w-8 h-8" />
            </div>
-           <span className="font-black text-xs text-slate-600 group-hover:text-[#00B4D8] transition-colors uppercase tracking-widest">{t('gal_add_new_image')}</span>
-           <span className="text-[10px] mt-2 text-slate-300 font-black uppercase tracking-[0.2em]">{t('gal_size_limit')}</span>
+           <span className="font-black text-xs text-slate-600 dark:text-slate-300 group-hover:text-[#00B4D8] transition-colors uppercase tracking-widest">{t('gal_add_new_image')}</span>
+           <span className="text-[10px] mt-2 text-slate-300 dark:text-slate-600 font-black uppercase tracking-[0.2em]">{t('gal_size_limit')}</span>
         </div>
 
         {loading ? (
-           <div className="col-span-full py-24 text-center text-slate-300 font-black uppercase tracking-widest animate-pulse">{t('gal_loading')}</div>
+           <div className="col-span-full py-24 text-center text-slate-300 dark:text-slate-600 font-black uppercase tracking-widest animate-pulse">{t('gal_loading')}</div>
         ) : images.map((image) => (
-          <div key={image.id} className="bg-white border border-slate-100 rounded-3xl overflow-hidden group hover:shadow-2xl hover:shadow-[#00B4D8]/20 hover:-translate-y-2 transition-all duration-500 shadow-xl shadow-slate-200/40 relative">
+          <div key={image.id} className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl overflow-hidden group hover:shadow-2xl hover:shadow-[#00B4D8]/20 dark:hover:shadow-[#00B4D8]/10 hover:-translate-y-2 transition-all duration-500 shadow-xl shadow-slate-200/40 dark:shadow-none relative">
             <div className="aspect-[4/3] relative overflow-hidden bg-slate-900 flex items-center justify-center">
               <img 
                 src={image.url} 
@@ -335,12 +335,12 @@ export function Gallery() {
             </div>
             <div className="p-5">
               <div className="flex items-center gap-2 mb-2">
-                 <span className="text-[9px] font-black px-2 py-0.5 rounded-md bg-slate-50 text-slate-400 uppercase tracking-widest border border-slate-100">
+                 <span className="text-[9px] font-black px-2 py-0.5 rounded-md bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500 uppercase tracking-widest border border-slate-100 dark:border-slate-700">
                     {image.date || t('gal_no_date')}
                  </span>
               </div>
-              <h3 className="font-black text-slate-800 text-sm tracking-tight truncate">{image.title}</h3>
-              <p className="text-[10px] text-slate-400 font-medium line-clamp-1 mt-1">{image.description || t('gal_no_description')}</p>
+              <h3 className="font-black text-slate-800 dark:text-slate-200 text-sm tracking-tight truncate">{image.title}</h3>
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium line-clamp-1 mt-1">{image.description || t('gal_no_description')}</p>
             </div>
           </div>
         ))}

@@ -201,10 +201,10 @@ export function Services() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-slate-100 pb-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-slate-100 dark:border-slate-800/50 pb-8">
         <div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">{t('services_title')}</h2>
-          <p className="mt-1 text-sm text-slate-400 font-bold uppercase tracking-widest">{t('services_subtitle')}</p>
+          <h2 className="text-3xl font-black text-slate-800 dark:text-slate-100 tracking-tighter">{t('services_title')}</h2>
+          <p className="mt-1 text-sm text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest">{t('services_subtitle')}</p>
         </div>
         <button 
           onClick={() => {
@@ -225,16 +225,16 @@ export function Services() {
         </button>
       </div>
 
-      <div className="flex items-center gap-2 mb-6 bg-slate-100/50 p-1.5 rounded-2xl border border-slate-200/50 overflow-x-auto">
+      <div className="flex items-center gap-2 mb-6 bg-slate-100/50 dark:bg-slate-800/30 p-1.5 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-x-auto">
           <button 
           onClick={() => setActiveTab('list')}
-          className={`px-4 sm:px-6 py-2.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap ${activeTab === 'list' ? 'bg-white text-[#0077B6] shadow-md shadow-slate-200' : 'text-slate-400 hover:text-slate-600'}`}
+          className={`px-4 sm:px-6 py-2.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap ${activeTab === 'list' ? 'bg-white dark:bg-slate-700 text-[#0077B6] dark:text-[#90E0EF] shadow-md shadow-slate-200 dark:shadow-none' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}`}
         >
           {t('services_all_services')}
         </button>
         <button 
           onClick={() => setActiveTab('categories')}
-          className={`px-4 sm:px-6 py-2.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap ${activeTab === 'categories' ? 'bg-white text-[#0077B6] shadow-md shadow-slate-200' : 'text-slate-400 hover:text-slate-600'}`}
+          className={`px-4 sm:px-6 py-2.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap ${activeTab === 'categories' ? 'bg-white dark:bg-slate-700 text-[#0077B6] dark:text-[#90E0EF] shadow-md shadow-slate-200 dark:shadow-none' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}`}
         >
           {t('services_service_categories')}
         </button>
@@ -252,57 +252,57 @@ export function Services() {
         <form onSubmit={handleServiceSubmit} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('serv_form_title_en')}</label>
+              <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('serv_form_title_en')}</label>
               <input 
-                required
                 type="text"
                 value={serviceFormData.title}
                 onChange={(e) => setServiceFormData({...serviceFormData, title: e.target.value})}
                 placeholder="e.g. Birth Certificate"
-                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+                className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all"
               />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('serv_form_title_am')}</label>
+              <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('serv_form_title_am')}</label>
               <input 
+                required
                 type="text"
                 value={serviceFormData.titleAm}
                 onChange={(e) => setServiceFormData({...serviceFormData, titleAm: e.target.value})}
                 placeholder="ለምሳሌ፡ የልደት ምስክር ወረቀት"
-                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+                className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all"
               />
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('serv_form_dept_en')}</label>
+              <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('serv_form_dept_en')}</label>
               <input 
-                required
                 type="text"
                 value={serviceFormData.department}
                 onChange={(e) => setServiceFormData({...serviceFormData, department: e.target.value})}
                 placeholder="e.g. Civil Registry"
-                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+                className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all"
               />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('serv_form_dept_am')}</label>
+              <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('serv_form_dept_am')}</label>
               <input 
+                required
                 type="text"
                 value={serviceFormData.departmentAm}
                 onChange={(e) => setServiceFormData({...serviceFormData, departmentAm: e.target.value})}
                 placeholder="ለምሳሌ፡ የሲቪል መዝገብ"
-                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+                className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all"
               />
             </div>
           </div>
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('serv_form_cat')}</label>
+            <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('serv_form_cat')}</label>
             <select 
               required
               value={serviceFormData.category}
               onChange={(e) => setServiceFormData({...serviceFormData, category: e.target.value})}
-              className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+              className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all"
             >
               <option value="" disabled>Select a Category...</option>
               {categories.map((cat) => (
@@ -312,12 +312,12 @@ export function Services() {
               ))}
             </select>
           </div>
-          <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+          <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700/50">
             <div className="flex items-center gap-3">
               <Star className="w-5 h-5 text-amber-500" />
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('serv_form_pop')}</label>
-                <p className="text-xs text-slate-500 mt-1">{t('serv_form_pop_desc')}</p>
+                <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">{t('serv_form_pop')}</label>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t('serv_form_pop_desc')}</p>
               </div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer ml-auto">
@@ -351,55 +351,55 @@ export function Services() {
         <form onSubmit={handleCategorySubmit} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('cat_form_name_en')}</label>
+              <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('cat_form_name_en')}</label>
               <input 
-                required
                 type="text"
                 value={categoryFormData.name}
                 onChange={(e) => setCategoryFormData({...categoryFormData, name: e.target.value})}
                 placeholder="e.g. Documentation"
-                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+                className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all"
               />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('cat_form_name_am')}</label>
+              <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('cat_form_name_am')}</label>
               <input 
+                required
                 type="text"
                 value={categoryFormData.nameAm}
                 onChange={(e) => setCategoryFormData({...categoryFormData, nameAm: e.target.value})}
                 placeholder="ለምሳሌ፡ ሰነዶች"
-                className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+                className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all"
               />
             </div>
           </div>
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('cat_form_num')}</label>
+            <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('cat_form_num')}</label>
             <input 
               type="number"
               value={categoryFormData.categoryNumber}
               onChange={(e) => setCategoryFormData({...categoryFormData, categoryNumber: e.target.value})}
               placeholder="e.g. 1"
-              className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all"
+              className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all"
             />
           </div>
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('cat_form_desc_en')}</label>
+            <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1">{t('cat_form_desc_en')}</label>
             <textarea 
               rows="3"
               value={categoryFormData.description}
               onChange={(e) => setCategoryFormData({...categoryFormData, description: e.target.value})}
               placeholder="Brief description of this service category..."
-              className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all resize-none"
+              className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all resize-none"
             />
           </div>
           <div>
-            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('cat_form_desc_am')}</label>
+            <label className="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2.5 ml-1 text-brand">{t('cat_form_desc_am')}</label>
             <textarea 
               rows="3"
               value={categoryFormData.descriptionAm}
               onChange={(e) => setCategoryFormData({...categoryFormData, descriptionAm: e.target.value})}
               placeholder="ስለዚህ አገልግሎት ምድብ አጭር መግለጫ..."
-              className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white transition-all resize-none"
+              className="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] focus:bg-white dark:focus:bg-slate-950 transition-all resize-none"
             />
           </div>
           <button 
@@ -414,15 +414,15 @@ export function Services() {
       {activeTab === 'list' && (
         <div className="space-y-4">
           {/* Search Bar */}
-          <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/40 border border-slate-100 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg shadow-slate-200/40 dark:shadow-none border border-slate-100 dark:border-slate-800 p-4">
             <div className="relative w-full sm:w-80">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 dark:text-slate-500" />
               <input 
                 type="text" 
                 placeholder={t('services_search_placeholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
+                className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
               />
             </div>
           </div>
@@ -448,7 +448,7 @@ export function Services() {
                 (service.titleAm && service.titleAm.toLowerCase().includes(searchTerm.toLowerCase())) ||
                 (service.departmentAm && service.departmentAm.toLowerCase().includes(searchTerm.toLowerCase()))
               ).map((service) => (
-              <div key={service.id} className="bg-white border border-slate-100 rounded-2xl p-4 hover:shadow-lg hover:shadow-[#00B4D8]/10 hover:border-[#00B4D8]/40 transition-all group relative overflow-hidden">
+              <div key={service.id} className="bg-white dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/60 rounded-2xl p-4 hover:shadow-lg hover:shadow-[#00B4D8]/10 dark:hover:shadow-none hover:border-[#00B4D8]/40 dark:hover:border-[#00B4D8]/40 transition-all group relative overflow-hidden">
                 {service.isPopular && (
                   <div className="absolute top-2 right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center">
                     <Star className="w-3 h-3 text-white fill-white" />
@@ -458,33 +458,33 @@ export function Services() {
                   <div className="w-8 h-8 rounded-xl bg-[#90E0EF]/20 text-[#00B4D8] flex items-center justify-center border border-[#90E0EF]/30 group-hover:bg-[#00B4D8] group-hover:text-white transition-all duration-300">
                     <FileText className="w-4 h-4" />
                   </div>
-                  <span className="text-[9px] font-black px-2 py-1 rounded-full bg-slate-50 text-slate-400 border border-slate-100 group-hover:bg-[#0077B6] group-hover:text-white group-hover:border-[#0077B6] transition-all">
+                  <span className="text-[9px] font-black px-2 py-1 rounded-full bg-slate-50 dark:bg-slate-900 text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800 group-hover:bg-[#0077B6] group-hover:text-white group-hover:border-[#0077B6] transition-all">
                     {service.category}
                   </span>
                 </div>
-                <h3 className="font-extrabold text-slate-800 text-sm tracking-tighter group-hover:text-[#00B4D8] transition-colors mb-1">
+                <h3 className="font-extrabold text-slate-800 dark:text-slate-200 text-sm tracking-tighter group-hover:text-[#00B4D8] transition-colors mb-1">
                   {language === 'am' && service.titleAm ? service.titleAm : service.title}
                 </h3>
-                <p className="text-[10px] text-slate-400 font-medium mb-4 line-clamp-2">
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium mb-4 line-clamp-2">
                   {language === 'am' && service.departmentAm ? service.departmentAm : service.department}
                 </p>
                 
-                <div className="flex border-t border-slate-50 pt-3 gap-1 justify-between items-center">
+                <div className="flex border-t border-slate-50 dark:border-slate-800/40 pt-3 gap-1 justify-between items-center">
                   <div className="flex gap-1">
                     <button 
                       onClick={() => handleEditService(service)}
-                      className="text-[9px] font-black text-[#00B4D8] uppercase tracking-widest hover:text-[#0077B6] transition-colors flex items-center p-1 hover:bg-slate-50 rounded-md">
+                      className="text-[9px] font-black text-[#00B4D8] uppercase tracking-widest hover:text-[#0077B6] transition-colors flex items-center p-1 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-md">
                        <Edit2 className="w-3 h-3 mr-1" /> Edit
                     </button>
                     <button 
                       onClick={() => deleteService(service.id)}
-                      className="text-[9px] font-black text-red-400 uppercase tracking-widest hover:text-red-600 transition-colors flex items-center p-1 hover:bg-red-50 rounded-md">
+                      className="text-[9px] font-black text-red-400 uppercase tracking-widest hover:text-red-600 transition-colors flex items-center p-1 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-md">
                        <Trash2 className="w-3 h-3" />
                     </button>
                   </div>
                   <button 
                     onClick={() => togglePopular(service.id, service.isPopular)}
-                    className={`p-1.5 rounded-lg transition-all ${service.isPopular ? 'bg-amber-100 text-amber-600 hover:bg-amber-200' : 'bg-slate-100 text-slate-400 hover:bg-amber-100 hover:text-amber-600'}`}
+                    className={`p-1.5 rounded-lg transition-all ${service.isPopular ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-500/30' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 hover:bg-amber-100 dark:hover:bg-amber-500/20 hover:text-amber-600 dark:hover:text-amber-400'}`}
                     title={service.isPopular ? 'Remove from Popular' : 'Add to Popular'}
                   >
                     <Star className={`w-3 h-3 ${service.isPopular ? 'fill-current' : ''}`} />
@@ -499,15 +499,15 @@ export function Services() {
       {activeTab === 'categories' && (
         <div className="space-y-4">
           {/* Search Bar for Categories */}
-          <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/40 border border-slate-100 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-lg shadow-slate-200/40 dark:shadow-none border border-slate-100 dark:border-slate-800 p-4">
             <div className="relative w-full sm:w-80">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 dark:text-slate-500" />
               <input 
                 type="text" 
                 placeholder={t('services_search_categories')}
                 value={categorySearchTerm}
                 onChange={(e) => setCategorySearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
+                className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/20 focus:border-[#00B4D8] transition-all"
               />
             </div>
           </div>
@@ -535,31 +535,31 @@ export function Services() {
               ).map((cat) => {
               const serviceCount = services.filter(s => s.category === cat.name).length;
               return (
-              <div key={cat.id} className="bg-white border border-slate-100 rounded-2xl p-4 hover:shadow-lg hover:shadow-[#00B4D8]/10 hover:border-[#00B4D8]/40 transition-all group relative overflow-hidden">
+              <div key={cat.id} className="bg-white dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/60 rounded-2xl p-4 hover:shadow-lg hover:shadow-[#00B4D8]/10 dark:hover:shadow-none hover:border-[#00B4D8]/40 dark:hover:border-[#00B4D8]/40 transition-all group relative overflow-hidden">
                 <div className="flex justify-between items-start mb-3">
                   <div className="w-8 h-8 rounded-xl bg-[#90E0EF]/20 text-[#00B4D8] flex items-center justify-center border border-[#90E0EF]/30 group-hover:bg-[#00B4D8] group-hover:text-white transition-all duration-300">
                     <span className="font-black text-sm">{cat.categoryNumber || 0}</span>
                   </div>
-                  <span className="text-[9px] font-black px-2 py-1 rounded-full bg-slate-50 text-slate-400 border border-slate-100 group-hover:bg-[#0077B6] group-hover:text-white group-hover:border-[#0077B6] transition-all">
+                  <span className="text-[9px] font-black px-2 py-1 rounded-full bg-slate-50 dark:bg-slate-900 text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-slate-800 group-hover:bg-[#0077B6] group-hover:text-white group-hover:border-[#0077B6] transition-all">
                     {serviceCount}
                   </span>
                 </div>
-                <h3 className="font-extrabold text-slate-800 text-sm tracking-tighter group-hover:text-[#00B4D8] transition-colors mb-1">
+                <h3 className="font-extrabold text-slate-800 dark:text-slate-200 text-sm tracking-tighter group-hover:text-[#00B4D8] transition-colors mb-1">
                   {language === 'am' && cat.nameAm ? cat.nameAm : cat.name}
                 </h3>
-                <p className="text-[10px] text-slate-400 font-medium mb-4 line-clamp-2">
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium mb-4 line-clamp-2">
                   {language === 'am' && cat.descriptionAm ? cat.descriptionAm : (cat.description || (language === 'am' ? "ለማህበረሰብ አገልግሎቶች ለመመደብ የሚያገለግሉ ምድቦች።" : "Categories used for grouping community services."))}
                 </p>
                 
-                <div className="flex border-t border-slate-50 pt-3 gap-1 justify-between">
+                <div className="flex border-t border-slate-50 dark:border-slate-800/40 pt-3 gap-1 justify-between">
                   <button 
                     onClick={() => handleEditCategory(cat)}
-                    className="text-[9px] font-black text-[#00B4D8] uppercase tracking-widest hover:text-[#0077B6] transition-colors flex items-center p-1 hover:bg-slate-50 rounded-md">
+                    className="text-[9px] font-black text-[#00B4D8] uppercase tracking-widest hover:text-[#0077B6] transition-colors flex items-center p-1 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-md">
                      <Edit2 className="w-3 h-3 mr-1" /> Edit
                   </button>
                   <button 
                     onClick={() => deleteCategory(cat.id)}
-                    className="text-[9px] font-black text-red-400 uppercase tracking-widest hover:text-red-600 transition-colors flex items-center p-1 hover:bg-red-50 rounded-md">
+                    className="text-[9px] font-black text-red-400 uppercase tracking-widest hover:text-red-600 transition-colors flex items-center p-1 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-md">
                      <Trash2 className="w-3 h-3" />
                   </button>
                 </div>

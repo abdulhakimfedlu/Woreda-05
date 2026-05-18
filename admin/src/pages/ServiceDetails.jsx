@@ -104,6 +104,15 @@ export function ServiceDetails() {
       toast.error('Authentication error. Please log in again.');
       return;
     }
+
+    if (!service.titleAm || !service.titleAm.trim()) {
+      toast.error('Amharic Title is required!');
+      return;
+    }
+    if (!service.departmentAm || !service.departmentAm.trim()) {
+      toast.error('Amharic Department is required!');
+      return;
+    }
     
     setSaving(true);
     try {
@@ -182,10 +191,10 @@ export function ServiceDetails() {
         </Link>
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div>
-            <h1 className="text-4xl font-black text-slate-800 tracking-tighter uppercase tracking-widest">
+            <h1 className="text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tighter uppercase tracking-widest">
               {language === 'am' && service.titleAm ? service.titleAm : service.title}
             </h1>
-            <p className="mt-2 text-sm text-slate-500 font-medium">
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 font-medium">
               {t('sd_subtitle')}
             </p>
           </div>
@@ -205,28 +214,28 @@ export function ServiceDetails() {
         <div className="lg:w-72 shrink-0 space-y-2">
           <button
             onClick={() => setActiveTab('general')}
-            className={`w-full flex items-center px-6 py-4 rounded-2xl transition-all ${activeTab === 'general' ? 'bg-white text-[#00B4D8] shadow-lg shadow-slate-200/50 border border-slate-50' : 'text-slate-400 hover:bg-slate-50'}`}
+            className={`w-full flex items-center px-6 py-4 rounded-2xl transition-all ${activeTab === 'general' ? 'bg-white dark:bg-slate-900 text-[#00B4D8] shadow-lg shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-slate-800' : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
           >
             <Info className="w-4 h-4 mr-3" />
             <span className="text-[11px] font-black uppercase tracking-widest">{t('sd_general_info')}</span>
           </button>
           <button
             onClick={() => setActiveTab('staff')}
-            className={`w-full flex items-center px-6 py-4 rounded-2xl transition-all ${activeTab === 'staff' ? 'bg-white text-[#00B4D8] shadow-lg shadow-slate-200/50 border border-slate-50' : 'text-slate-400 hover:bg-slate-50'}`}
+            className={`w-full flex items-center px-6 py-4 rounded-2xl transition-all ${activeTab === 'staff' ? 'bg-white dark:bg-slate-900 text-[#00B4D8] shadow-lg shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-slate-800' : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
           >
             <Users className="w-4 h-4 mr-3" />
             <span className="text-[11px] font-black uppercase tracking-widest">{t('sd_staff_member')}</span>
           </button>
           <button
             onClick={() => setActiveTab('content')}
-            className={`w-full flex items-center px-6 py-4 rounded-2xl transition-all ${activeTab === 'content' ? 'bg-white text-[#00B4D8] shadow-lg shadow-slate-200/50 border border-slate-50' : 'text-slate-400 hover:bg-slate-50'}`}
+            className={`w-full flex items-center px-6 py-4 rounded-2xl transition-all ${activeTab === 'content' ? 'bg-white dark:bg-slate-900 text-[#00B4D8] shadow-lg shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-slate-800' : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
           >
             <FileText className="w-4 h-4 mr-3" />
             <span className="text-[11px] font-black uppercase tracking-widest">{t('sd_service_requirements')}</span>
           </button>
           <button
             onClick={() => setActiveTab('media')}
-            className={`w-full flex items-center px-6 py-4 rounded-2xl transition-all ${activeTab === 'media' ? 'bg-white text-[#00B4D8] shadow-lg shadow-slate-200/50 border border-slate-50' : 'text-slate-400 hover:bg-slate-50'}`}
+            className={`w-full flex items-center px-6 py-4 rounded-2xl transition-all ${activeTab === 'media' ? 'bg-white dark:bg-slate-900 text-[#00B4D8] shadow-lg shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-slate-800' : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
           >
             <ImageIcon className="w-4 h-4 mr-3" />
             <span className="text-[11px] font-black uppercase tracking-widest">{t('sd_banner_photo')}</span>
@@ -234,16 +243,16 @@ export function ServiceDetails() {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 bg-white rounded-[32px] p-8 sm:p-10 shadow-2xl shadow-slate-200/30 border border-slate-50 min-h-[500px]">
+        <div className="flex-1 bg-white dark:bg-slate-900 rounded-[32px] p-8 sm:p-10 shadow-2xl shadow-slate-200/30 dark:shadow-none border border-slate-50 dark:border-slate-800 min-h-[500px]">
           {/* GENERAL TAB */}
           {activeTab === 'general' && (
             <div className="space-y-10 animate-in fade-in duration-300">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-3 ml-1">{t('form_service_title_en')}</label>
+                  <label className="block text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">{t('form_service_title_en')}</label>
                   <input
                     type="text"
-                    className="w-full bg-slate-50/50 border-none rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white transition-all text-slate-700"
+                    className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white dark:focus:bg-slate-950 transition-all text-slate-700 dark:text-slate-200"
                     value={service.title || ''}
                     onChange={e => setService({ ...service, title: e.target.value })}
                   />
@@ -252,7 +261,7 @@ export function ServiceDetails() {
                   <label className="block text-[10px] font-black text-brand uppercase tracking-[0.2em] mb-3 ml-1">{t('form_service_title_am')}</label>
                   <input
                     type="text"
-                    className="w-full bg-slate-50/50 border-none rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white transition-all text-slate-700 font-am"
+                    className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white dark:focus:bg-slate-950 transition-all text-slate-700 dark:text-slate-200 font-am"
                     value={service.titleAm || ''}
                     onChange={e => setService({ ...service, titleAm: e.target.value })}
                   />
@@ -261,10 +270,10 @@ export function ServiceDetails() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-3 ml-1">{t('form_department_en')}</label>
+                  <label className="block text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">{t('form_department_en')}</label>
                   <input
                     type="text"
-                    className="w-full bg-slate-50/50 border-none rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white transition-all text-slate-700"
+                    className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white dark:focus:bg-slate-950 transition-all text-slate-700 dark:text-slate-200"
                     value={service.department || ''}
                     onChange={e => setService({ ...service, department: e.target.value })}
                   />
@@ -273,7 +282,7 @@ export function ServiceDetails() {
                   <label className="block text-[10px] font-black text-brand uppercase tracking-[0.2em] mb-3 ml-1">{t('form_department_am')}</label>
                   <input
                     type="text"
-                    className="w-full bg-slate-50/50 border-none rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white transition-all text-slate-700"
+                    className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-2xl px-6 py-4 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white dark:focus:bg-slate-950 transition-all text-slate-700 dark:text-slate-200"
                     value={service.departmentAm || ''}
                     onChange={e => setService({ ...service, departmentAm: e.target.value })}
                   />
@@ -282,24 +291,24 @@ export function ServiceDetails() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_working_hours')}</label>
+                  <label className="block text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_working_hours')}</label>
                   <div className="relative">
                     <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00B4D8]" />
                     <input
                       type="text"
-                      className="w-full bg-slate-50/50 border-none rounded-2xl pl-14 pr-6 py-4 text-sm font-bold text-slate-700"
+                      className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-2xl pl-14 pr-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-200"
                       value={service.hours || ''}
                       onChange={e => setService({ ...service, hours: e.target.value })}
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_office_location')}</label>
+                  <label className="block text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_office_location')}</label>
                   <div className="relative">
                     <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00B4D8]" />
                     <input
                       type="text"
-                      className="w-full bg-slate-50/50 border-none rounded-2xl pl-14 pr-6 py-4 text-sm font-bold text-slate-700"
+                      className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-2xl pl-14 pr-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-200"
                       value={service.officeNumber || ''}
                       onChange={e => setService({ ...service, officeNumber: e.target.value })}
                     />
@@ -309,24 +318,24 @@ export function ServiceDetails() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_contact_phone')}</label>
+                  <label className="block text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_contact_phone')}</label>
                   <div className="relative">
                     <Phone className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00B4D8]" />
                     <input
                       type="text"
-                      className="w-full bg-slate-50/50 border-none rounded-2xl pl-14 pr-6 py-4 text-sm font-bold text-slate-700"
+                      className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-2xl pl-14 pr-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-200"
                       value={service.contactPhone || ''}
                       onChange={e => setService({ ...service, contactPhone: e.target.value })}
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_contact_email')}</label>
+                  <label className="block text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_contact_email')}</label>
                   <div className="relative">
                     <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00B4D8]" />
                     <input
                       type="text"
-                      className="w-full bg-slate-50/50 border-none rounded-2xl pl-14 pr-6 py-4 text-sm font-bold text-slate-700"
+                      className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-2xl pl-14 pr-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-200"
                       value={service.contactEmail || ''}
                       onChange={e => setService({ ...service, contactEmail: e.target.value })}
                     />
@@ -340,13 +349,13 @@ export function ServiceDetails() {
           {activeTab === 'staff' && (
             <div className="space-y-10 animate-in fade-in duration-300">
               {/* Officer Photo Preview + Upload */}
-              <div className="flex items-end gap-8 p-8 bg-slate-50 rounded-[28px] border border-slate-100">
+              <div className="flex items-end gap-8 p-8 bg-slate-50 dark:bg-slate-800/40 rounded-[28px] border border-slate-100 dark:border-slate-800/60">
                 <div className="relative group shrink-0">
-                  <div className="w-28 h-28 rounded-3xl bg-white shadow-xl flex items-center justify-center border-4 border-white overflow-hidden">
+                  <div className="w-28 h-28 rounded-3xl bg-white dark:bg-slate-800 shadow-xl flex items-center justify-center border-4 border-white dark:border-slate-800 overflow-hidden">
                     {service.officerPhoto ? (
                       <img src={service.officerPhoto} alt="Officer" className="w-full h-full object-cover" />
                     ) : (
-                      <User size={40} className="text-slate-200" />
+                      <User size={40} className="text-slate-200 dark:text-slate-600" />
                     )}
                     {officerPhotoUploading && (
                       <div className="absolute inset-0 bg-slate-900/60 flex items-center justify-center rounded-3xl">
@@ -356,11 +365,11 @@ export function ServiceDetails() {
                   </div>
                 </div>
                 <div className="flex-1 space-y-3">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('sd_officer_photo')}</p>
+                  <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">{t('sd_officer_photo')}</p>
                   <div className="flex items-center gap-3">
-                    <label className="flex items-center gap-3 px-5 py-3 bg-white border border-slate-200 rounded-2xl cursor-pointer hover:border-[#00B4D8] hover:shadow-md transition-all w-fit">
+                    <label className="flex items-center gap-3 px-5 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl cursor-pointer hover:border-[#00B4D8] dark:hover:border-[#00B4D8] hover:shadow-md transition-all w-fit">
                       <Upload className="w-4 h-4 text-[#00B4D8]" />
-                      <span className="text-xs font-black text-slate-600 uppercase tracking-widest">
+                      <span className="text-xs font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest">
                         {officerPhotoUploading ? t('sd_uploading') : (officerPhotoFile ? officerPhotoFile.name : (service.officerPhoto ? t('sd_change_banner').replace(t('sd_banner_photo'), t('sd_officer_photo')) : t('sd_upload_banner').replace(t('sd_banner_photo'), t('sd_officer_photo'))))}
                       </span>
                       <input
@@ -378,7 +387,7 @@ export function ServiceDetails() {
                           setService(prev => ({ ...prev, officerPhoto: null, officerPhotoPublicId: null }));
                           setOfficerPhotoFile(null);
                         }}
-                        className="p-3 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition-all border border-transparent hover:border-red-100"
+                        className="p-3 bg-red-50 dark:bg-red-500/10 text-red-500 dark:text-red-400 hover:bg-red-500 hover:text-white rounded-xl transition-all border border-transparent hover:border-red-100 dark:hover:border-red-500/30"
                         title={t('btn_delete')}
                       >
                         <Trash2 className="w-4 h-4" />
@@ -390,19 +399,19 @@ export function ServiceDetails() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_officer_name')}</label>
+                  <label className="block text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_officer_name')}</label>
                   <input
                     type="text"
-                    className="w-full bg-slate-50/50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-slate-700"
+                    className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-950 transition-all focus:ring-2 focus:ring-[#00B4D8]/20"
                     value={service.officerName || ''}
                     onChange={e => setService({ ...service, officerName: e.target.value })}
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_officer_role')}</label>
+                  <label className="block text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_officer_role')}</label>
                   <input
                     type="text"
-                    className="w-full bg-slate-50/50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-slate-700"
+                    className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-950 transition-all focus:ring-2 focus:ring-[#00B4D8]/20"
                     value={service.officerRole || ''}
                     onChange={e => setService({ ...service, officerRole: e.target.value })}
                   />
@@ -414,7 +423,7 @@ export function ServiceDetails() {
                   <label className="block text-[10px] font-black text-brand uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_officer_name')} (አማርኛ)</label>
                   <input
                     type="text"
-                    className="w-full bg-slate-50/50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 font-am"
+                    className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-200 font-am focus:bg-white dark:focus:bg-slate-950 transition-all focus:ring-2 focus:ring-[#00B4D8]/20"
                     value={service.officerNameAm || ''}
                     onChange={e => setService({ ...service, officerNameAm: e.target.value })}
                   />
@@ -423,7 +432,7 @@ export function ServiceDetails() {
                   <label className="block text-[10px] font-black text-brand uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_officer_role')} (አማርኛ)</label>
                   <input
                     type="text"
-                    className="w-full bg-slate-50/50 border-none rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 font-am"
+                    className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-200 font-am focus:bg-white dark:focus:bg-slate-950 transition-all focus:ring-2 focus:ring-[#00B4D8]/20"
                     value={service.officerRoleAm || ''}
                     onChange={e => setService({ ...service, officerRoleAm: e.target.value })}
                   />
@@ -438,10 +447,10 @@ export function ServiceDetails() {
               {/* Description */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-3 ml-1">{t('form_description_en')}</label>
+                  <label className="block text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">{t('form_description_en')}</label>
                   <textarea
                     rows="4"
-                    className="w-full bg-slate-50/50 border-none rounded-3xl px-8 py-6 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white transition-all text-slate-700"
+                    className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-3xl px-8 py-6 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white dark:focus:bg-slate-950 transition-all text-slate-700 dark:text-slate-200"
                     value={service.description || ''}
                     onChange={e => setService({ ...service, description: e.target.value })}
                   />
@@ -450,7 +459,7 @@ export function ServiceDetails() {
                   <label className="block text-[10px] font-black text-brand uppercase tracking-[0.2em] mb-3 ml-1">{t('form_description_am')}</label>
                   <textarea
                     rows="4"
-                    className="w-full bg-slate-50/50 border-none rounded-3xl px-8 py-6 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white transition-all text-slate-700 font-am"
+                    className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-3xl px-8 py-6 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white dark:focus:bg-slate-950 transition-all text-slate-700 dark:text-slate-200 font-am"
                     value={service.descriptionAm || ''}
                     onChange={e => setService({ ...service, descriptionAm: e.target.value })}
                   />
@@ -458,9 +467,9 @@ export function ServiceDetails() {
               </div>
 
               {/* Requirements (English) */}
-              <div className="pt-6 border-t border-slate-100">
+              <div className="pt-6 border-t border-slate-100 dark:border-slate-800/60">
                 <div className="flex justify-between items-center mb-4">
-                  <label className="block text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] ml-1">{t('sd_req_en')}</label>
+                  <label className="block text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.2em] ml-1">{t('sd_req_en')}</label>
                   <button
                     type="button"
                     onClick={() => setService({ ...service, requirements: [...(service.requirements || []), ''] })}
@@ -471,16 +480,16 @@ export function ServiceDetails() {
                 </div>
                 <div className="space-y-3">
                   {(service.requirements || []).length === 0 ? (
-                    <p className="text-xs text-slate-400 font-medium italic px-2">{t('sd_no_req')}</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 font-medium italic px-2">{t('sd_no_req')}</p>
                   ) : (
                     (service.requirements || []).map((req, index) => (
                       <div key={index} className="flex gap-3 items-start">
-                        <span className="w-8 h-10 flex border-none items-center justify-center bg-slate-50 rounded-xl text-xs font-black text-slate-400 shrink-0 select-none">
+                        <span className="w-8 h-10 flex border-none items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl text-xs font-black text-slate-400 dark:text-slate-500 shrink-0 select-none">
                           {index + 1}
                         </span>
                         <input
                           type="text"
-                          className="flex-1 bg-slate-50/50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white transition-all text-slate-700"
+                          className="flex-1 bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white dark:focus:bg-slate-950 transition-all text-slate-700 dark:text-slate-200"
                           value={req}
                           placeholder={t('sd_req_ph')}
                           onChange={e => {
@@ -496,7 +505,7 @@ export function ServiceDetails() {
                             newReqs.splice(index, 1);
                             setService({ ...service, requirements: newReqs });
                           }}
-                          className="w-10 h-10 border-none flex items-center justify-center bg-red-50 text-red-400 hover:bg-red-500 hover:text-white rounded-xl transition-all shrink-0"
+                          className="w-10 h-10 border-none flex items-center justify-center bg-red-50 dark:bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white rounded-xl transition-all shrink-0"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -507,7 +516,7 @@ export function ServiceDetails() {
               </div>
 
               {/* Requirements (Amharic) */}
-              <div className="pt-6 border-t border-slate-100">
+              <div className="pt-6 border-t border-slate-100 dark:border-slate-800/60">
                 <div className="flex justify-between items-center mb-4">
                   <label className="block text-[10px] font-black text-brand uppercase tracking-[0.2em] ml-1">{t('sd_req_am')}</label>
                   <button
@@ -520,16 +529,16 @@ export function ServiceDetails() {
                 </div>
                 <div className="space-y-3">
                   {(service.requirementsAm || []).length === 0 ? (
-                    <p className="text-xs text-slate-400 font-medium italic px-2">{t('sd_no_req')}</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 font-medium italic px-2">{t('sd_no_req')}</p>
                   ) : (
                     (service.requirementsAm || []).map((req, index) => (
                       <div key={index} className="flex gap-3 items-start">
-                        <span className="w-8 h-10 border-none flex items-center justify-center bg-slate-50 rounded-xl text-xs font-black text-slate-400 shrink-0 select-none">
+                        <span className="w-8 h-10 border-none flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl text-xs font-black text-slate-400 dark:text-slate-500 shrink-0 select-none">
                           {index + 1}
                         </span>
                         <input
                           type="text"
-                          className="flex-1 bg-slate-50/50 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white transition-all text-slate-700 font-am"
+                          className="flex-1 bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white dark:focus:bg-slate-950 transition-all text-slate-700 dark:text-slate-200 font-am"
                           value={req}
                           placeholder={t('sd_req_ph')}
                           onChange={e => {
@@ -545,7 +554,7 @@ export function ServiceDetails() {
                             newReqs.splice(index, 1);
                             setService({ ...service, requirementsAm: newReqs });
                           }}
-                          className="w-10 h-10 border-none flex items-center justify-center bg-red-50 text-red-400 hover:bg-red-500 hover:text-white rounded-xl transition-all shrink-0"
+                          className="w-10 h-10 border-none flex items-center justify-center bg-red-50 dark:bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white rounded-xl transition-all shrink-0"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -556,12 +565,12 @@ export function ServiceDetails() {
               </div>
 
               {/* Additional Details */}
-              <div className="pt-6 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="pt-6 border-t border-slate-100 dark:border-slate-800/60 grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_additional_en')}</label>
+                  <label className="block text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_additional_en')}</label>
                   <textarea
                     rows="3"
-                    className="w-full bg-slate-50/50 border-none rounded-3xl px-8 py-6 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white transition-all text-slate-700"
+                    className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-3xl px-8 py-6 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white dark:focus:bg-slate-950 transition-all text-slate-700 dark:text-slate-200"
                     value={service.additionalDetails || ''}
                     placeholder="Formatting guidelines, extra instructions..."
                     onChange={e => setService({ ...service, additionalDetails: e.target.value })}
@@ -571,7 +580,7 @@ export function ServiceDetails() {
                   <label className="block text-[10px] font-black text-brand uppercase tracking-[0.2em] mb-3 ml-1">{t('sd_additional_am')}</label>
                   <textarea
                     rows="3"
-                    className="w-full bg-slate-50/50 border-none rounded-3xl px-8 py-6 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white transition-all text-slate-700 font-am"
+                    className="w-full bg-slate-50/50 dark:bg-slate-800/40 border-none rounded-3xl px-8 py-6 text-sm font-bold focus:ring-2 focus:ring-[#00B4D8]/20 focus:bg-white dark:focus:bg-slate-950 transition-all text-slate-700 dark:text-slate-200 font-am"
                     value={service.additionalDetailsAm || ''}
                     placeholder="ተጨማሪ መመሪያዎች..."
                     onChange={e => setService({ ...service, additionalDetailsAm: e.target.value })}
@@ -585,17 +594,17 @@ export function ServiceDetails() {
           {activeTab === 'media' && (
             <div className="space-y-10 animate-in fade-in duration-300">
               <div>
-                <label className="block text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-4 ml-1">
+                <label className="block text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.2em] mb-4 ml-1">
                   {t('sd_banner_photo')}
                 </label>
 
                 {/* Banner preview */}
                 {service.bannerPhoto ? (
-                  <div className="relative w-full h-52 rounded-3xl overflow-hidden mb-5 border border-slate-100 shadow-lg">
+                  <div className="relative w-full h-52 rounded-3xl overflow-hidden mb-5 border border-slate-100 dark:border-slate-800 shadow-lg">
                     <img src={service.bannerPhoto} alt="Banner" className="w-full h-full object-cover" />
                   </div>
                 ) : (
-                  <div className="w-full h-52 rounded-3xl border-2 border-dashed border-slate-200 flex items-center justify-center mb-5 text-slate-300">
+                  <div className="w-full h-52 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800 flex items-center justify-center mb-5 text-slate-300 dark:text-slate-600">
                     <div className="text-center">
                       <ImageIcon className="w-10 h-10 mx-auto mb-2" />
                       <p className="text-xs font-black uppercase tracking-widest">{t('sd_no_banner')}</p>
@@ -624,7 +633,7 @@ export function ServiceDetails() {
                         setService(prev => ({ ...prev, bannerPhoto: null, bannerPhotoPublicId: null }));
                         setBannerPhotoFile(null);
                       }}
-                      className="p-4 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-2xl transition-all shadow-lg shadow-red-500/20"
+                      className="p-4 bg-red-50 dark:bg-red-500/10 text-red-500 dark:text-red-400 hover:bg-red-500 hover:text-white rounded-2xl transition-all shadow-lg shadow-red-500/20"
                       title={t('btn_delete')}
                     >
                       <Trash2 className="w-5 h-5" />

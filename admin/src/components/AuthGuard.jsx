@@ -60,10 +60,10 @@ export function AuthGuard() {
 
   if (!isLoaded || checking) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-slate-50">
+      <div className="flex h-screen w-full items-center justify-center bg-slate-50 dark:bg-[#080d14] transition-colors duration-300">
         <div className="flex flex-col items-center">
-          <div className="w-10 h-10 border-4 border-indigo-100 border-t-indigo-500 rounded-full animate-spin mb-4" />
-          <p className="text-xs font-black uppercase tracking-widest text-slate-400">Verifying Credentials...</p>
+          <div className="w-10 h-10 border-4 border-[#00B4D8]/20 dark:border-[#00B4D8]/10 border-t-[#00B4D8] dark:border-t-[#00B4D8] rounded-full animate-spin mb-4" />
+          <p className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Verifying Credentials...</p>
         </div>
       </div>
     );

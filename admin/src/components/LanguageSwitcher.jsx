@@ -8,7 +8,7 @@ export function LanguageSwitcher() {
   return (
     <button
       onClick={toggleLanguage}
-      className="flex items-center gap-2 p-2.5 rounded-xl text-slate-400 hover:text-[#00B4D8] hover:bg-[#90E0EF]/10 transition-all"
+      className="flex items-center gap-2 p-2.5 rounded-xl text-slate-400 dark:text-slate-500 hover:text-[#00B4D8] dark:hover:text-[#00B4D8] hover:bg-[#90E0EF]/10 dark:hover:bg-[#00B4D8]/10 transition-all"
       title={language === 'en' ? t('lang_switch_to_am') : t('lang_switch_to_en')}
     >
       <Globe className="w-5 h-5" />

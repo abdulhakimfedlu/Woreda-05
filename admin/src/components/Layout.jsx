@@ -196,14 +196,18 @@ export function Layout() {
             {/* Dark Mode Toggle */}
             <button
               onClick={toggleTheme}
-              className="w-9 h-9 rounded-xl flex items-center justify-center bg-black/5 dark:bg-white/8 border border-slate-200/50 dark:border-white/10 hover:border-brand/50 hover:bg-brand/10 dark:hover:bg-brand/20 transition-all group cursor-pointer"
+              className={`relative flex items-center w-[60px] h-8 rounded-full p-1 transition-colors duration-300 focus:outline-none shrink-0 ${isDark ? 'bg-slate-800 border border-slate-700' : 'bg-[#E2E8F0] border border-[#CBD5E1]'}`}
               aria-label="Toggle dark mode"
             >
-              {isDark ? (
-                <Sun className="w-4 h-4 text-brand group-hover:rotate-45 transition-transform duration-300" />
-              ) : (
-                <Moon className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-brand transition-colors duration-200" />
-              )}
+              <div 
+                className={`absolute left-1 w-6 h-6 rounded-full bg-white flex items-center justify-center transform transition-transform duration-500 shadow-md ${isDark ? 'translate-x-[28px] bg-slate-900 shadow-black/50' : 'translate-x-0 shadow-slate-400/30'}`}
+              >
+                {isDark ? (
+                  <Moon className="w-3.5 h-3.5 text-brand" />
+                ) : (
+                  <Sun className="w-3.5 h-3.5 text-amber-500" />
+                )}
+              </div>
             </button>
 
             <div className="hidden sm:flex items-center gap-3 pl-6 border-l border-slate-100 dark:border-slate-800/40">
