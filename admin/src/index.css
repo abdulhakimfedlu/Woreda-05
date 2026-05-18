@@ -4,19 +4,30 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --toast-bg: #ffffff;
+  --toast-fg: #1e293b;
+}
+
+.dark {
+  --toast-bg: #111827;
+  --toast-fg: #f3f4f6;
+}
+
 @layer base {
   body {
-    @apply antialiased bg-white text-black font-sans;
+    @apply antialiased bg-[#F8FAFC] text-slate-800 font-sans dark:bg-[#080d14] dark:text-slate-100;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
 }
 
 @layer utilities {
   .glass-panel {
-    @apply bg-white/80 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300;
+    @apply bg-white/80 dark:bg-[#111827]/80 backdrop-blur-xl border border-white/10 dark:border-white/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300;
   }
 
   .glass-card-premium {
-    @apply bg-white/90 backdrop-blur-2xl border border-white shadow-[0_15px_60px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_60px_-15px_rgba(0,180,216,0.2)] transition-all duration-500 hover:-translate-y-1;
+    @apply bg-white/90 dark:bg-[#111827]/90 backdrop-blur-2xl border border-white/10 dark:border-white/5 shadow-[0_15px_60px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_60px_-15px_rgba(0,180,216,0.2)] transition-all duration-500 hover:-translate-y-1;
   }
 
   .text-gradient {

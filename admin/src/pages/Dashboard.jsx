@@ -62,8 +62,8 @@ export function Dashboard() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-brand/20 border-t-brand rounded-full animate-spin"></div>
-          <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">{t('dash_loading')}</p>
+          <div className="w-12 h-12 border-4 border-brand/20 dark:border-brand/10 border-t-brand dark:border-t-brand rounded-full animate-spin"></div>
+          <p className="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest text-xs">{t('dash_loading')}</p>
         </div>
       </div>
     );
@@ -73,11 +73,11 @@ export function Dashboard() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">{t('dash_title')} <span className="text-brand">{t('dash_title_highlight')}</span></h2>
-          <p className="mt-1.5 text-slate-500 font-medium">{t('dash_subtitle')}</p>
+          <h2 className="text-3xl font-black text-slate-800 dark:text-slate-100 tracking-tighter">{t('dash_title')} <span className="text-brand">{t('dash_title_highlight')}</span></h2>
+          <p className="mt-1.5 text-slate-500 dark:text-slate-400 font-medium">{t('dash_subtitle')}</p>
         </div>
         <div className="flex items-center gap-3">
-           <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100 text-xs font-black uppercase tracking-widest">
+           <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl border border-emerald-100 dark:border-emerald-500/20 text-xs font-black uppercase tracking-widest">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -89,14 +89,14 @@ export function Dashboard() {
 
       {/* Unread Messages Banner */}
       {data.unreadCount > 0 && (
-        <div className="bg-red-50 border-2 border-red-500/20 rounded-3xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-red-500/5">
+        <div className="bg-red-50 dark:bg-red-500/10 border-2 border-red-500/20 dark:border-red-500/20 rounded-3xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-red-500/5">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/20 shrink-0">
                <MessageSquare className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="text-lg font-black text-red-600 tracking-tight">{data.unreadCount} {t('dash_unread_messages') || 'Unread Messages'}</h4>
-              <p className="text-[10px] text-red-500/80 font-bold uppercase tracking-[0.2em]">{t('dash_unread_desc') || 'You have new messages to review'}</p>
+              <h4 className="text-lg font-black text-red-600 dark:text-red-400 tracking-tight">{data.unreadCount} {t('dash_unread_messages') || 'Unread Messages'}</h4>
+              <p className="text-[10px] text-red-500/80 dark:text-red-400/80 font-bold uppercase tracking-[0.2em]">{t('dash_unread_desc') || 'You have new messages to review'}</p>
             </div>
           </div>
           <Link to="/messages" className="w-full sm:w-auto px-8 py-3 bg-red-500 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl shadow-lg shadow-red-500/20 hover:bg-red-600 hover:-translate-y-0.5 transition-all text-center">
@@ -108,19 +108,19 @@ export function Dashboard() {
       {/* Primary Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
-          <div key={stat.name} className="glass-card-premium rounded-3xl p-6 relative overflow-hidden group border-none shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)]" style={{ animationDelay: `${index * 100}ms` }}>
-            <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-slate-50 to-white opacity-20 rotate-12 group-hover:scale-110 transition-transform duration-500"></div>
+          <div key={stat.name} className="glass-card-premium rounded-3xl p-6 relative overflow-hidden group border-none shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)] dark:shadow-none" style={{ animationDelay: `${index * 100}ms` }}>
+            <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-slate-50 to-white dark:from-white/5 dark:to-transparent opacity-20 rotate-12 group-hover:scale-110 transition-transform duration-500"></div>
             
             <div className="flex items-center justify-between mb-5">
               <div className={`p-3.5 rounded-2xl bg-gradient-to-br ${stat.gradient} text-white shadow-lg shadow-brand/10 group-hover:scale-110 transition-transform duration-300`}>
                 <stat.icon size={22} strokeWidth={2.5} />
               </div>
-              <ArrowUpRight className="w-5 h-5 text-slate-200 group-hover:text-brand transition-colors" />
+              <ArrowUpRight className="w-5 h-5 text-slate-200 dark:text-slate-700 group-hover:text-brand transition-colors" />
             </div>
             
             <div>
-               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{stat.name}</p>
-               <h3 className="text-3xl font-black text-slate-800 tracking-tight">{stat.value}</h3>
+               <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-1">{stat.name}</p>
+               <h3 className="text-3xl font-black text-slate-800 dark:text-slate-100 tracking-tight">{stat.value}</h3>
             </div>
           </div>
         ))}
@@ -131,97 +131,97 @@ export function Dashboard() {
         <div className="lg:col-span-2 space-y-8">
           
           {/* Recent Services */}
-          <div className="glass-panel rounded-[32px] p-8 border-none shadow-[0_20px_60px_-20px_rgba(0,0,0,0.03)]">
+          <div className="glass-panel rounded-[32px] p-8 border-none shadow-[0_20px_60px_-20px_rgba(0,0,0,0.03)] dark:shadow-none">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h3 className="text-lg font-black text-slate-800 tracking-tight">{t('dash_recent_services')}</h3>
-                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">{t('dash_latest_items')}</p>
+                <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 tracking-tight">{t('dash_recent_services')}</h3>
+                <p className="text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest">{t('dash_latest_items')}</p>
               </div>
-              <Link to="/services" className="px-4 py-2 bg-slate-50 text-slate-500 hover:text-brand text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">
+              <Link to="/services" className="px-4 py-2 bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 hover:text-brand dark:hover:text-brand text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">
                 {t('dash_service_list')}
               </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {data.services.slice(0, 3).map((service, i) => (
-                <div key={service.id} className="p-5 rounded-2xl bg-slate-50/50 border border-slate-100 hover:border-brand/20 hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 transition-all group">
-                   <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-brand mb-4 group-hover:scale-110 transition-transform">
+                <div key={service.id} className="p-5 rounded-2xl bg-slate-50/50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 hover:border-brand/20 dark:hover:border-brand/30 hover:bg-white dark:hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-none transition-all group">
+                   <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 shadow-sm dark:shadow-none flex items-center justify-center text-brand mb-4 group-hover:scale-110 transition-transform">
                      <Server size={18} />
                    </div>
-                   <h4 className="text-sm font-black text-slate-800 mb-1 line-clamp-1">{service.title}</h4>
-                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{service.category}</p>
+                   <h4 className="text-sm font-black text-slate-800 dark:text-slate-200 mb-1 line-clamp-1">{service.title}</h4>
+                   <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tight">{service.category}</p>
                 </div>
               ))}
-              {data.services.length === 0 && <p className="col-span-3 text-center py-6 text-slate-300 font-bold uppercase tracking-widest text-xs">{t('dash_no_services')}</p>}
+              {data.services.length === 0 && <p className="col-span-3 text-center py-6 text-slate-300 dark:text-slate-600 font-bold uppercase tracking-widest text-xs">{t('dash_no_services')}</p>}
             </div>
           </div>
 
           {/* Top Categories */}
-          <div className="glass-panel rounded-[32px] p-8 border-none shadow-[0_20px_60px_-20px_rgba(0,0,0,0.03)]">
+          <div className="glass-panel rounded-[32px] p-8 border-none shadow-[0_20px_60px_-20px_rgba(0,0,0,0.03)] dark:shadow-none">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h3 className="text-lg font-black text-slate-800 tracking-tight">{t('dash_categories_title')}</h3>
-                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">{t('dash_organized_groups')}</p>
+                <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 tracking-tight">{t('dash_categories_title')}</h3>
+                <p className="text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest">{t('dash_organized_groups')}</p>
               </div>
-              <Link to="/services" className="px-4 py-2 bg-slate-50 text-slate-500 hover:text-brand text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">
+              <Link to="/services" className="px-4 py-2 bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 hover:text-brand dark:hover:text-brand text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">
                 {t('dash_manage')}
               </Link>
             </div>
             <div className="space-y-3">
               {data.categories.slice(0, 3).map((cat, i) => (
-                <div key={cat.id} className="flex items-center justify-between p-4 rounded-2xl bg-white border border-slate-50 hover:border-emerald-100 hover:shadow-lg hover:shadow-emerald-500/5 transition-all group">
+                <div key={cat.id} className="flex items-center justify-between p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-50 dark:border-slate-800/40 hover:border-emerald-100 dark:hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/5 dark:hover:shadow-none transition-all group">
                    <div className="flex items-center gap-4">
-                     <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                     <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform">
                        <FolderTree size={18} />
                      </div>
                      <div>
-                       <h4 className="text-sm font-black text-slate-800">{cat.name}</h4>
+                       <h4 className="text-sm font-black text-slate-800 dark:text-slate-200">{cat.name}</h4>
                        <p className="text-[10px] font-bold text-brand uppercase tracking-widest">{cat.nameAm || t('dash_category_fallback')}</p>
                      </div>
                    </div>
-                   <div className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-lg">
+                   <div className="px-3 py-1 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-black rounded-lg">
                       {t('dash_active')}
                    </div>
                 </div>
               ))}
-               {data.categories.length === 0 && <p className="text-center py-6 text-slate-300 font-bold uppercase tracking-widest text-xs">{t('dash_no_categories')}</p>}
+               {data.categories.length === 0 && <p className="text-center py-6 text-slate-300 dark:text-slate-600 font-bold uppercase tracking-widest text-xs">{t('dash_no_categories')}</p>}
             </div>
           </div>
         </div>
         
         {/* System Monitor */}
         <div className="lg:col-span-1">
-          <div className="glass-panel rounded-[32px] p-8 border-none shadow-[0_20px_60px_-20px_rgba(0,0,0,0.03)] h-full flex flex-col">
-            <h3 className="text-lg font-black text-slate-800 tracking-tight mb-8">{t('dash_system_health')}</h3>
+          <div className="glass-panel rounded-[32px] p-8 border-none shadow-[0_20px_60px_-20px_rgba(0,0,0,0.03)] dark:shadow-none h-full flex flex-col">
+            <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 tracking-tight mb-8">{t('dash_system_health')}</h3>
             
             <div className="flex-1 flex flex-col justify-center items-center text-center">
               <div className="relative mb-8">
-                <div className={`w-32 h-32 rounded-full border-[6px] ${status === 'healthy' ? 'border-emerald-50' : 'border-red-50'} flex items-center justify-center`}>
+                <div className={`w-32 h-32 rounded-full border-[6px] ${status === 'healthy' ? 'border-emerald-50 dark:border-emerald-500/10' : 'border-red-50 dark:border-red-500/10'} flex items-center justify-center`}>
                   <div className={`w-24 h-24 rounded-full bg-gradient-to-br ${status === 'healthy' ? 'from-emerald-400 to-emerald-600' : 'from-red-400 to-red-600'} flex items-center justify-center text-white shadow-xl ${status === 'healthy' ? 'shadow-emerald-500/30' : 'shadow-red-500/30'}`}>
                     {status === 'healthy' ? <CheckCircle2 size={32} strokeWidth={2.5} /> : <AlertCircle size={32} strokeWidth={2.5} />}
                   </div>
                 </div>
                 {status === 'healthy' && (
                   <>
-                    <div className="absolute top-0 right-0 w-5 h-5 bg-emerald-400 border-4 border-white rounded-full animate-ping"></div>
-                    <div className="absolute top-0 right-0 w-5 h-5 bg-emerald-500 border-4 border-white rounded-full shadow-sm"></div>
+                    <div className="absolute top-0 right-0 w-5 h-5 bg-emerald-400 border-4 border-white dark:border-[#111827] rounded-full animate-ping"></div>
+                    <div className="absolute top-0 right-0 w-5 h-5 bg-emerald-500 border-4 border-white dark:border-[#111827] rounded-full shadow-sm"></div>
                   </>
                 )}
               </div>
               
               <div className="space-y-4 mb-8">
-                <h4 className={`text-xl font-black tracking-tight ${status === 'healthy' ? 'text-emerald-700' : 'text-red-700'}`}>
+                <h4 className={`text-xl font-black tracking-tight ${status === 'healthy' ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-700 dark:text-red-400'}`}>
                   {status === 'healthy' ? t('dash_all_operational') : t('dash_connection_warning')}
                 </h4>
-                <p className="text-sm text-slate-500 font-medium leading-relaxed px-4">
+                <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed px-4">
                   {t('dash_system_description')}
                 </p>
               </div>
 
               <div className="w-full space-y-3">
-                <button className="w-full py-4 rounded-2xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black transition-all shadow-xl shadow-slate-900/20">
+                <button className="w-full py-4 rounded-2xl bg-slate-900 dark:bg-slate-800 text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black dark:hover:bg-slate-700 transition-all shadow-xl shadow-slate-900/20 dark:shadow-none">
                   {t('dash_view_logs')}
                 </button>
-                <div className="flex items-center justify-center gap-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                <div className="flex items-center justify-center gap-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                   <span className="flex items-center gap-1.5"><Activity className="w-3 h-3" /> {t('dash_latency')}: 24ms</span>
                   <span className="flex items-center gap-1.5"><Activity className="w-3 h-3" /> {t('dash_uptime')}: 99.9%</span>
                 </div>
@@ -232,14 +232,14 @@ export function Dashboard() {
       </div>
 
       {/* Announcements Shortcut */}
-      <div className="glass-panel rounded-3xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-none bg-gradient-to-r from-brand/5 to-transparent">
+      <div className="glass-panel rounded-3xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-none bg-gradient-to-r from-brand/5 to-transparent dark:from-brand/10 dark:to-transparent">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-brand/10 text-brand flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-brand/10 dark:bg-brand/20 text-brand flex items-center justify-center shrink-0">
              <Megaphone size={20} />
           </div>
           <div>
-            <h4 className="font-black text-slate-800">{t('dash_manage_announcements')}</h4>
-            <p className="text-xs text-slate-500 font-medium">{t('dash_manage_announcements_desc')}</p>
+            <h4 className="font-black text-slate-800 dark:text-slate-100">{t('dash_manage_announcements')}</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{t('dash_manage_announcements_desc')}</p>
           </div>
         </div>
         <Link to="/announcements" className="w-full sm:w-auto px-8 py-3 bg-brand text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl shadow-lg shadow-brand/20 hover:bg-brand-dark transition-all text-center">

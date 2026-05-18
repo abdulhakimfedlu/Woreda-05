@@ -7,9 +7,32 @@ import { Globe, ChevronDown, Sun, Moon } from 'lucide-react';
 const Navbar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLangOpen, setIsLangOpen] = React.useState(false);
+  const [isVisible, setIsVisible] = React.useState(true);
   const location = useLocation();
   const { language, setLang, t } = useLanguage();
   const { isDark, toggleTheme } = useTheme();
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Keep it visible if mobile menu is open
+      if (isOpen) {
+        setIsVisible(true);
+        return;
+      }
+
+      // Only show the navbar when in the hero section (< 450px from the top)
+      if (currentScrollY < 450) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isOpen]);
 
   const isActive = (path) => {
     if (path === '/') return location.pathname === '/';
@@ -26,33 +49,36 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/85 dark:bg-[#080d14]/90 backdrop-blur-xl border-b border-black/5 dark:border-white/8 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div className="flex justify-between items-center h-20">
+    <div className={`fixed top-0 left-0 right-0 z-50 px-4 pt-3 transition-transform duration-300 ease-in-out ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
+      <div className="navbar-aqua-wrapper max-w-7xl mx-auto">
+        <div className="navbar-aqua-inner">
+      <nav className="bg-white/90 dark:bg-[#080d14]/95 backdrop-blur-xl transition-colors duration-300">
+        <div className="px-5 sm:px-7">
+          <div className="flex justify-between items-center h-16">
 
           {/* Brand */}
-          <Link to="/" className="flex items-center gap-4 cursor-pointer group">
-            <div className="w-11 h-11 bg-black dark:bg-brand flex items-center justify-center rounded-2xl group-hover:bg-brand dark:group-hover:bg-brand/80 transition-all duration-500 subtle-glow">
-              <span className="text-white font-black text-xl tracking-tighter">W5</span>
+          <Link to="/" className="flex items-center gap-3 cursor-pointer group">
+            <div className="w-9 h-9 bg-black dark:bg-brand flex items-center justify-center rounded-2xl group-hover:bg-brand dark:group-hover:bg-brand/80 transition-all duration-500 subtle-glow">
+              <span className="text-white font-black text-base tracking-tighter">W5</span>
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-lg font-black text-black dark:text-white tracking-tight leading-none uppercase">Woreda 05</span>
-              <span className="text-[9px] font-black text-brand uppercase tracking-[0.3em] mt-1 opacity-70">YEKA SUBCITY</span>
+              <span className="text-base font-black text-black dark:text-white tracking-tight leading-none uppercase">Woreda 05</span>
+              <span className="text-[8px] font-black text-brand uppercase tracking-[0.3em] mt-0.5 opacity-70">YEKA SUBCITY</span>
             </div>
           </Link>
 
           {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-14">
+          <div className="hidden md:flex items-center gap-10">
             {links.map((link) => {
               const active = isActive(link.path);
               return (
                 <Link key={link.name} to={link.path} className="group relative flex flex-col items-center py-2">
-                  <span className={`text-[13px] font-black uppercase tracking-[0.1em] transition-colors duration-300 ${
+                  <span className={`text-[12px] font-black uppercase tracking-[0.1em] transition-colors duration-300 ${
                     active ? 'text-brand' : 'text-black/50 dark:text-white/50 group-hover:text-brand'
                   }`}>
                     {link.name}
                   </span>
-                  <span className={`absolute bottom-0 left-0 h-1 bg-brand rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(0,180,216,0.5)] ${active ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+                  <span className={`absolute bottom-0 left-0 h-0.5 bg-brand rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(0,180,216,0.6)] ${active ? 'w-full' : 'w-0 group-hover:w-full'}`} />
                 </Link>
               );
             })}
@@ -65,10 +91,10 @@ const Navbar = () => {
             <div className="relative">
               <button
                 onClick={() => setIsLangOpen(!isLangOpen)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-black/5 dark:bg-white/8 border border-black/8 dark:border-white/10 hover:border-brand/40 transition-all group"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/5 dark:bg-white/8 border border-black/8 dark:border-white/10 hover:border-brand/40 transition-all group"
               >
-                <Globe className="w-4 h-4 text-black/40 dark:text-white/40 group-hover:text-brand transition-colors" />
-                <span className="text-[11px] font-black uppercase tracking-widest text-black/60 dark:text-white/60">
+                <Globe className="w-3.5 h-3.5 text-black/40 dark:text-white/40 group-hover:text-brand transition-colors" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-black/60 dark:text-white/60">
                   {language === 'en' ? 'English' : 'አማርኛ'}
                 </span>
                 <ChevronDown className={`w-3 h-3 text-black/40 dark:text-white/40 transition-transform duration-300 ${isLangOpen ? 'rotate-180' : ''}`} />
@@ -99,7 +125,7 @@ const Navbar = () => {
             {/* Dark Mode Toggle */}
             <button
               onClick={toggleTheme}
-              className="w-10 h-10 rounded-xl flex items-center justify-center bg-black/5 dark:bg-white/8 border border-black/8 dark:border-white/10 hover:border-brand/50 hover:bg-brand/10 dark:hover:bg-brand/20 transition-all group"
+              className="w-9 h-9 rounded-xl flex items-center justify-center bg-black/5 dark:bg-white/8 border border-black/8 dark:border-white/10 hover:border-brand/50 hover:bg-brand/10 dark:hover:bg-brand/20 transition-all group"
               aria-label="Toggle dark mode"
             >
               {isDark
@@ -117,7 +143,7 @@ const Navbar = () => {
             {/* Mobile Dark Toggle */}
             <button
               onClick={toggleTheme}
-              className="w-9 h-9 rounded-xl flex items-center justify-center bg-black/5 dark:bg-white/8 border border-black/8 dark:border-white/10"
+              className="w-8 h-8 rounded-xl flex items-center justify-center bg-black/5 dark:bg-white/8 border border-black/8 dark:border-white/10"
               aria-label="Toggle dark mode"
             >
               {isDark
@@ -136,17 +162,20 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+    </nav>
+        </div>
+      </div>
 
-      {/* Mobile Menu */}
-      <div className={`md:hidden overflow-y-auto transition-all duration-500 bg-white dark:bg-[#0d1420] ${isOpen ? 'max-h-[calc(100vh-80px)] border-b border-black/5 dark:border-white/8 pb-12' : 'max-h-0'}`}>
-        <div className="px-10 pt-12 flex flex-col gap-8 items-center">
+      {/* Mobile Menu Dropdown - placed outside the aqua wrapper so it doesn't stretch the border vertically */}
+      <div className={`md:hidden overflow-hidden transition-all duration-500 max-w-7xl mx-auto mt-2 rounded-3xl border border-black/5 dark:border-white/8 bg-white/95 dark:bg-[#080d14]/95 backdrop-blur-2xl ${isOpen ? 'max-h-[calc(100vh-100px)] opacity-100 py-6 px-8' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+        <div className="flex flex-col gap-6 items-center">
           {links.map((link) => {
             const active = isActive(link.path);
             return (
               <Link
                 key={link.name}
                 to={link.path}
-                className={`text-3xl font-black transition-colors ${active ? 'text-brand' : 'text-black dark:text-white hover:text-brand'}`}
+                className={`text-2xl font-black transition-colors ${active ? 'text-brand' : 'text-black dark:text-white hover:text-brand'}`}
                 onClick={() => setIsOpen(false)}
               >
                 {link.name}
@@ -154,10 +183,10 @@ const Navbar = () => {
             );
           })}
 
-          <div className="w-full h-px bg-black/8 dark:bg-white/8 my-4" />
+          <div className="w-full h-px bg-black/8 dark:bg-white/8 my-2" />
 
-          <div className="flex flex-col gap-4 w-full">
-            <p className="text-[10px] font-black text-black/30 dark:text-white/30 uppercase tracking-[0.3em] text-center mb-2">
+          <div className="flex flex-col gap-3 w-full">
+            <p className="text-[10px] font-black text-black/30 dark:text-white/30 uppercase tracking-[0.3em] text-center mb-1">
               {language === 'am' ? 'ቋንቋ ይምረጡ' : 'Select Language'}
             </p>
             <div className="flex gap-2">
@@ -165,7 +194,7 @@ const Navbar = () => {
                 <button
                   key={lang}
                   onClick={() => { setLang(lang); setIsOpen(false); }}
-                  className={`flex-1 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest border transition-all ${
+                  className={`flex-1 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest border transition-all ${
                     language === lang
                       ? 'bg-brand text-white border-brand'
                       : 'bg-black/5 dark:bg-white/5 text-black/40 dark:text-white/40 border-black/8 dark:border-white/10'
@@ -178,7 +207,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-    </nav>
+    </div>
   );
 };
 

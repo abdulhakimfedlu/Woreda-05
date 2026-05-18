@@ -62,15 +62,15 @@
   }
 
   .glass-card-premium {
-    @apply bg-white/70 backdrop-blur-2xl border border-white shadow-[0_15px_60px_-15px_rgba(0, 0, 0, 0.05)] hover:shadow-brand/20 transition-all duration-500 hover:-translate-y-2;
+    @apply bg-white/70 backdrop-blur-2xl border border-white shadow-[0_15px_60px_-15px_rgba(0,0,0,0.05)] hover:shadow-brand/20 transition-all duration-500 hover:-translate-y-2;
   }
 
   html.dark .glass-card-premium {
-    @apply bg-white/5 border-white/10 shadow-[0_15px_60px_-15px_rgba(0, 0, 0, 0.5)];
+    @apply bg-white/5 border-white/10 shadow-[0_15px_60px_-15px_rgba(0,0,0,0.5)];
   }
 
   .subtle-glow {
-    @apply shadow-[0_0_20px_rgba(0, 180, 216, 0.15)];
+    @apply shadow-[0_0_20px_rgba(0,180,216,0.15)];
   }
 
   .animate-float-calm {
@@ -88,4 +88,47 @@
       transform: translateY(-15px);
     }
   }
+}
+
+/* ─── Navbar Aqua Animated Border ────────────────────────────── */
+@property --aqua-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes aqua-spin {
+  0%   { --aqua-angle: 0deg; }
+  100% { --aqua-angle: 360deg; }
+}
+
+.navbar-aqua-wrapper {
+  position: relative;
+  border-radius: 9999px;
+  padding: 1.5px;
+  animation: aqua-spin 4s linear infinite;
+  background: conic-gradient(
+    from var(--aqua-angle),
+    transparent 0deg,
+    transparent 50deg,
+    #00e5ff  80deg,
+    #00fff7 108deg,
+    #00b4d8 135deg,
+    #00e5ff 162deg,
+    transparent 190deg,
+    transparent 240deg,
+    #00e5ff 265deg,
+    #00fff7 290deg,
+    #00b4d8 315deg,
+    #00e5ff 340deg,
+    transparent 360deg
+  );
+  filter: drop-shadow(0 0 7px rgba(0, 229, 255, 0.6));
+}
+
+.navbar-aqua-inner {
+  border-radius: calc(9999px - 1.5px);
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
 }

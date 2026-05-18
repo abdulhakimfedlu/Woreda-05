@@ -13,15 +13,19 @@ import {
   Menu,
   X,
   Plus,
-  FileText
+  FileText,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { Shield } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { useClerk } from '@clerk/clerk-react';
+import { useTheme } from '../context/ThemeContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
 export function Layout() {
+  const { isDark, toggleTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const { t } = useLanguage();
@@ -75,21 +79,21 @@ export function Layout() {
   }, [admin, authFetch]);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#080d14] text-slate-800 dark:text-slate-100 transition-colors duration-300">
       {/* Sidebar - Desktop */}
-      <aside className="fixed inset-y-0 left-0 hidden w-72 bg-white border-r border-slate-100 lg:flex flex-col z-50">
+      <aside className="fixed inset-y-0 left-0 hidden w-72 bg-white dark:bg-[#0f172a] border-r border-slate-100 dark:border-slate-800/40 lg:flex flex-col z-50 transition-colors duration-300">
         <div className="p-8">
           <div className="flex items-center gap-3.5 mb-10 group cursor-pointer">
             <div className="w-11 h-11 bg-gradient-to-br from-[#00B4D8] to-[#0077B6] rounded-2xl flex items-center justify-center shadow-lg shadow-[#00B4D8]/20 group-hover:scale-110 transition-transform duration-300">
               <Server className="text-white w-6 h-6" strokeWidth={2.5} />
             </div>
             <div>
-              <h1 className="text-xl font-black text-slate-800 tracking-tighter leading-none">WOREDA <span className="text-[#00B4D8]">05</span></h1>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1.5">{t('nav_management')}</p>
+              <h1 className="text-xl font-black text-slate-800 dark:text-white tracking-tighter leading-none">WOREDA <span className="text-[#00B4D8]">05</span></h1>
+              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1.5">{t('nav_management')}</p>
             </div>
           </div>
 
-          <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-6 ml-1">{t('nav_main_menu')}</p>
+          <p className="text-[10px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-[0.2em] mb-6 ml-1">{t('nav_main_menu')}</p>
           <nav className="space-y-1.5">
             {navigation.map((item) => (
               <NavLink
@@ -97,8 +101,8 @@ export function Layout() {
                 to={item.href}
                 className={({ isActive }) =>
                   `flex items-center gap-4 px-5 py-4 rounded-2xl text-sm font-bold tracking-tight transition-all duration-300 group ${isActive
-                    ? 'bg-[#E0F2FE] text-[#0077B6] shadow-sm shadow-[#0077B6]/5'
-                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
+                    ? 'bg-[#E0F2FE] dark:bg-brand/10 text-[#0077B6] dark:text-[#00B4D8] shadow-sm shadow-[#0077B6]/5'
+                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/40 hover:text-slate-800 dark:hover:text-white'
                   }`
                 }
               >
@@ -113,22 +117,22 @@ export function Layout() {
           </nav>
         </div>
 
-        <div className="mt-auto p-4 border-t border-slate-50 space-y-3">
-          <div className="p-5 rounded-3xl bg-slate-50 flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center shadow-sm relative">
-              <Bell size={18} className="text-slate-400" />
+        <div className="mt-auto p-4 border-t border-slate-50 dark:border-slate-800/40 space-y-3">
+          <div className="p-5 rounded-3xl bg-slate-50 dark:bg-slate-800/20 flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 flex items-center justify-center shadow-sm relative">
+              <Bell size={18} className="text-slate-400 dark:text-slate-500" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 border-2 border-white rounded-full"></span>
+                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 border-2 border-white dark:border-slate-900 rounded-full"></span>
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-black text-slate-800 tracking-tight truncate">{admin?.username || t('nav_admin_user')}</p>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{admin?.id === 1 ? t('nav_super_admin') : 'Admin User'}</p>
+              <p className="text-xs font-black text-slate-800 dark:text-slate-200 tracking-tight truncate">{admin?.username || t('nav_admin_user')}</p>
+              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{admin?.id === 1 ? t('nav_super_admin') : 'Admin User'}</p>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center w-full gap-4 px-6 py-4 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] transition-all group"
+            className="flex items-center w-full gap-4 px-6 py-4 text-slate-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] transition-all group"
           >
             <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
             {t('nav_logout')}
@@ -137,28 +141,28 @@ export function Layout() {
       </aside>
 
       {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-slate-100 z-40 px-6 py-4 flex items-center justify-between">
+      <header className="lg:hidden fixed top-0 w-full bg-white/80 dark:bg-[#080d14]/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800/40 z-40 px-6 py-4 flex items-center justify-between transition-colors duration-300">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-brand rounded-xl flex items-center justify-center shadow-lg shadow-brand/20">
             <Server className="text-white w-5 h-5" />
           </div>
-          <h1 className="text-lg font-black text-slate-800 tracking-tighter">WOREDA <span className="text-brand">05</span></h1>
+          <h1 className="text-lg font-black text-slate-800 dark:text-white tracking-tighter">WOREDA <span className="text-brand">05</span></h1>
         </div>
-        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-slate-500 bg-slate-50 rounded-xl">
+        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 rounded-xl">
           {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </header>
 
       {/* Mobile Nav Overlay */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 bg-white z-50 p-10 flex flex-col animate-in fade-in duration-300">
+        <div className="lg:hidden fixed inset-0 bg-white dark:bg-[#080d14] z-50 p-10 flex flex-col animate-in fade-in duration-300">
           <div className="flex justify-between items-center mb-12">
             <h2 className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">{t('nav_main_menu')}</h2>
-            <button onClick={() => setIsMobileMenuOpen(false)}><X size={24} className="text-slate-300" /></button>
+            <button onClick={() => setIsMobileMenuOpen(false)}><X size={24} className="text-slate-300 dark:text-slate-500" /></button>
           </div>
           <nav className="space-y-6 flex-1">
             {navigation.map(item => (
-              <NavLink key={item.name} to={item.href} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-between text-3xl font-black text-slate-800 tracking-tighter">
+              <NavLink key={item.name} to={item.href} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-between text-3xl font-black text-slate-800 dark:text-slate-200 tracking-tighter">
                 <div className="flex items-center gap-6">
                   <item.icon size={32} className="text-brand" /> {item.name}
                 </div>
@@ -177,19 +181,33 @@ export function Layout() {
       {/* Main Content */}
       <main className="lg:pl-72 pt-20 lg:pt-0">
         {/* Top Navbar - Search & Switcher */}
-        <div className="h-20 bg-white/50 backdrop-blur-sm border-b border-slate-100 flex items-center justify-between px-6 lg:px-10 sticky top-0 z-30">
+        <div className="h-20 bg-white/50 dark:bg-[#080d14]/50 backdrop-blur-sm border-b border-slate-100 dark:border-slate-800/40 flex items-center justify-between px-6 lg:px-10 sticky top-0 z-30 transition-colors duration-300">
           <div className="relative w-full max-w-md hidden sm:block">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
             <input
               type="text"
               placeholder={t('search_quick_placeholder')}
-              className="w-full bg-white border border-slate-200 rounded-2xl pl-12 pr-4 py-3 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all"
+              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl pl-12 pr-4 py-3 text-xs font-bold text-slate-850 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all"
             />
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 sm:gap-6">
             <LanguageSwitcher />
-            <div className="hidden sm:flex items-center gap-3 pl-6 border-l border-slate-100">
-              <div className="w-10 h-10 rounded-2xl bg-brand text-white flex items-center justify-center font-black text-xs shadow-lg shadow-brand/20 ring-4 ring-brand/5 uppercase">
+
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="w-9 h-9 rounded-xl flex items-center justify-center bg-black/5 dark:bg-white/8 border border-slate-200/50 dark:border-white/10 hover:border-brand/50 hover:bg-brand/10 dark:hover:bg-brand/20 transition-all group cursor-pointer"
+              aria-label="Toggle dark mode"
+            >
+              {isDark ? (
+                <Sun className="w-4 h-4 text-brand group-hover:rotate-45 transition-transform duration-300" />
+              ) : (
+                <Moon className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-brand transition-colors duration-200" />
+              )}
+            </button>
+
+            <div className="hidden sm:flex items-center gap-3 pl-6 border-l border-slate-100 dark:border-slate-800/40">
+              <div className="w-10 h-10 rounded-2xl bg-brand text-white flex items-center justify-center font-black text-xs shadow-lg shadow-brand/20 ring-4 ring-brand/5 dark:ring-brand/10 uppercase">
                 {admin?.username ? admin.username.charAt(0) : 'A'}
               </div>
             </div>

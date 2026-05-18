@@ -35,7 +35,7 @@ function App() {
       <LanguageProvider>
         <div className="min-h-screen flex flex-col font-sans selection:bg-brand/20 bg-white dark:bg-[#080d14] overflow-x-hidden transition-colors duration-300">
           <Navbar />
-          <main className="flex-grow">
+          <main className="flex-grow pt-24">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/services" element={<ServicesPage />} />

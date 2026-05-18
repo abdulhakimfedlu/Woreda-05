@@ -13,12 +13,14 @@ import { SignUpPage } from './pages/SignUpPage';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { ManageAdmins } from './pages/ManageAdmins';
 import { LanguageProvider } from './context/LanguageContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { AuthGuard } from './components/AuthGuard';
 
 function App() {
   return (
+    <ThemeProvider>
     <LanguageProvider>
-      <Toaster position="top-center" />
+      <Toaster position="top-center" toastOptions={{ style: { background: 'var(--toast-bg, #fff)', color: 'var(--toast-fg, #1e293b)' } }} />
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -39,6 +41,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </LanguageProvider>
+    </ThemeProvider>
   )
 }
 

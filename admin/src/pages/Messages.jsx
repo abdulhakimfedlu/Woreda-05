@@ -15,15 +15,15 @@ const SideSheet = ({ m, onClose, onDelete, onMarkRead, t, categories, language }
   };
   return (
     <>
-      <div className="fixed inset-0 bg-slate-900/10 backdrop-blur-[2px] z-40 lg:pl-64" onClick={onClose} />
-      <div className="fixed right-0 top-0 h-full w-full max-w-lg bg-white shadow-2xl z-50 animate-in slide-in-from-right duration-300 border-l border-slate-100 flex flex-col">
-        <div className="flex items-center justify-between p-6 border-b border-slate-50">
+      <div className="fixed inset-0 bg-slate-900/10 dark:bg-slate-900/50 backdrop-blur-[2px] z-40 lg:pl-64" onClick={onClose} />
+      <div className="fixed right-0 top-0 h-full w-full max-w-lg bg-white dark:bg-[#0B0F19] shadow-2xl z-50 animate-in slide-in-from-right duration-300 border-l border-slate-100 dark:border-slate-800 flex flex-col">
+        <div className="flex items-center justify-between p-6 border-b border-slate-50 dark:border-slate-800/40">
           <div className="flex items-center gap-3">
-             <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${m.isAnonymous ? 'bg-slate-100 text-slate-400' : 'bg-brand/10 text-brand'}`}>
+             <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${m.isAnonymous ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500' : 'bg-brand/10 dark:bg-brand/20 text-brand'}`}>
                <Mail size={20} />
              </div>
              <div>
-               <h3 className="text-sm font-black text-slate-800 tracking-tight leading-none uppercase tracking-widest">{m.isAnonymous ? t('msg_anonymous_feedback') : t('msg_citizen_report')}</h3>
+               <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none uppercase tracking-widest">{m.isAnonymous ? t('msg_anonymous_feedback') : t('msg_citizen_report')}</h3>
                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-1.5 flex items-center gap-1.5">
                   <Clock size={12} /> {new Date(m.createdAt).toLocaleString()}
                </p>
@@ -36,21 +36,21 @@ const SideSheet = ({ m, onClose, onDelete, onMarkRead, t, categories, language }
 
         <div className="flex-1 overflow-y-auto p-8 space-y-10">
           <div className="space-y-4">
-             <h4 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">{t('msg_subject')}</h4>
-             <p className="text-xl font-black text-slate-800 tracking-tighter leading-tight">{m.topic}</p>
+             <h4 className="text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.3em]">{t('msg_subject')}</h4>
+             <p className="text-xl font-black text-slate-800 dark:text-slate-100 tracking-tighter leading-tight">{m.topic}</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-               <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{t('msg_contact_detail')}</p>
-               <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
+               <p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">{t('msg_contact_detail')}</p>
+               <div className="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300">
                   <Phone size={14} className="text-brand" />
                   {m.isAnonymous ? t('msg_confidential') : (m.contactInfo || 'N/A')}
                </div>
             </div>
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-               <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{t('msg_origin')}</p>
-               <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
+               <p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">{t('msg_origin')}</p>
+               <div className="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300">
                   <User size={14} className="text-brand" />
                   {m.isAnonymous ? t('msg_origin_anon') : t('msg_origin_verified')}
                </div>
@@ -58,16 +58,16 @@ const SideSheet = ({ m, onClose, onDelete, onMarkRead, t, categories, language }
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-               <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{t('msg_table_type') || 'Type'}</p>
-               <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
+               <p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">{t('msg_table_type') || 'Type'}</p>
+               <div className="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300">
                   {m.messageType === 'General' ? (t('msg_type_general_label') || 'General') : (t('msg_type_service_label') || 'Service-Related')}
                </div>
             </div>
             {m.serviceCategory && (
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{t('msg_category_label') || 'Category'}</p>
-                  <div className="flex items-center gap-2 text-xs font-bold text-slate-700 truncate">
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
+                 <p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">{t('msg_category_label') || 'Category'}</p>
+                  <div className="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300 truncate">
                      {getTranslatedCategory(m.serviceCategory)}
                   </div>
               </div>
@@ -77,15 +77,15 @@ const SideSheet = ({ m, onClose, onDelete, onMarkRead, t, categories, language }
           <div className="space-y-4">
             <div className="flex items-center gap-2">
                <div className="w-1 h-4 bg-brand rounded-full" />
-               <h4 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">{t('msg_message_content')}</h4>
+               <h4 className="text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.3em]">{t('msg_message_content')}</h4>
             </div>
-            <div className="bg-white rounded-2xl p-6 text-sm font-medium text-slate-600 leading-relaxed border border-slate-100 shadow-sm whitespace-pre-wrap">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 text-sm font-medium text-slate-600 dark:text-slate-300 leading-relaxed border border-slate-100 dark:border-slate-800 shadow-sm whitespace-pre-wrap">
               {m.description}
             </div>
           </div>
         </div>
 
-        <div className="p-6 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+        <div className="p-6 bg-slate-50 dark:bg-slate-800/20 border-t border-slate-100 dark:border-slate-800/40 flex items-center justify-between">
            <button 
              onClick={() => onDelete(m.id)}
              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-red-500 hover:bg-red-50 transition-all"
@@ -177,10 +177,10 @@ export function Messages() {
       <div className="flex items-center justify-between mb-8 px-2">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
            <div className="flex items-center gap-4">
-             <h2 className="text-2xl font-black text-slate-800 tracking-tighter uppercase tracking-widest">{t('msg_inbox')}</h2>
+             <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tighter uppercase tracking-widest">{t('msg_inbox')}</h2>
              <div className="flex items-center gap-2">
-               <span className="px-2.5 py-1 rounded-full bg-slate-100 text-[10px] font-black text-slate-500 border border-slate-200">{messages.length}</span>
-               <span className="px-2.5 py-1 rounded-full bg-brand/10 text-[10px] font-black text-brand border border-brand/20">
+               <span className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-black text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">{messages.length}</span>
+               <span className="px-2.5 py-1 rounded-full bg-brand/10 dark:bg-brand/20 text-[10px] font-black text-brand border border-brand/20 dark:border-brand/30">
                  {messages.filter(m => !m.isRead).length} {t('msg_unread')}
                </span>
              </div>
@@ -193,7 +193,7 @@ export function Messages() {
                  setTypeFilter(e.target.value);
                  if (e.target.value !== 'Service-Related') setCategoryFilter('All');
                }}
-               className="bg-white border border-slate-200 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-lg px-3 py-2 outline-none focus:border-brand"
+               className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-black uppercase tracking-widest rounded-lg px-3 py-2 outline-none focus:border-brand"
              >
                <option value="All">{t('msg_filter_all') || 'All'}</option>
                <option value="General">{t('msg_type_general_label') || 'General'}</option>
@@ -204,7 +204,7 @@ export function Messages() {
                 <select 
                   value={categoryFilter} 
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="bg-white border border-slate-200 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-lg px-3 py-2 outline-none focus:border-brand"
+                  className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-black uppercase tracking-widest rounded-lg px-3 py-2 outline-none focus:border-brand"
                 >
                   <option value="All">{t('msg_category_label') || 'Category'} ({t('msg_filter_all') || 'All'})</option>
                   {Array.from(new Set(messages.filter(m => m.messageType === 'Service-Related' && m.serviceCategory).map(m => m.serviceCategory))).map(catName => {
@@ -224,29 +224,29 @@ export function Messages() {
       </div>
 
       {/* Standardized Dense Table Container */}
-      <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden flex flex-col flex-1">
+      <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden flex flex-col flex-1">
         {loading ? (
           <div className="flex-1 flex flex-col items-center justify-center p-10 opacity-50">
-             <div className="w-6 h-6 border-2 border-brand/20 border-t-brand rounded-full animate-spin mb-4" />
-             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">{t('msg_syncing')}</p>
+             <div className="w-6 h-6 border-2 border-brand/20 dark:border-brand/10 border-t-brand dark:border-t-brand rounded-full animate-spin mb-4" />
+             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">{t('msg_syncing')}</p>
           </div>
         ) : messages.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center p-10">
-             <Inbox size={32} className="text-slate-100 mb-4" />
-             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-300">{t('msg_no_messages')}</p>
+             <Inbox size={32} className="text-slate-100 dark:text-slate-800 mb-4" />
+             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 dark:text-slate-600">{t('msg_no_messages')}</p>
           </div>
         ) : (
           <div className="overflow-auto flex-1">
             <table className="w-full text-left border-collapse">
-              <thead className="sticky top-0 bg-white border-b border-slate-50 z-10">
+              <thead className="sticky top-0 bg-white dark:bg-slate-900 border-b border-slate-50 dark:border-slate-800/40 z-10">
                 <tr>
-                  <th className="px-6 py-3 text-[9px] font-black text-slate-300 uppercase tracking-widest transition-colors">{t('msg_table_type')}</th>
-                  <th className="px-6 py-3 text-[9px] font-black text-slate-300 uppercase tracking-widest transition-colors">{t('msg_table_subject')}</th>
-                  <th className="px-6 py-3 text-[9px] font-black text-slate-300 uppercase tracking-widest transition-colors hidden md:table-cell">{t('msg_table_snippet')}</th>
-                  <th className="px-6 py-3 text-[9px] font-black text-slate-300 uppercase tracking-widest transition-colors text-right">{t('msg_table_received')}</th>
+                  <th className="px-6 py-3 text-[9px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-widest transition-colors">{t('msg_table_type')}</th>
+                  <th className="px-6 py-3 text-[9px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-widest transition-colors">{t('msg_table_subject')}</th>
+                  <th className="px-6 py-3 text-[9px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-widest transition-colors hidden md:table-cell">{t('msg_table_snippet')}</th>
+                  <th className="px-6 py-3 text-[9px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-widest transition-colors text-right">{t('msg_table_received')}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-50 text-xs">
+              <tbody className="divide-y divide-slate-50 dark:divide-slate-800/40 text-xs">
                 {messages.filter(m => {
                   if (typeFilter !== 'All' && m.messageType !== typeFilter) return false;
                   if (typeFilter === 'Service-Related' && categoryFilter !== 'All' && m.serviceCategory !== categoryFilter) return false;
@@ -255,26 +255,26 @@ export function Messages() {
                   <tr 
                     key={m.id} 
                     onClick={() => handleSelectMessage(m)}
-                    className={`group cursor-pointer hover:bg-slate-50/80 transition-all ${!m.isRead ? 'bg-brand/[0.02]' : ''}`}
+                    className={`group cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-all ${!m.isRead ? 'bg-brand/[0.02] dark:bg-brand/[0.05]' : ''}`}
                   >
                     <td className="px-6 py-3.5 whitespace-nowrap">
                        <div className="flex items-center gap-2">
                          <div className={`w-1.5 h-1.5 rounded-full ${!m.isRead ? 'bg-brand' : 'bg-transparent'}`} />
-                         <span className={`text-[9px] font-black uppercase tracking-tighter ${m.isAnonymous ? 'text-slate-400' : 'text-brand'}`}>
+                         <span className={`text-[9px] font-black uppercase tracking-tighter ${m.isAnonymous ? 'text-slate-400 dark:text-slate-500' : 'text-brand'}`}>
                             {m.isAnonymous ? t('msg_type_anon') : t('msg_type_citizen')}
                          </span>
                        </div>
                     </td>
                     <td className="px-6 py-3.5">
-                       <span className={`tracking-tight ${!m.isRead ? 'font-black text-slate-800' : 'font-bold text-slate-500'}`}>
+                       <span className={`tracking-tight ${!m.isRead ? 'font-black text-slate-800 dark:text-slate-100' : 'font-bold text-slate-500 dark:text-slate-400'}`}>
                          {m.topic}
                        </span>
                     </td>
                     <td className="px-6 py-3.5 hidden md:table-cell">
-                       <p className="text-slate-400 truncate max-w-sm font-medium">{m.description}</p>
+                       <p className="text-slate-400 dark:text-slate-500 truncate max-w-sm font-medium">{m.description}</p>
                     </td>
                     <td className="px-6 py-3.5 text-right whitespace-nowrap">
-                       <span className="text-[10px] font-bold text-slate-300 font-mono">
+                       <span className="text-[10px] font-bold text-slate-300 dark:text-slate-600 font-mono">
                          {new Date(m.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                        </span>
                     </td>
